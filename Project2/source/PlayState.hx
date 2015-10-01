@@ -12,11 +12,13 @@ import flixel.util.FlxMath;
  */
 class PlayState extends FlxState
 {
+	var player:Player;
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
 	override public function create():Void
 	{
+		add(player = new Player(100, 50, this));
 		super.create();
 	}
 	
