@@ -3,9 +3,15 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.FlxObject;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
+import flixel.util.FlxColor;
+import flixel.tile.FlxTilemap;
+import flixel.FlxCamera;
+import flixel.util.FlxRect;
+import openfl.Assets;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -13,13 +19,30 @@ import flixel.util.FlxMath;
 class PlayState extends FlxState
 {
 	var player:Player;
+	var tileMap:FlxTilemap;
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
 	override public function create():Void
 	{
-		add(player = new Player(100, 50, this));
 		super.create();
+		FlxG.state.bgColor = FlxColor.AZURE;
+		FlxG.worldBounds.set(0, 0, 50 * 64, 50 * 64);
+		tileMap = new FlxTilemap();
+        var mapData:String = Assets.getText("assets/data/testMap.csv");
+        var mapTilePath:String = "assets/images/map/tiles2.png";
+        tileMap.loadMap(mapData, mapTilePath);
+		tileMap.setTileProperties(0, FlxObject.NONE);
+		tileMap.setTileProperties(1, FlxObject.ANY);
+		tileMap.immovable = true;
+        add(tileMap);
+		
+		
+		
+		
+		add(player = new Player(400, 100, this));
+		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN, 1);
+		
 	}
 	
 	/**
@@ -36,6 +59,11 @@ class PlayState extends FlxState
 	 */
 	override public function update():Void
 	{
+		
+		if(FlxG.collide(tileMap, player)){
+			player.jumpReset();
+		}
 		super.update();
-	}	
+	}
+	
 }
