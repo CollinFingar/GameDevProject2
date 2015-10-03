@@ -1,0 +1,20 @@
+Level Progression
+Level 1: Tower
+-Princess Chamber
+-Boss Chamber
+-Descent
+-Castle Foyer, Entryway to Dungeon
+
+Level 2: Dungeon
+-Stairs towards/away from Foyer
+-Actual Dungeon
+-Room With Lava
+-Underneath the Moat
+-Entryway, Ladder up to field
+
+Level 3: Field
+-Castle entrance, moat area
+-Long Jump
+-Room with some weaker enemies
+-Introductory Room (Think 1-1)
+-Empty field, boss fight
