@@ -18,6 +18,7 @@ class Player extends FlxSprite
     var parent:PlayState;
     
     var playerJumping:Bool = false;
+	var facingLeft:Bool = true;
     
     public function new(X:Float=0, Y:Float=0, Parent:PlayState) 
     {
@@ -53,26 +54,36 @@ class Player extends FlxSprite
                 playerJumping = true;
             }
         }
-        if (velocity.x > 0 || velocity.x < 0) {
-			if(velocity.x > 0){
+		if(FlxG.keys.anyJustPressed(["X"])){
+			shootCrossbow();
+		}
+		
+		//Set which animation to show
+		if(velocity.y <= 0 && playerJumping){
+			//makeGraphic(80, 120, FlxColor.WHITE);
+		} else if(velocity.y > 0 && playerJumping){
+			//makeGraphic(80, 120, FlxColor.BLACK);
+		} else if (velocity.x > 0 || velocity.x < 0) {
+			if (velocity.x > 0) {
+				
 				//makeGraphic(80, 120, FlxColor.GREEN);
 			} else {
 				//makeGraphic(80, 120, FlxColor.YELLOW);
 			}
             //animation.play("walk");
-        }
-        else {
+        } else {
 			//makeGraphic(80, 120, FlxColor.CRIMSON);
             animation.play("idle");
 			
 			//offset.set(width/2, height/2 + 10);
         }
-		
-		if(velocity.y <= 0 && playerJumping){
-			//makeGraphic(80, 120, FlxColor.WHITE);
-		} else if(velocity.y > 0 && playerJumping){
-			//makeGraphic(80, 120, FlxColor.BLACK);
+		if(velocity.x > 0){
+			facingLeft = false;
+		} else if(velocity.x < 0){
+			facingLeft = true;
 		}
+		
+		
         super.update();
     }
     
@@ -81,5 +92,21 @@ class Player extends FlxSprite
             playerJumping = false;
         }
     }
+	
+	public function shootCrossbow():Void {
+		if(facingLeft){
+			var bolt:Bolt = new Bolt(this.x - width/4, this.y + height/2, -1, this.parent);
+			parent.add(bolt);
+		} else {
+			var bolt:Bolt = new Bolt(this.x + 3*width/4, this.y + height/2, 1, this.parent);
+			parent.add(bolt);
+		}
+		
+		
+	}
+	override public function destroy():Void
+	{
+		super.destroy();
+	}
     
 }
