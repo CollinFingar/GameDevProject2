@@ -40,14 +40,16 @@ class Player extends FlxSprite
     public override function update():Void {
         acceleration.x = 0;
         if (FlxG.keys.anyPressed(["LEFT", "A"])) {
+			facingLeft = true;
             acceleration.x = -drag.x;
             flipX = false;
         }
         if (FlxG.keys.anyPressed(["RIGHT", "D"])) {
+			facingLeft = false;
             acceleration.x = drag.x;
             flipX = true;
         }
-        if(FlxG.keys.anyJustPressed(["SPACE"])){
+        if(FlxG.keys.anyJustPressed(["SPACE", "W"])){
             if(!playerJumping && velocity.y == 0){
                 velocity.y = -1000;
                 //animation.play('jump-up');
@@ -77,11 +79,6 @@ class Player extends FlxSprite
 			
 			//offset.set(width/2, height/2 + 10);
         }
-		if(velocity.x > 0){
-			facingLeft = false;
-		} else if(velocity.x < 0){
-			facingLeft = true;
-		}
 		
 		
         super.update();
@@ -94,15 +91,15 @@ class Player extends FlxSprite
     }
 	
 	public function shootCrossbow():Void {
-		if(facingLeft){
-			var bolt:Bolt = new Bolt(this.x - width/4, this.y + height/2, -1, this.parent);
-			parent.add(bolt);
-		} else {
-			var bolt:Bolt = new Bolt(this.x + 3*width/4, this.y + height/2, 1, this.parent);
-			parent.add(bolt);
+		if(this.parent.bolts.length < 3){
+			if(facingLeft){
+				var bolt:Bolt = new Bolt(this.x - width/4, this.y + height/2, -1, this.parent);
+				this.parent.addBolt(bolt);
+			} else {
+				var bolt:Bolt = new Bolt(this.x + 3*width/4, this.y + height/2, 1, this.parent);
+				this.parent.addBolt(bolt);
+			}
 		}
-		
-		
 	}
 	override public function destroy():Void
 	{

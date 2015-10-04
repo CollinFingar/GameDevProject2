@@ -19,6 +19,8 @@ class Bolt extends FlxSprite
     var parent:PlayState;
 	public static inline var VELOCTIY = 1000;
     
+	
+	
     public function new(X:Float = 0, Y:Float = 0, DX:Float = 0, Parent:PlayState) 
     {
 		super(X, Y);
