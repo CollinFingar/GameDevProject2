@@ -3,6 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.util.FlxPoint;
 import flixel.FlxObject;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
@@ -20,6 +21,7 @@ class PlayState extends FlxState
 {
 	var player:Player;
 	var tileMap:FlxTilemap;
+	public var coinMap:FlxTilemap;
 	public var bolts:Array<Bolt> = [];
 	public var coins:Array<Collectible> = [];
 	/**
@@ -31,21 +33,19 @@ class PlayState extends FlxState
 		FlxG.state.bgColor = FlxColor.AZURE;
 		FlxG.worldBounds.set(0, 0, 50 * 64, 50 * 64);
 		tileMap = new FlxTilemap();
-        var mapData:String = Assets.getText("assets/data/testMap.csv");
+        var mapData:String = Assets.getText("assets/data/testWorld.csv");
         var mapTilePath:String = "assets/images/map/tiles2.png";
         tileMap.loadMap(mapData, mapTilePath);
 		tileMap.setTileProperties(0, FlxObject.NONE);
 		tileMap.setTileProperties(1, FlxObject.ANY);
 		tileMap.immovable = true;
         add(tileMap);
-		
-		var coin1:Collectible = new Collectible(1800, 1700, this);
-		var coin2:Collectible = new Collectible(2000, 1700, this);
 
-		coins.push(coin1);
-		coins.push(coin2);
-		add(coin1);
-		add(coin2);
+		coinMap = new FlxTilemap();
+		var coinData:String = Assets.getText("assets/data/collectibleLocations.csv");
+		coinMap.loadMap(coinData, mapTilePath);
+		placeCoins();
+		
 		
 		add(player = new Player(1700, 1600, this));
 		FlxG.camera.follow(player, FlxCamera.STYLE_PLATFORMER, 1);
@@ -112,8 +112,18 @@ class PlayState extends FlxState
 			}
 		}
 		for(i in 0...d.length){
-			remove(coins[i]);
-			coins.splice(i, 1);
+			remove(coins[d[i]]);
+			coins.splice(d[i], 1);
+		}
+	}
+	
+	public function placeCoins():Void{
+		var coinCoords:Array<FlxPoint> = coinMap.getTileCoords(2, true);
+		for(i in 0...coinCoords.length){
+			var c:Collectible = new Collectible(coinCoords[i].x, coinCoords[i].y, this);
+			
+			coins.push(c);
+			add(c);
 		}
 	}
 	

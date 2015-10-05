@@ -30,7 +30,7 @@ class Player extends FlxSprite
         animation.add("idle", [0,1,2,3,4,5,6,7], 8, true);
         drag.set(RUN_SPEED * 8, RUN_SPEED * 8);
         maxVelocity.set(RUN_SPEED * 2, RUN_SPEED * 6);
-        acceleration.y = 1500;
+        acceleration.y = 3000;
         parent = Parent;
 		scale.set(.5, .5);
         setSize(width / 4, height / 3);
