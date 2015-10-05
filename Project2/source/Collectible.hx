@@ -21,8 +21,8 @@ class Collectible extends FlxSprite
     
     public function new(X:Float=0, Y:Float=0, Parent:PlayState) 
     {
-        super(X, Y);
-        makeGraphic(40, 40, FlxColor.GOLDEN);
+        super(X-10, Y-10);
+        makeGraphic(30, 30, FlxColor.GOLDEN);
         parent = Parent;
         updateHitbox();
     }
