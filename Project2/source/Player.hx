@@ -19,6 +19,7 @@ class Player extends FlxSprite
     
     var playerJumping:Bool = false;
 	var facingLeft:Bool = true;
+	public var score:Int = 0;
     
     public function new(X:Float=0, Y:Float=0, Parent:PlayState) 
     {
