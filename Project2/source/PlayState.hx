@@ -12,6 +12,7 @@ import flixel.tile.FlxTilemap;
 import flixel.FlxCamera;
 import flixel.util.FlxRect;
 import openfl.Assets;
+import source.ui.CutScene;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -20,6 +21,7 @@ class PlayState extends FlxState
 {
 	var player:Player;
 	var tileMap:FlxTilemap;
+	var cs:CutScene;
 	public var bolts:Array<Bolt> = [];
 	public var coins:Array<Collectible> = [];
 	/**
@@ -28,6 +30,7 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		super.create();
+		
 		FlxG.state.bgColor = FlxColor.AZURE;
 		FlxG.worldBounds.set(0, 0, 50 * 64, 50 * 64);
 		tileMap = new FlxTilemap();
@@ -50,6 +53,30 @@ class PlayState extends FlxState
 		add(player = new Player(1700, 1600, this));
 		FlxG.camera.follow(player, FlxCamera.STYLE_PLATFORMER, 1);
 		
+		/* WILL'S CODE */
+		
+		var Joe = new FlxSprite( 0, 0 );
+		var Mike = new FlxSprite( 0, 0 );
+		
+		Joe.makeGraphic( 120, 80, FlxColor.GREEN );
+		Mike.makeGraphic( 70, 130, FlxColor.RED );
+		
+		cs = new CutScene( this );
+		
+		cs.add_character( "Joe", Joe );
+		cs.add_character( "Mike", Mike );
+		
+		cs.add_dialogue( "Joe",  "So what are we doing" );
+		cs.add_dialogue( "Mike", "I don't know" );
+		cs.add_dialogue( "Mike", "Ask me about it later" );
+		cs.add_dialogue( "Joe",  "Yeah okay sure whatever" );
+		
+		add( Joe );
+		add( Mike );
+		
+		/* WILL'S CODE */
+		
+		add( new FlxText( 32, 32, 1000, "What the heck is going on" ) );
 	}
 	
 	/**
@@ -72,6 +99,10 @@ class PlayState extends FlxState
 		}
 		checkBolts();
 		checkCoins();
+		
+		if ( FlxG.keys.justPressed.Q ) {
+			cs.change();
+		}
 		
 		super.update();
 	}
