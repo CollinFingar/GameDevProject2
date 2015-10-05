@@ -18,7 +18,7 @@ class Player extends FlxSprite
     var parent:PlayState;
     
     var playerJumping:Bool = false;
-	var playerRunning:Bool = false;
+	var playerRunning:Bool = true;
 	var facingLeft:Bool = true;
 	public var score:Int = 0;
     
@@ -32,9 +32,8 @@ class Player extends FlxSprite
         maxVelocity.set(RUN_SPEED * 2, RUN_SPEED * 6);
         acceleration.y = 3000;
         parent = Parent;
-		scale.set(.5, .5);
-        setSize(width / 4, height / 3);
-		offset.set(width*1.5, height);
+		setIdleAnimation();
+		//setGoodHitbox();
         //updateHitbox();
     }
     
