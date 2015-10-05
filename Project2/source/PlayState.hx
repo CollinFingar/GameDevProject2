@@ -26,6 +26,9 @@ class PlayState extends FlxState
 	public var coinMap:FlxTilemap;
 	public var bolts:Array<Bolt> = [];
 	public var coins:Array<Collectible> = [];
+	
+	
+	var walker:Walker;
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -49,6 +52,7 @@ class PlayState extends FlxState
 		coinMap.loadMap(coinData, mapTilePath);
 		placeCoins();
 		
+		add(walker = new Walker(2500, 2500, this));
 		
 		add(player = new Player(1700, 1600, this));
 		FlxG.camera.follow(player, FlxCamera.STYLE_PLATFORMER, 1);
@@ -99,6 +103,7 @@ class PlayState extends FlxState
 		}
 		checkBolts();
 		checkCoins();
+		FlxG.collide(walker, tileMap);
 		
 		if ( FlxG.keys.justPressed.Q ) {
 			cs.change();
