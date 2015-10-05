@@ -18,6 +18,7 @@ class Player extends FlxSprite
     var parent:PlayState;
     
     var playerJumping:Bool = false;
+	var playerRunning:Bool = false;
 	var facingLeft:Bool = true;
 	public var score:Int = 0;
     
@@ -25,9 +26,8 @@ class Player extends FlxSprite
     {
         super(X, Y);
         //makeGraphic(80, 120, FlxColor.CRIMSON);
-        loadGraphic("assets/images/damsel/princess_blink1_307x343_8fps_strip8.png", true, 307, 343);
-        //animation.add("walk", [4, 5, 6, 7], 12, true);
-        animation.add("idle", [0,1,2,3,4,5,6,7], 8, true);
+		
+		
         drag.set(RUN_SPEED * 8, RUN_SPEED * 8);
         maxVelocity.set(RUN_SPEED * 2, RUN_SPEED * 6);
         acceleration.y = 3000;
@@ -44,6 +44,8 @@ class Player extends FlxSprite
 			facingLeft = true;
             acceleration.x = -drag.x;
             flipX = false;
+			
+			//updateHitbox();
         }
         if (FlxG.keys.anyPressed(["RIGHT", "D"])) {
 			facingLeft = false;
@@ -68,15 +70,16 @@ class Player extends FlxSprite
 			//makeGraphic(80, 120, FlxColor.BLACK);
 		} else if (velocity.x > 0 || velocity.x < 0) {
 			if (velocity.x > 0) {
-				
+				setRunAnimation();
 				//makeGraphic(80, 120, FlxColor.GREEN);
 			} else {
+				setRunAnimation();
 				//makeGraphic(80, 120, FlxColor.YELLOW);
 			}
             //animation.play("walk");
         } else {
 			//makeGraphic(80, 120, FlxColor.CRIMSON);
-            animation.play("idle");
+            setIdleAnimation();
 			
 			//offset.set(width/2, height/2 + 10);
         }
@@ -105,6 +108,35 @@ class Player extends FlxSprite
 	override public function destroy():Void
 	{
 		super.destroy();
+	}
+	
+	public function setRunAnimation():Void {
+		if(!playerRunning && !playerJumping){
+			loadGraphic("assets/images/damsel/princess_run1_307x343_18fps_strip12.png", true, 307, 343);
+		animation.add("run", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 12, true);
+		animation.play("run", false);
+		playerRunning = true;
+		//updateHitbox();
+		setGoodHitbox();
+		}
+		
+	}
+	public function setIdleAnimation():Void {
+	if(playerRunning && !playerJumping){
+		loadGraphic("assets/images/damsel/princess_blink1_307x343_8fps_strip8.png", true, 307, 343);
+        animation.add("idle", [0, 1, 2, 3, 4, 5, 6, 7], 8, true);
+		animation.play("idle", false);
+		playerRunning = false;
+		//updateHitbox();
+		setGoodHitbox();
+		}
+		
+	}
+	public function setGoodHitbox():Void {
+		
+		scale.set(.5, .5);
+        setSize(width / 4, height / 3);
+		offset.set(width*1.5, height);
 	}
     
 }
