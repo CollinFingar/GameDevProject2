@@ -20,6 +20,8 @@ class PlayState extends FlxState
 {
 	var player:Player;
 	var tileMap:FlxTilemap;
+	public var bolts:Array<Bolt> = [];
+	public var coins:Array<Collectible> = [];
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -37,10 +39,15 @@ class PlayState extends FlxState
 		tileMap.immovable = true;
         add(tileMap);
 		
+		var coin1:Collectible = new Collectible(1800, 1700, this);
+		var coin2:Collectible = new Collectible(2000, 1700, this);
+
+		coins.push(coin1);
+		coins.push(coin2);
+		add(coin1);
+		add(coin2);
 		
-		
-		
-		add(player = new Player(400, 100, this));
+		add(player = new Player(1700, 1600, this));
 		FlxG.camera.follow(player, FlxCamera.STYLE_PLATFORMER, 1);
 		
 	}
@@ -63,7 +70,51 @@ class PlayState extends FlxState
 		if(FlxG.collide(tileMap, player)){
 			player.jumpReset();
 		}
+		checkBolts();
+		checkCoins();
+		
 		super.update();
+	}
+	
+	
+	public function addBolt(B:Bolt):Void{
+		bolts.push(B);
+		add(B);
+	}
+	
+	
+	public function checkBolts():Void{
+		var d:Array<Bool> = [false, false, false];
+		for (i in 0...bolts.length) {
+			var b:Float = bolts[i].x;
+			if(FlxG.collide(tileMap, bolts[i])){
+				d[i] = true;
+			}
+			
+			else if (b < (player.x - FlxG.camera.width/2) || b > (player.x + FlxG.camera.width/2)){
+				d[i] = true;
+			}
+		}
+		for(i in 0...d.length){
+			if(d[i]){
+				remove(bolts[i]);
+				bolts.splice(i, 1);
+			}
+		}
+	}
+	
+	public function checkCoins():Void{
+		var d:Array<Int> = [];
+		for (i in 0...coins.length){
+			if(FlxG.overlap(player, coins[i])){
+				player.score += coins[i].score;
+				d.push(i);
+			}
+		}
+		for(i in 0...d.length){
+			remove(coins[i]);
+			coins.splice(i, 1);
+		}
 	}
 	
 }
