@@ -6,6 +6,7 @@ import flixel.FlxState;
 import flixel.FlxG;
 import flixel.FlxSubState;
 import flixel.group.FlxSpriteGroup;
+import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
@@ -15,87 +16,153 @@ import flixel.FlxCamera;
 
 using flixel.util.FlxSpriteUtil;
 
-enum CUTSCENE_STATE {
-    CUTSCENE_OPENED;
-    CUTSCENE_OPENING;
-    CUTSCENE_CLOSING;
-    CUTSCENE_CLOSED;
+enum SPEECH_STATE {
+	SPEECH_ERASING;
+	SPEECH_STABLE_WRITTEN;
+	SPEECH_WRITING;
+	SPEECH_GROWING;
+	SPEECH_STABLE_CLOSE;
+	SPEECH_SHRINKING;
 }
 
-class CutScene extends FlxSubState {
-    
-    var state:CUTSCENE_STATE;
-    var upper:FlxSprite;
-    var lower:FlxSprite;
-    var height:Int;
-    
-    var porth:Int;
-    var portrait:FlxSprite;
-    var saying:FlxText;
-    var said:FlxText;
-    var indexA:Int; // index in dialogue
-    var indexB:Int; // index in sub-dialogue
-    var indexC:Int; // character index in text
-    var buffer:Float;
-    var wrtspeed:Float;
-    
-    var portraits:Map<String,FlxSprite>;
-    var dialogue:Array<Array<String>>;
-    
-    public override function new( par:FlxState, h:Float = 0.2 ) {
-        super();
-        
-        height = cast(cast(FlxG.height, Float) * h, Int);
-        porth = height - 32;
-        
-        upper = new FlxSprite( 0, 0 );
-        lower = new FlxSprite( 0, FlxG.height - height );
-        portrait = new FlxSprite( 16, FlxG.height - porth - 16 );
-        
-        saying = new FlxText( porth + 32, FlxG.height - porth, FlxG.width - porth - 120, "Saying" );
-        said = new FlxText( porth + 32, FlxG.height - porth + 40, FlxG.width - porth - 120, "Said words words words words words words words" );
-        
-        upper.makeGraphic( FlxG.width, height, FlxColor.BLACK );
-        upper.origin.set( 0, 0 );
-        
-        lower.makeGraphic( FlxG.width, height+2, FlxColor.BLACK );
-        lower.origin.set( 0, height );
-        
-        portrait.makeGraphic( porth, porth, 0xFFEEBC1D );
-        portrait.drawRect( 16, 16, porth - 32, porth - 32, 0xFFDDDDDD );
-        
-        saying.size = 32;
-        said.size = 16;
-        
-        upper.scale.y = 0;
-        lower.scale.y = 0;
-        
-        indexA = 0;
-        indexB = 0;
-        indexC = 0;
-        wrtspeed = 1.2;
-        buffer = 0;
-        
-        dialogue = new Array<Array<String>>();
-        portraits = new Map<String,FlxSprite>();
-        
-        state = CUTSCENE_CLOSED;
-        
-        add( upper );
-        add( lower );
-        add( portrait );
-        add( saying );
-        add( said );
-        
-        par.add( this );
-        
-        hide_dialogue();
-        
-    }
-    public function add_character( name:String, img:FlxSprite ):Void {
-        portraits[name] = img;
-    }
-    public function add_dialogue( name:String, txt:String ):Void {
-        if ( dialogue[dialogue.length - 1][0] == name ) {
-            dialogue[dialogue.length - 1].push( txt );
-...
+class SpeechBubble extends FlxBasic {
+	
+	var state:SPEECH_STATE;
+	
+	var bubble:FlxSprite;
+	var text:FlxText;
+	
+	var srctext:String;
+	var index:Int;
+	var buffer:Float;
+	var speed:Float;
+	var writespd:Float;
+	
+	public override function new( par:FlxState, pos:FlxPoint, w:Int, h:Int, txt:String, spd:Float = 0.1, wrtspd:Float = 1.2 ) {
+		super();
+		
+		bubble = new FlxSprite( pos.x, pos.y );
+		text = new FlxText( pos.x + 16, pos.y + 16, w - 32, "" );
+		
+		state = SPEECH_STABLE_CLOSE;
+		speed = spd;
+		writespd = wrtspd;
+		srctext = txt;
+		buffer = 0;
+		index = 0;
+		
+        bubble.makeGraphic( w, h, FlxColor.TRANSPARENT );
+		bubble.drawRoundRect( 0, 0, w, h, 16, 16, FlxColor.WHITE );
+		
+		bubble.alpha = 0;
+		bubble.scale.set( 0, 0 );
+		bubble.origin.set( 0, h );
+		
+		text.size = 16;
+		text.color = FlxColor.BLACK;
+		
+		par.add( bubble );
+		par.add( text );
+		par.add( this );
+	}
+	
+	private function grow():Void {
+		if ( bubble.scale.x <= 1 - speed ) {
+			bubble.scale.x += speed;
+			bubble.scale.y += speed; 
+			bubble.alpha = bubble.scale.x * 2;
+		} else {
+			bubble.scale.set( 1, 1 );
+			buffer = 0;
+			state = SPEECH_WRITING;
+		}
+	}
+	private function shrink():Void {
+		if ( bubble.scale.x >= speed ) {
+			bubble.scale.x -= speed;
+			bubble.scale.y -= speed;
+			bubble.alpha = bubble.scale.x * 2;
+		} else {
+			bubble.scale.set( 0, 0 );
+			state = SPEECH_STABLE_CLOSE;
+		}
+	}
+	private function write():Void {
+		buffer += writespd;
+		while ( buffer > 1 ) {
+			index += 1;
+			buffer -= 1;
+		}
+		if ( index >= srctext.length ) {
+			index = srctext.length;
+			text.text = srctext;
+			buffer = 0;
+			state = SPEECH_STABLE_WRITTEN;
+		} else
+			text.text = srctext.substring( 0, index );
+	}
+	private function erase():Void {
+		buffer += writespd;
+		while ( buffer > 1 ) {
+			index -= 1;
+			buffer -= 1;
+		}
+		if ( index <= 0 ) {
+			index = 0;
+			text.text = "";
+			buffer = 0;
+			state = SPEECH_SHRINKING;
+		} else
+			text.text = srctext.substring( 0, index );
+	}
+	
+	public function open():Void {
+		switch ( state ) {
+			case SPEECH_STABLE_CLOSE | SPEECH_SHRINKING :
+				state = SPEECH_GROWING;
+			case SPEECH_ERASING :
+				state = SPEECH_WRITING;
+			case SPEECH_WRITING | SPEECH_STABLE_WRITTEN | SPEECH_GROWING:
+		}
+	}
+	public function close():Void {
+		switch ( state ) {
+			case SPEECH_STABLE_WRITTEN | SPEECH_WRITING:
+				state = SPEECH_ERASING;
+			case SPEECH_GROWING:
+				state = SPEECH_SHRINKING;
+			case SPEECH_ERASING | SPEECH_STABLE_CLOSE | SPEECH_SHRINKING:
+		}
+	}
+	public function is_opening():Bool {
+		return ( state == SPEECH_WRITING || 
+				 state == SPEECH_GROWING ||
+				 state == SPEECH_STABLE_WRITTEN );
+	}
+	public function is_closing():Bool {
+		return ( state == SPEECH_ERASING || 
+				 state == SPEECH_SHRINKING ||
+				 state == SPEECH_STABLE_CLOSE );
+	}
+	public function change():Void {
+		if ( is_opening() )
+			close();
+		else
+			open();
+	}
+	
+	public override function update():Void {
+		super.update();
+		switch ( state ) {
+			case SPEECH_STABLE_CLOSE | SPEECH_STABLE_WRITTEN:
+			case SPEECH_GROWING:
+				grow();
+			case SPEECH_SHRINKING:
+				shrink();
+			case SPEECH_WRITING:
+				write();
+			case SPEECH_ERASING:
+				erase();
+		}
+	}
+}
