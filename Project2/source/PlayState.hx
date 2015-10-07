@@ -32,7 +32,9 @@ class PlayState extends FlxState
 	public var bolts:Array<Bolt> = [];
 	public var coins:Array<Collectible> = [];
 	public var walkers:Array<enemies.Walker> = [];
+	public var batShots:Array<enemies.Batshot> = [];
 	public var batneyes:Array<enemies.Batneye> = [];
+	
 	
 	
 	
@@ -126,6 +128,8 @@ class PlayState extends FlxState
 		checkWalkers();
 		//check batneyes for colliding with walls, bolts, and players
 		checkBats();
+		//check batShots for colliding with walls, players, and lifespan
+		checkBatShots();
 		
 		if ( FlxG.keys.justPressed.Q ) {
 			//cs.revive();
@@ -234,6 +238,39 @@ class PlayState extends FlxState
 				} else {
 					player.velocity.x = 4500;
 				}
+			}
+		}
+	}
+	
+	public function checkBatShots():Void {
+		var d:Array<Bool> = [];
+		for (i in 0...batShots.length) {
+			var b:Float = batShots[i].x;
+			if(FlxG.collide(tileMap, batShots[i])){
+				d.push(true);
+			}
+			
+			else if (b > batShots[i].startX + FlxG.camera.width  || b < batShots[i].startX - FlxG.camera.width){
+				d.push(true);
+			} else if (FlxG.collide(player, batShots[i])) {
+				hud.damage(1);
+				if(batShots[i].x > player.x){
+					player.velocity.x = -3000;
+				} else {
+					player.velocity.x = 3000;
+				}
+				d.push(true);
+			}
+			else {
+				d.push(false);
+
+			}
+			
+		}
+		for(i in 0...d.length){
+			if(d[i]){
+				remove(batShots[i]);
+				batShots.splice(i, 1);
 			}
 		}
 	}

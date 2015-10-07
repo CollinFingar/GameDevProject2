@@ -73,15 +73,31 @@ class Batneye extends FlxSprite
 			if(changed){
 				changed = !changed;
 				makeGraphic(120, 70, FlxColor.CORAL);
+				shoot();
 			} else {
 				changed = !changed;
 				makeGraphic(120, 70, FlxColor.FOREST_GREEN);
+				shoot();
 			}
 		}
 		
 		
         super.update();
     }
+	
+	public function shoot():Void{
+		if(facingLeft){
+				var shot:Batshot = new Batshot(this.x - width/4, this.y + height/2, -1, this.parent);
+				this.parent.batShots.push(shot);
+				this.parent.add(shot);
+			} else {
+				var shot:Batshot = new Batshot(this.x + 3*width/4, this.y + height/2, 1, this.parent);
+				this.parent.batShots.push(shot);
+				this.parent.add(shot);
+
+			}
+		}
+	
     
     
 }
