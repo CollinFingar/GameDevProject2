@@ -29,6 +29,7 @@ class PlayState extends FlxState
 	var cs:CutScene;
 	public var hud:HUD;
 	public var coinMap:FlxTilemap;
+	public var enemyMap:FlxTilemap;
 	public var bolts:Array<Bolt> = [];
 	public var coins:Array<Collectible> = [];
 	public var walkers:Array<enemies.Walker> = [];
@@ -45,7 +46,7 @@ class PlayState extends FlxState
 	{
 		super.create();
 		
-		FlxG.state.bgColor = FlxColor.GRAY;
+		FlxG.state.bgColor = FlxColor.CHARCOAL;
 		FlxG.worldBounds.set(0, 0, 50 * 64, 50 * 64);
 		tileMap = new FlxTilemap();
         var mapData:String = Assets.getText("assets/data/testWorld.csv");
@@ -61,13 +62,18 @@ class PlayState extends FlxState
 		coinMap.loadMap(coinData, mapTilePath);
 		placeCoins();
 		
-		var walker:enemies.Walker;
-		add(walker = new enemies.Walker(2500, 2500, this));
-		walkers.push(walker);
+		enemyMap = new FlxTilemap();
+		var enemyData:String = Assets.getText("assets/data/enemyLocations.csv");
+		enemyMap.loadMap(enemyData, mapTilePath);
+		placeEnemies();
 		
-		var bat:Batneye;
-		add(bat = new Batneye(1200, 2750, this));
-		batneyes.push(bat);
+		//var walker:enemies.Walker;
+		//add(walker = new enemies.Walker(2500, 2500, this));
+		//walkers.push(walker);
+		
+		//var bat:Batneye;
+		//add(bat = new Batneye(1200, 2750, this));
+		//batneyes.push(bat);
 		
 		add(player = new Player(1700, 1600, this));
 		FlxG.camera.follow(player, FlxCamera.STYLE_PLATFORMER, 1);
@@ -201,16 +207,7 @@ class PlayState extends FlxState
 			coins.splice(d[i], 1);
 		}
 	}
-	
-	public function placeCoins():Void{
-		var coinCoords:Array<FlxPoint> = coinMap.getTileCoords(2, true);
-		for(i in 0...coinCoords.length){
-			var c:Collectible = new Collectible(coinCoords[i].x, coinCoords[i].y, this);
-			
-			coins.push(c);
-			add(c);
-		}
-	}
+
 	
 	public function checkWalkers():Void {
 		for(i in 0...walkers.length){
@@ -274,6 +271,39 @@ class PlayState extends FlxState
 				batShots.splice(i, 1);
 			}
 		}
+	}
+	
+	
+		
+	public function placeCoins():Void{
+		var coinCoords:Array<FlxPoint> = coinMap.getTileCoords(2, true);
+		for(i in 0...coinCoords.length){
+			var c:Collectible = new Collectible(coinCoords[i].x, coinCoords[i].y, this);
+			
+			coins.push(c);
+			add(c);
+		}
+	}
+	
+	public function placeEnemies():Void{
+		var walkerCoords:Array<FlxPoint> = enemyMap.getTileCoords(3, true);
+		for(i in 0...walkerCoords.length){
+			var w:Walker = new Walker(walkerCoords[i].x, walkerCoords[i].y-50, this);
+			walkers.push(w);
+			add(w);
+		}
+		var batCoords:Array<FlxPoint> = enemyMap.getTileCoords(4, true);
+		for(i in 0...batCoords.length){
+			var b:Batneye = new Batneye(batCoords[i].x, batCoords[i].y, 70, this);
+			batneyes.push(b);
+			add(b);
+		}
+		//var walkerCoords:Array<FlxPoint> = enemyMap.getTileCoords(3, true);
+		//for(i in 0...coinCoords.length){
+			//var w:Walker = new Walker(walkerCoords[i].x, walkerCoords[i].y, this);
+			//walkers.push(w);
+			//add(w);
+		//}
 	}
 	
 }
