@@ -1,5 +1,6 @@
 package;
 
+import enemies.Batneye;
 import enemies.Walker;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -31,6 +32,7 @@ class PlayState extends FlxState
 	public var bolts:Array<Bolt> = [];
 	public var coins:Array<Collectible> = [];
 	public var walkers:Array<enemies.Walker> = [];
+	public var batneyes:Array<enemies.Batneye> = [];
 	
 	
 	
@@ -60,6 +62,10 @@ class PlayState extends FlxState
 		var walker:enemies.Walker;
 		add(walker = new enemies.Walker(2500, 2500, this));
 		walkers.push(walker);
+		
+		var bat:Batneye;
+		add(bat = new Batneye(1500, 2800, this));
+		batneyes.push(bat);
 		
 		add(player = new Player(1700, 1600, this));
 		FlxG.camera.follow(player, FlxCamera.STYLE_PLATFORMER, 1);
@@ -192,7 +198,7 @@ class PlayState extends FlxState
 	public function checkWalkers():Void {
 		for(i in 0...walkers.length){
 			FlxG.collide(walkers[i], tileMap);
-			if(FlxG.collide(player, walkers[i])){
+			if(FlxG.overlap(player, walkers[i])){
 				hud.damage(1);
 				if(walkers[i].x > player.x){
 					player.velocity.x = -1500; walkers[i].velocity.x = 1500;

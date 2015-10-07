@@ -19,6 +19,9 @@ class Batneye extends FlxSprite
 	var facingLeft:Bool = true;
 	var goingUp:Bool = true;
 	public var healthRemaining:Int = 2;
+	
+	var maxHeight:Float;
+	var minHeight:Float;
     
     public function new(X:Float=0, Y:Float=0, Parent:PlayState) 
     {
@@ -27,10 +30,11 @@ class Batneye extends FlxSprite
 		
 		
         drag.set(MOVE_SPEED * 3, MOVE_SPEED * 3);
-        maxVelocity.set(RUN_SPEED * 1, RUN_SPEED * 3);
+        maxVelocity.set(MOVE_SPEED * 1, MOVE_SPEED * 3);
 		
         parent = Parent;
-		var maxHeight = X +600;
+		maxHeight = Y +600;
+		minHeight = Y;
 		
 		//scale.set(.5, .5);
         //setSize(width / 4, height / 3);
@@ -39,7 +43,7 @@ class Batneye extends FlxSprite
     }
     
     public override function update():Void {
-        acceleration.x = 0;
+        velocity.y = 0;
 		
 		if(this.parent.player.x < this.x){
 			facingLeft = true;
@@ -47,11 +51,16 @@ class Batneye extends FlxSprite
 			facingLeft = false;
 		}
 		if(goingUp){
-			acceleration.y = drag.y;
-			if(
+			velocity.y = drag.y;
+			if(this.y > maxHeight){
+				goingUp = false;
+			}
 		} else {
-			//acceleration.x = -drag.x;
-		//}
+			velocity.y = -drag.y;
+			if(this.y < minHeight){
+				goingUp = true;
+			}
+		}
 		
 		
         super.update();
