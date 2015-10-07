@@ -20,7 +20,6 @@ class Player extends FlxSprite
     var playerJumping:Bool = false;
 	var playerRunning:Bool = true;
 	var facingLeft:Bool = true;
-	public var score:Int = 0;
     
     public function new(X:Float=0, Y:Float=0, Parent:PlayState) 
     {
@@ -52,7 +51,8 @@ class Player extends FlxSprite
             flipX = true;
         }
         if(FlxG.keys.anyJustPressed(["SPACE", "W"])){
-            if(!playerJumping && velocity.y == 0){
+            if (!playerJumping && velocity.y == 0) {
+				parent.hud.heal( 1 );	
                 velocity.y = -1000;
                 //animation.play('jump-up');
                 playerJumping = true;
@@ -94,7 +94,7 @@ class Player extends FlxSprite
     }
 	
 	public function shootCrossbow():Void {
-		if(this.parent.bolts.length < 3){
+		if (this.parent.bolts.length < 3) {
 			if(facingLeft){
 				var bolt:Bolt = new Bolt(this.x - width/4, this.y + height/2, -1, this.parent);
 				this.parent.addBolt(bolt);
@@ -132,7 +132,6 @@ class Player extends FlxSprite
 		
 	}
 	public function setGoodHitbox():Void {
-		
 		scale.set(.5, .5);
         setSize(width / 4, height / 3);
 		offset.set(width*1.5, height);

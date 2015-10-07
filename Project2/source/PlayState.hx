@@ -13,7 +13,9 @@ import flixel.tile.FlxTilemap;
 import flixel.FlxCamera;
 import flixel.util.FlxRect;
 import openfl.Assets;
+
 import source.ui.CutScene;
+import source.ui.HUD;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -23,6 +25,7 @@ class PlayState extends FlxState
 	var player:Player;
 	var tileMap:FlxTilemap;
 	var cs:CutScene;
+	public var hud:HUD;
 	public var coinMap:FlxTilemap;
 	public var bolts:Array<Bolt> = [];
 	public var coins:Array<Collectible> = [];
@@ -78,6 +81,10 @@ class PlayState extends FlxState
 		add( Joe );
 		add( Mike );
 		
+		var Heart = new FlxSprite();
+		Heart.makeGraphic( 32, 32, FlxColor.RED );
+		hud = new HUD( this, 3, Heart, 9999 );
+		
 		/* WILL'S CODE */
 		
 		add( new FlxText( 32, 32, 1000, "What the heck is going on" ) );
@@ -116,6 +123,7 @@ class PlayState extends FlxState
 	public function addBolt(B:Bolt):Void{
 		bolts.push(B);
 		add(B);
+		hud.damage( 1 );
 	}
 	
 	
@@ -142,8 +150,8 @@ class PlayState extends FlxState
 	public function checkCoins():Void{
 		var d:Array<Int> = [];
 		for (i in 0...coins.length){
-			if(FlxG.overlap(player, coins[i])){
-				player.score += coins[i].score;
+			if (FlxG.overlap(player, coins[i])) {
+				hud.AddScore( coins[i].score );
 				d.push(i);
 			}
 		}
