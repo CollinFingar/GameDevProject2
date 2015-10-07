@@ -119,7 +119,6 @@ class PlayState extends FlxState
 		checkWalkers();
 		
 		if ( FlxG.keys.justPressed.Q ) {
-			//cs.revive();
 			cs.change();
 		}
 		
@@ -130,7 +129,6 @@ class PlayState extends FlxState
 	public function addBolt(B:Bolt):Void{
 		bolts.push(B);
 		add(B);
-		hud.damage( 1 );
 	}
 	
 	

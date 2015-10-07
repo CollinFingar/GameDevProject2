@@ -34,6 +34,8 @@ class Player extends FlxSprite
 	var jumpAdjust:Float;
 	var jumpIncrease:Float;
 	var jumpAscend:Bool;
+	
+	var playerFalling:Bool;
     
     public function new(X:Float=0, Y:Float=0, Parent:PlayState) 
     {
@@ -41,6 +43,8 @@ class Player extends FlxSprite
 		
         drag.set(RUN_SPEED * 8, RUN_SPEED * 8);
         maxVelocity.set(RUN_SPEED * 2, RUN_SPEED * 6);
+		
+		playerFalling = false;
 		
         acceleration.y = 3200;
 		
@@ -87,9 +91,9 @@ class Player extends FlxSprite
 		//Set which animation to show
 		if ( velocity.y <= 0 && playerJumping ){
 			
-			setJumpUpAnimation();
 			
-		} else if ( velocity.y > 0 && playerJumping ){
+			
+		} else if ( velocity.y > 0 ){
 			
 			setFallAnimation();
 			
@@ -114,7 +118,7 @@ class Player extends FlxSprite
 		if ( velocity.y == 0 ) {
 			if ( jumpAscend ) { // hit her head
 				jumpCountDown = JUMP_FRAMES;
-			} else if ( playerJumping ) { // else
+			} else if ( playerJumping || playerFalling ) { // else
 				endJump();
 			}
 		}
@@ -129,15 +133,13 @@ class Player extends FlxSprite
 	public function jumpStart():Void {
 		if (!playerJumping && velocity.y == 0) {
 			
-			/* TEST CODE BEGIN */
-			parent.hud.heal( 1 );
-			/* TEST CODE END */
-			
 			jumpAdjust = 0.5 + Math.sqrt( Math.abs( cast(velocity.x,Float) ) ) / 100.0;
 			jumpVel = cast(JUMP_MIN, Float) * jumpAdjust;
 			jumpCountDown = 0;
 			velocity.y = -jumpVel;
 			playerJumping = true;
+			
+			setJumpUpAnimation();
 		}
 	}
 	
@@ -204,14 +206,13 @@ class Player extends FlxSprite
 	}
 	
 	public function setShootAnimation():Void {
-	if (this.parent.bolts.length < 2) {
-	loadGraphic("assets/images/damsel/princess_shoot1_307x343_16fps_strip5.png", true, 307, 343);
+		if (this.parent.bolts.length < 2) {
+			loadGraphic("assets/images/damsel/princess_shoot1_307x343_16fps_strip5.png", true, 307, 343);
 			animation.add("shoot", [0, 1, 2, 3, 4], 16, false);
 			animation.play("shoot", false);
 			setGoodHitbox();
 			justShotCrossbow = true;	
-	}	
-		
+		}
 	}
 	
 	public function setJumpUpAnimation():Void{
@@ -223,13 +224,16 @@ class Player extends FlxSprite
 		setGoodHitbox();
 	}
 	
-	public function setFallAnimation():Void{
-		loadGraphic("assets/images/damsel/princess_fallloop1_307x343_20fps_strip4.png", true, 307, 343);
-        animation.add("idle", [0, 1, 2, 3], 20, true);
-		animation.play("idle", false);
-		playerRunning = false;
-		//updateHitbox();
-		setGoodHitbox();
+	public function setFallAnimation():Void {
+		if ( !playerFalling ) {	
+			loadGraphic("assets/images/damsel/princess_fallloop1_307x343_20fps_strip4.png", true, 307, 343);
+			animation.add("idle", [0, 1, 2, 3], 20, true);
+			animation.play("idle", false);
+			playerRunning = false;
+			//updateHitbox();
+			setGoodHitbox();
+			playerFalling = true;
+		}
 	}
 	
 	public function setGoodHitbox():Void {
@@ -254,8 +258,9 @@ class Player extends FlxSprite
 		animation.add("idle", [0, 1, 2, 3, 4, 5, 6, 7], 8, true);
 		animation.play("idle", false);
 		playerRunning = false;
-		setGoodHitbox();
 		playerJumping = false;
+		playerFalling= false;
+		setGoodHitbox();
 	}
     
 }
