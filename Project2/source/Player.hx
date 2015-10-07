@@ -67,7 +67,7 @@ class Player extends FlxSprite
             acceleration.x = drag.x;
             flipX = true;
         }
-        if (FlxG.keys.anyPressed(["UP", "W"])) {
+        if (FlxG.keys.anyPressed(["UP", "W", "SPACE"])) {
 			
 			if ( playerJumping ) {
 				jumpMoar();

@@ -64,7 +64,7 @@ class PlayState extends FlxState
 		walkers.push(walker);
 		
 		var bat:Batneye;
-		add(bat = new Batneye(1500, 2800, this));
+		add(bat = new Batneye(1200, 2750, this));
 		batneyes.push(bat);
 		
 		add(player = new Player(1700, 1600, this));
@@ -124,6 +124,8 @@ class PlayState extends FlxState
 		checkCoins();
 		//check if walkers are colliding with ground
 		checkWalkers();
+		//check batneyes for colliding with walls, bolts, and players
+		checkBats();
 		
 		if ( FlxG.keys.justPressed.Q ) {
 			//cs.revive();
@@ -159,6 +161,16 @@ class PlayState extends FlxState
 					if(walkers[j].healthRemaining < 1){
 						remove(walkers[j]);
 						walkers.splice(j, 1);
+					}
+				}
+			}
+			for(j in 0...batneyes.length){
+				if(FlxG.overlap(bolts[i], batneyes[j])){
+					d[i] = true;
+					batneyes[j].healthRemaining -= 1;
+					if(batneyes[j].healthRemaining < 1){
+						remove(batneyes[j]);
+						batneyes.splice(j, 1);
 					}
 				}
 			}
@@ -201,12 +213,28 @@ class PlayState extends FlxState
 			if(FlxG.overlap(player, walkers[i])){
 				hud.damage(1);
 				if(walkers[i].x > player.x){
-					player.velocity.x = -1500; walkers[i].velocity.x = 1500;
+					player.velocity.x = -2500; walkers[i].velocity.x = 1500;
 				} else {
-					player.velocity.x = 1500; walkers[i].velocity.x = -1500;
+					player.velocity.x = 2500; walkers[i].velocity.x = -1500;
 				}
 			}
 			
+		}
+	}
+	
+	public function checkBats():Void {
+		for(i in 0...batneyes.length){
+			if(FlxG.collide(batneyes[i], tileMap)){
+				batneyes[i].goingUp = !batneyes[i].goingUp;
+			}
+			if(FlxG.overlap(player, batneyes[i])){
+				hud.damage(1);
+				if(batneyes[i].x > player.x){
+					player.velocity.x = -4500;
+				} else {
+					player.velocity.x = 4500;
+				}
+			}
 		}
 	}
 	
