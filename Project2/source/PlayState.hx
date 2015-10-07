@@ -1,5 +1,6 @@
 package;
 
+import enemies.Walker;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -22,14 +23,14 @@ import source.ui.HUD;
  */
 class PlayState extends FlxState
 {
-	var player:Player;
+	public var player:Player;
 	var tileMap:FlxTilemap;
 	var cs:CutScene;
 	public var hud:HUD;
 	public var coinMap:FlxTilemap;
 	public var bolts:Array<Bolt> = [];
 	public var coins:Array<Collectible> = [];
-	public var walkers:Array<Walker> = [];
+	public var walkers:Array<enemies.Walker> = [];
 	
 	
 	
@@ -56,8 +57,8 @@ class PlayState extends FlxState
 		coinMap.loadMap(coinData, mapTilePath);
 		placeCoins();
 		
-		var walker:Walker;
-		add(walker = new Walker(2500, 2500, this));
+		var walker:enemies.Walker;
+		add(walker = new enemies.Walker(2500, 2500, this));
 		walkers.push(walker);
 		
 		add(player = new Player(1700, 1600, this));
