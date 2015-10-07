@@ -1,0 +1,79 @@
+Characters:
+Licia
+Knight (To be named)
+NPC1: Guard on ground, unable to move due to injuries from Knight
+NPC2: New guard, first day on the job
+NPC3: Another Knight who failed at rescuing Licia
+
+Opening Cutscene
+<Knight> enters Princess Chamber
+Knight: Princess Licia, I've come to rescue you from this tower!
+Licia: Well, it's about time SOMEONE came. Who are you with? The Royal Army? 
+Knight: No, Princess. I came here on my own accord, so you would have my hand in marriage.
+Licia: Marriage? MARRIAGE? You do realize that we're going to have to fight our way out of this tower?
+Knight: That should be no problem at all! I fought my way up here for you, I can fight my way out!
+Licia: For ME? No. You fought your way up here so I would have to marry you. 
+Knight: Well, isn't that how it goes? The Knight climbs the tower. The Knight rescues the Princess. They escape and get married.
+Licia: You really expect me to marry some self-centered jerk who is only in this for himself? 
+Knight: Well, of course! That's how it goes!
+Licia: Well, okay then.
+<Licia> walks towards <Knight>, knocks him out, takes his stuff
+Licia: Ugh, men. They always think that just because they're saving Princesses, that they have to elope. They never think about how we feel.
+<Licia> pauses, game HUD pops up.
+Licia: WHATEVER. I'm out of this place.
+
+Level 1: Tower
+Boss Room:
+Licia: Time to escape before they find out what happened. I just need to keep moving to the west.
+
+Tower Descent:
+Licia: Great... Stairs.
+
+If Player talks to NPC1:
+NPC1: He was... too powerful...
+
+If Player talks to NPC2:
+NPC2: First day on the job! They said the new guards should be towards the top of the tower today, because they're trying something new. Who are you, the captain?
+
+
+Castle Foyer:
+Licia: Oh, WONDERFUL, the Drawbridge is closed. I'll need to find a way to get out of here.
+
+
+
+Level 2: Underground/Dungeon
+Stairs away from Foyer room:
+Licia: Hopefully they won't check down here. How heavily guarded would the underground be anyways?
+
+Dungeon:
+Licia: Great, the dungeon. Maybe I'll see some other jerks that would have tried to marry me.
+
+If Player talks to NPC3:
+NPC3: Oh, Princess Licia, is that you? I, Sir Reginald was captured trying to rescue you! If you let me out of here, we can escape together and get married!
+Licia: ...
+
+Room With Lava:
+Licia: It's so hot in here... I need to keep moving.
+
+Underneath the Moat:
+Licia: Almost out of here, I really need some fresh air.
+
+Entryway with Ladder:
+Licia: I can feel a breeze! FINALLY!
+
+
+Level 3: Field
+Castle Entrance/Moat Area:
+Licia: I'm almost free. This should be easy enough.
+Guard: There she is! Get her!
+Licia: ...Great. Just Great.
+
+Long Jump Room:
+Licia: This armor is really heavy! Must... keep... going...
+
+Room with Weaker enemies:
+Licia: Did I lose them?
+
+Introductory Room:
+Licia: Yes! It's all flat fields from here! I can certainly outrun these jerks. Freedom!
+

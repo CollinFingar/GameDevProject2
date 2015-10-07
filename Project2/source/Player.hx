@@ -22,6 +22,8 @@ class Player extends FlxSprite
 	
     var parent:PlayState;
     
+	var justShotCrossbow:Bool = false;
+	
     var playerJumping:Bool = false;
 	var playerRunning:Bool = true;
 	var facingLeft:Bool = true;
@@ -39,7 +41,8 @@ class Player extends FlxSprite
 		
         drag.set(RUN_SPEED * 8, RUN_SPEED * 8);
         maxVelocity.set(RUN_SPEED * 2, RUN_SPEED * 6);
-        acceleration.y = 3000;
+		
+        acceleration.y = 3200;
 		
 		jumpCountDown = 0;
 		jumpVel = 0;
@@ -74,16 +77,21 @@ class Player extends FlxSprite
 			
         }
 		
-		if(FlxG.keys.anyJustPressed(["X"])){
+		if (FlxG.keys.anyJustPressed(["X"])) {
+			if (!playerRunning) {
+				setShootAnimation();
+			}
 			shootCrossbow();
 		}
 		
 		//Set which animation to show
 		if ( velocity.y <= 0 && playerJumping ){
 			
+			setJumpUpAnimation();
 			
 		} else if ( velocity.y > 0 && playerJumping ){
 			
+			setFallAnimation();
 			
 		} else if ( velocity.x > 0 || velocity.x < 0 ) {
 			
@@ -95,6 +103,9 @@ class Player extends FlxSprite
 			
 		}
 		
+		if(justShotCrossbow){
+			finishCrossbowAnimation();
+		}
 		
         super.update();
     }
@@ -103,8 +114,8 @@ class Player extends FlxSprite
 		if ( velocity.y == 0 ) {
 			if ( jumpAscend ) { // hit her head
 				jumpCountDown = JUMP_FRAMES;
-			} else { // else
-				playerJumping = false;
+			} else if ( playerJumping ) { // else
+				endJump();
 			}
 		}
     }
@@ -131,7 +142,8 @@ class Player extends FlxSprite
 	}
 	
 	public function shootCrossbow():Void {
-		if (this.parent.bolts.length < 3) {
+		if (this.parent.bolts.length < 2) {
+
 			if(facingLeft){
 				var bolt:Bolt = new Bolt(this.x - width/4, this.y + height/2, -1, this.parent);
 				this.parent.addBolt(bolt);
@@ -145,6 +157,23 @@ class Player extends FlxSprite
 		super.destroy();
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public function setRunAnimation():Void {
 		if ( !playerRunning && !playerJumping ) {
 			
@@ -157,8 +186,8 @@ class Player extends FlxSprite
 			setGoodHitbox();
 			
 		}
-		
 	}
+	
 	public function setIdleAnimation():Void {
 		if ( playerRunning && !playerJumping ) {
 			
@@ -173,10 +202,60 @@ class Player extends FlxSprite
 		}
 		
 	}
+	
+	public function setShootAnimation():Void {
+	if (this.parent.bolts.length < 2) {
+	loadGraphic("assets/images/damsel/princess_shoot1_307x343_16fps_strip5.png", true, 307, 343);
+			animation.add("shoot", [0, 1, 2, 3, 4], 16, false);
+			animation.play("shoot", false);
+			setGoodHitbox();
+			justShotCrossbow = true;	
+	}	
+		
+	}
+	
+	public function setJumpUpAnimation():Void{
+		loadGraphic("assets/images/damsel/princess_jump1_307x343_12fps_strip3.png", true, 307, 343);
+        animation.add("idle", [0, 1, 2], 12, false);
+		animation.play("idle", false);
+		playerRunning = false;
+		//updateHitbox();
+		setGoodHitbox();
+	}
+	
+	public function setFallAnimation():Void{
+		loadGraphic("assets/images/damsel/princess_fallloop1_307x343_20fps_strip4.png", true, 307, 343);
+        animation.add("idle", [0, 1, 2, 3], 20, true);
+		animation.play("idle", false);
+		playerRunning = false;
+		//updateHitbox();
+		setGoodHitbox();
+	}
+	
 	public function setGoodHitbox():Void {
 		scale.set(.5, .5);
         setSize(width / 4, height / 3);
 		offset.set(width*1.5, height);
+	}
+	
+	public function finishCrossbowAnimation():Void{
+		if(animation.finished){
+			loadGraphic("assets/images/damsel/princess_blink1_307x343_8fps_strip8.png", true, 307, 343);
+			animation.add("idle", [0, 1, 2, 3, 4, 5, 6, 7], 8, true);
+			animation.play("idle", false);
+			playerRunning = false;
+			setGoodHitbox();
+			justShotCrossbow = false;
+		}
+	}
+	
+	public function endJump():Void{
+		loadGraphic("assets/images/damsel/princess_blink1_307x343_8fps_strip8.png", true, 307, 343);
+		animation.add("idle", [0, 1, 2, 3, 4, 5, 6, 7], 8, true);
+		animation.play("idle", false);
+		playerRunning = false;
+		setGoodHitbox();
+		playerJumping = false;
 	}
     
 }
