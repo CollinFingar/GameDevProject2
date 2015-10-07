@@ -62,6 +62,10 @@ class PlayState extends FlxState
 		
 		/* WILL'S CODE */
 		
+		var Heart = new FlxSprite();
+		Heart.makeGraphic( 32, 32, FlxColor.RED );
+		hud = new HUD( this, 3, Heart, 9999 );
+		
 		var Joe = new FlxSprite( 0, 0 );
 		var Mike = new FlxSprite( 0, 0 );
 		
@@ -81,9 +85,7 @@ class PlayState extends FlxState
 		add( Joe );
 		add( Mike );
 		
-		var Heart = new FlxSprite();
-		Heart.makeGraphic( 32, 32, FlxColor.RED );
-		hud = new HUD( this, 3, Heart, 9999 );
+		//cs.kill();
 		
 		/* WILL'S CODE */
 		
@@ -105,14 +107,16 @@ class PlayState extends FlxState
 	override public function update():Void
 	{
 		
-		if(FlxG.collide(tileMap, player)){
+		if ( FlxG.collide(tileMap, player) ) {
 			player.jumpReset();
 		}
+		
 		checkBolts();
 		checkCoins();
 		FlxG.collide(walker, tileMap);
 		
 		if ( FlxG.keys.justPressed.Q ) {
+			//cs.revive();
 			cs.change();
 		}
 		
