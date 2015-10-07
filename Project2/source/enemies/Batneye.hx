@@ -14,16 +14,20 @@ import flixel.FlxObject;
  */
 class Batneye extends FlxSprite
 {
-    public static inline var MOVE_SPEED:Int =  200;
+    public static inline var MOVE_SPEED:Int =  70;
     var parent:PlayState;
 	var facingLeft:Bool = true;
-	var goingUp:Bool = true;
+	public var goingUp:Bool = true;
 	public var healthRemaining:Int = 2;
 	
 	var maxHeight:Float;
 	var minHeight:Float;
+	var shootRate:Int;
+	var shootIndex:Int;
+	
+	var changed:Bool = false;
     
-    public function new(X:Float=0, Y:Float=0, Parent:PlayState) 
+    public function new(X:Float=0, Y:Float=0, SR:Int = 70, Parent:PlayState) 
     {
         super(X, Y);
         makeGraphic(120, 70, FlxColor.CORAL);
@@ -33,8 +37,10 @@ class Batneye extends FlxSprite
         maxVelocity.set(MOVE_SPEED * 1, MOVE_SPEED * 3);
 		
         parent = Parent;
-		maxHeight = Y +600;
+		maxHeight = Y +300;
 		minHeight = Y;
+		shootRate = SR;
+		shootIndex = 0;
 		
 		//scale.set(.5, .5);
         //setSize(width / 4, height / 3);
@@ -59,6 +65,17 @@ class Batneye extends FlxSprite
 			velocity.y = -drag.y;
 			if(this.y < minHeight){
 				goingUp = true;
+			}
+		}
+		
+		shootIndex += 1;
+		if(shootIndex % shootRate == 0){
+			if(changed){
+				changed = !changed;
+				makeGraphic(120, 70, FlxColor.CORAL);
+			} else {
+				changed = !changed;
+				makeGraphic(120, 70, FlxColor.FOREST_GREEN);
 			}
 		}
 		
