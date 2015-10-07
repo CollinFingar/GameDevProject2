@@ -114,6 +114,9 @@ class PlayState extends FlxState
 	 */
 	override public function update():Void
 	{
+		if ( FlxG.keys.justPressed.ESCAPE ) {
+			FlxG.switchState(new MenuState());
+		}
 		if ( FlxG.collide(tileMap, player) ) {
 			player.jumpReset();
 		}

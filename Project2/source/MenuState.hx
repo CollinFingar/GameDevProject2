@@ -9,17 +9,22 @@ import flixel.util.FlxMath;
 import flixel.util.FlxColor;
 import source.ui.CutScene;
 
+import flash.system.System;
+
 /**
  * A FlxState which can be used for the game's menu.
  */
 class MenuState extends FlxState
 {
-	public static inline var OPTIONS:Int = 2;
+	public static inline var OPTIONS:Int = 3;
 	
+	var title:FlxText;
 	var opt0txt:FlxText;
 	var opt1txt:FlxText;
+	var opt2txt:FlxText;
 	
-	var pointer:FlxSprite;
+	var pointer1:FlxSprite;
+	var pointer2:FlxSprite;
 	var option:Int = 0;
 	
 	/**
@@ -27,32 +32,30 @@ class MenuState extends FlxState
 	 */
 	override public function create():Void
 	{
-		FlxG.state.bgColor = FlxColor.BLUE;
+		FlxG.state.bgColor = 0xFFF0F0F0;
 		
-		opt0txt = new FlxText(FlxG.width * 2 / 3, FlxG.height * 2 / 3, 150, "Play the Game");
-		opt1txt = new FlxText(FlxG.width * 2 / 3, FlxG.height * 2 / 3 + 30, 150, "Cheat Sheet");
+		title = new FlxText(0, FlxG.height / 3, FlxG.width, "A Princess Game" );
 		
-		opt0txt.size = opt1txt.size = 16;
+		opt0txt = new FlxText(FlxG.width / 2 - 130, FlxG.height / 2 + 0, 260, "Play");
+		opt1txt = new FlxText(FlxG.width / 2 - 130, FlxG.height / 2 + 96, 260, "Learn");
+		opt2txt = new FlxText(FlxG.width / 2 - 130, FlxG.height / 2 + 192, 260, "Quit");
 		
+		title.size = 128;
+		title.alignment = "center";
+		title.color = FlxColor.BLACK;
+		opt0txt.size = 48;
+		opt0txt.alignment = "center";
+		opt1txt.size = 48;
+		opt1txt.alignment = "center";
+		opt2txt.size = 48;
+		opt2txt.alignment = "center";
+		
+		add( title );
 		add(opt0txt);
 		add(opt1txt);
-		
-		pointer = new FlxSprite();
-		pointer.makeGraphic(10, 10, FlxColor.YELLOW);
-		pointer.x = opt0txt.x - pointer.width - 10;
-		
-		add(pointer);
+		add(opt2txt);
 		
 		super.create();
-	}
-	
-	/**
-	 * Function that is called when this state is destroyed - you might want to 
-	 * consider setting all objects this state uses to null to help garbage collection.
-	 */
-	override public function destroy():Void
-	{
-		super.destroy();
 	}
 
 	/**
@@ -63,9 +66,17 @@ class MenuState extends FlxState
 				//set y position of cursor based on option choice
 		switch(option) {
 		case 0:
-			pointer.y = opt0txt.y;
+			opt0txt.color = FlxColor.BLACK;
+			opt1txt.color = FlxColor.WHITE;
+			opt2txt.color = FlxColor.WHITE;
 		case 1:
-			pointer.y = opt1txt.y;
+			opt0txt.color = FlxColor.WHITE;
+			opt1txt.color = FlxColor.BLACK;
+			opt2txt.color = FlxColor.WHITE;
+		case 2:
+			opt0txt.color = FlxColor.WHITE;
+			opt1txt.color = FlxColor.WHITE;
+			opt2txt.color = FlxColor.BLACK;
 		}
 		
 		//listen for keys
@@ -83,6 +94,8 @@ class MenuState extends FlxState
 				FlxG.switchState(new PlayState());
 			case 1:
 				FlxG.openURL("http://haxeflixel.com/documentation/cheat-sheet/");
+			case 2:
+				System.exit(0);
 			}
 		}
 		
