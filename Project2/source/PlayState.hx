@@ -45,7 +45,7 @@ class PlayState extends FlxState
 	{
 		super.create();
 		
-		FlxG.state.bgColor = FlxColor.AZURE;
+		FlxG.state.bgColor = FlxColor.GRAY;
 		FlxG.worldBounds.set(0, 0, 50 * 64, 50 * 64);
 		tileMap = new FlxTilemap();
         var mapData:String = Assets.getText("assets/data/testWorld.csv");
