@@ -7,6 +7,7 @@ import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
 import flixel.util.FlxColor;
+import source.ui.CutScene;
 
 /**
  * A FlxState which can be used for the game's menu.
@@ -20,21 +21,28 @@ class MenuState extends FlxState
 	
 	var pointer:FlxSprite;
 	var option:Int = 0;
+	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
 	override public function create():Void
 	{
 		FlxG.state.bgColor = FlxColor.BLUE;
+		
 		opt0txt = new FlxText(FlxG.width * 2 / 3, FlxG.height * 2 / 3, 150, "Play the Game");
 		opt1txt = new FlxText(FlxG.width * 2 / 3, FlxG.height * 2 / 3 + 30, 150, "Cheat Sheet");
+		
 		opt0txt.size = opt1txt.size = 16;
+		
 		add(opt0txt);
 		add(opt1txt);
+		
 		pointer = new FlxSprite();
 		pointer.makeGraphic(10, 10, FlxColor.YELLOW);
 		pointer.x = opt0txt.x - pointer.width - 10;
+		
 		add(pointer);
+		
 		super.create();
 	}
 	
@@ -68,7 +76,7 @@ class MenuState extends FlxState
 		if (FlxG.keys.justPressed.DOWN) {
 			option = (option + 1 + OPTIONS) % OPTIONS;
 		}
-		if (FlxG.keys.anyJustPressed(["SPACE", "ENTER"])) {
+		if (FlxG.keys.anyJustPressed(["ENTER"])) {
 			switch(option) {
 			case 0:
 				FlxG.state.bgColor = FlxColor.BLACK;
@@ -77,6 +85,7 @@ class MenuState extends FlxState
 				FlxG.openURL("http://haxeflixel.com/documentation/cheat-sheet/");
 			}
 		}
+		
 		super.update();
 	}	
 }

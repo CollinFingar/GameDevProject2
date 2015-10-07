@@ -28,12 +28,10 @@ class Collectible extends FlxSprite
     }
     
     public override function update():Void {
-
         super.update();
     }
 
-	override public function destroy():Void
-	{
+	override public function destroy():Void {
 		super.destroy();
 	}
     
