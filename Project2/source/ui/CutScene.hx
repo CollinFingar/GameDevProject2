@@ -46,6 +46,7 @@ enum CUTSCENE_STATE {
 
 class CutScene extends FlxSubState {
 	
+	var showing:Bool;
 	var state:CUTSCENE_STATE;
 	var upper:FlxSprite;
 	var lower:FlxSprite;
@@ -121,6 +122,7 @@ class CutScene extends FlxSubState {
 		par.add( this );
 		
 		hide_dialogue();
+		hide();
 		
 	}
 	public function add_character( name:String, img:FlxSprite ):Void {
@@ -180,6 +182,10 @@ class CutScene extends FlxSubState {
 	}
 	
 	public function show():Void {
+		if ( !showing ) {
+			showing = true;
+			revive();
+		}
 		switch ( state ) {
 			case CUTSCENE_CLOSED | CUTSCENE_CLOSING:
 				state = CUTSCENE_OPENING;
@@ -187,6 +193,10 @@ class CutScene extends FlxSubState {
 		}
 	}
 	public function hide():Void {
+		if ( showing ) {
+			showing = false;
+			kill();
+		}
 		switch ( state ) {
 			case CUTSCENE_OPENED | CUTSCENE_OPENING:
 				state = CUTSCENE_CLOSING;
