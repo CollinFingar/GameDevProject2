@@ -109,6 +109,23 @@ class Player extends FlxSprite
 		super.destroy();
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public function setRunAnimation():Void {
 		if(!playerRunning && !playerJumping){
 			loadGraphic("assets/images/damsel/princess_run1_307x343_18fps_strip12.png", true, 307, 343);

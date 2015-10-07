@@ -29,9 +29,10 @@ class PlayState extends FlxState
 	public var coinMap:FlxTilemap;
 	public var bolts:Array<Bolt> = [];
 	public var coins:Array<Collectible> = [];
+	public var walkers:Array<Walker> = [];
 	
 	
-	var walker:Walker;
+	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -55,7 +56,9 @@ class PlayState extends FlxState
 		coinMap.loadMap(coinData, mapTilePath);
 		placeCoins();
 		
+		var walker:Walker;
 		add(walker = new Walker(2500, 2500, this));
+		walkers.push(walker);
 		
 		add(player = new Player(1700, 1600, this));
 		FlxG.camera.follow(player, FlxCamera.STYLE_PLATFORMER, 1);
@@ -104,13 +107,16 @@ class PlayState extends FlxState
 	 */
 	override public function update():Void
 	{
-		
+		//Check if player lands after jumping
 		if(FlxG.collide(tileMap, player)){
 			player.jumpReset();
 		}
+		//check if bolts need to reset
 		checkBolts();
+		//check if coins are collected
 		checkCoins();
-		FlxG.collide(walker, tileMap);
+		//check if walkers are colliding with ground
+		checkWalkers();
 		
 		if ( FlxG.keys.justPressed.Q ) {
 			cs.change();
@@ -137,11 +143,15 @@ class PlayState extends FlxState
 			
 			else if (b < (player.x - FlxG.camera.width/2) || b > (player.x + FlxG.camera.width/2)){
 				d[i] = true;
-			} else if(FlxG.overlap(bolts[i], walker)){
-				d[i] = true;
-				walker.healthRemaining -= 1;
-				if(walker.healthRemaining < 1){
-					remove(walker);
+			} 
+			for(j in 0...walkers.length){
+				if(FlxG.overlap(bolts[i], walkers[j])){
+					d[i] = true;
+					walkers[j].healthRemaining -= 1;
+					if(walkers[j].healthRemaining < 1){
+						remove(walkers[j]);
+						walkers.splice(j, 1);
+					}
 				}
 			}
 		}
@@ -174,6 +184,21 @@ class PlayState extends FlxState
 			
 			coins.push(c);
 			add(c);
+		}
+	}
+	
+	public function checkWalkers():Void {
+		for(i in 0...walkers.length){
+			FlxG.collide(walkers[i], tileMap);
+			if(FlxG.collide(player, walkers[i])){
+				hud.damage(1);
+				if(walkers[i].x > player.x){
+					player.velocity.x = -1500; walkers[i].velocity.x = 1500;
+				} else {
+					player.velocity.x = 1500; walkers[i].velocity.x = -1500;
+				}
+			}
+			
 		}
 	}
 	
