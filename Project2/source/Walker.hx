@@ -16,9 +16,8 @@ class Walker extends FlxSprite
 {
     public static inline var RUN_SPEED:Int =  200;
     var parent:PlayState;
-    
 	var facingLeft:Bool = true;
-	public var score:Int = 0;
+	public var healthRemaining:Int = 3;
     
     public function new(X:Float=0, Y:Float=0, Parent:PlayState) 
     {

@@ -89,7 +89,7 @@ class PlayState extends FlxState
 	
 	
 	public function checkBolts():Void{
-		var d:Array<Bool> = [false, false, false];
+		var d:Array<Bool> = [false, false];
 		for (i in 0...bolts.length) {
 			var b:Float = bolts[i].x;
 			if(FlxG.collide(tileMap, bolts[i])){
@@ -98,6 +98,12 @@ class PlayState extends FlxState
 			
 			else if (b < (player.x - FlxG.camera.width/2) || b > (player.x + FlxG.camera.width/2)){
 				d[i] = true;
+			} else if(FlxG.overlap(bolts[i], walker)){
+				d[i] = true;
+				walker.healthRemaining -= 1;
+				if(walker.healthRemaining < 1){
+					remove(walker);
+				}
 			}
 		}
 		for(i in 0...d.length){
