@@ -116,6 +116,9 @@ class PlayState extends FlxState
 	 */
 	override public function update():Void
 	{
+		if ( FlxG.keys.justPressed.ESCAPE ) {
+			FlxG.switchState(new MenuState());
+		}
 		if ( FlxG.collide(tileMap, player) ) {
 			player.jumpReset();
 		}
@@ -132,7 +135,6 @@ class PlayState extends FlxState
 		checkBatShots();
 		
 		if ( FlxG.keys.justPressed.Q ) {
-			//cs.revive();
 			cs.change();
 		}
 		
@@ -143,7 +145,6 @@ class PlayState extends FlxState
 	public function addBolt(B:Bolt):Void{
 		bolts.push(B);
 		add(B);
-		hud.damage( 1 );
 	}
 	
 	

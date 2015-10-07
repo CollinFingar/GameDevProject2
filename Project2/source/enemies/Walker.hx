@@ -29,6 +29,7 @@ class Walker extends FlxSprite
         maxVelocity.set(RUN_SPEED * 1, RUN_SPEED * 3);
         acceleration.y = 3000;
         parent = Parent;
+		
 		//scale.set(.5, .5);
         //setSize(width / 4, height / 3);
 		//offset.set(width*1.5, height);
