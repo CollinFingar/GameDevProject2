@@ -84,8 +84,10 @@ class PlayState extends FlxState
 		//add(bat = new Batneye(1200, 2750, this));
 		//batneyes.push(bat);
 		
-		add(player = new Player(2000, 500, this));
-		FlxG.camera.follow(player, FlxCamera.STYLE_PLATFORMER, 1);
+		add(player = new Player(2000, 300, this));
+		//var pnt:FlxPoint = new FlxPoint(-1000, 1000);
+		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
+		FlxG.camera.zoom = 1;
 		
 		/* WILL'S CODE */
 		
