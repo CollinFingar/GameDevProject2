@@ -46,25 +46,34 @@ class PlayState extends FlxState
 	{
 		super.create();
 		
-		FlxG.state.bgColor = FlxColor.CHARCOAL;
-		FlxG.worldBounds.set(0, 0, 50 * 64, 50 * 64);
+		FlxG.state.bgColor = FlxColor.CYAN;
+		FlxG.worldBounds.set(0, 0, 70 * 64, 140 * 64);
 		tileMap = new FlxTilemap();
-        var mapData:String = Assets.getText("assets/data/testWorld.csv");
-        var mapTilePath:String = "assets/images/map/tiles2.png";
-        tileMap.loadMap(mapData, mapTilePath);
-		tileMap.setTileProperties(0, FlxObject.NONE);
+        var mapData:String = Assets.getText("assets/data/CastleMap/CastleMap_Walls.csv");
+        var mapTilePath:String = "assets/images/tiles1.png";
+		
+		var background = new FlxTilemap();
+		var backgroundData:String = Assets.getText("assets/data/CastleMap/CastleMap_Background.csv");
+		background.loadMap(backgroundData, mapTilePath, 64, 64);
+		background.setTileProperties(19, FlxObject.NONE);
+		background.setTileProperties(4, FlxObject.NONE);
+		add(background);
+		
+        tileMap.loadMap(mapData, mapTilePath, 64, 64);
+		tileMap.setTileProperties(19, FlxObject.NONE);
 		tileMap.setTileProperties(1, FlxObject.ANY);
 		tileMap.immovable = true;
         add(tileMap);
+		
 
 		coinMap = new FlxTilemap();
-		var coinData:String = Assets.getText("assets/data/collectibleLocations.csv");
-		coinMap.loadMap(coinData, mapTilePath);
+		var coinData:String = Assets.getText("assets/data/CastleMap/CastleMap_Coins.csv");
+		coinMap.loadMap(coinData, mapTilePath, 64, 64);
 		placeCoins();
 		
 		enemyMap = new FlxTilemap();
-		var enemyData:String = Assets.getText("assets/data/enemyLocations.csv");
-		enemyMap.loadMap(enemyData, mapTilePath);
+		var enemyData:String = Assets.getText("assets/data/CastleMap/CastleMap_Enemies.csv");
+		enemyMap.loadMap(enemyData, mapTilePath, 64, 64);
 		placeEnemies();
 		
 		//var walker:enemies.Walker;
@@ -75,7 +84,7 @@ class PlayState extends FlxState
 		//add(bat = new Batneye(1200, 2750, this));
 		//batneyes.push(bat);
 		
-		add(player = new Player(1700, 1600, this));
+		add(player = new Player(2000, 500, this));
 		FlxG.camera.follow(player, FlxCamera.STYLE_PLATFORMER, 1);
 		
 		/* WILL'S CODE */
@@ -276,7 +285,7 @@ class PlayState extends FlxState
 	
 		
 	public function placeCoins():Void{
-		var coinCoords:Array<FlxPoint> = coinMap.getTileCoords(2, true);
+		var coinCoords:Array<FlxPoint> = coinMap.getTileCoords(1, true);
 		for(i in 0...coinCoords.length){
 			var c:Collectible = new Collectible(coinCoords[i].x, coinCoords[i].y, this);
 			
@@ -286,13 +295,13 @@ class PlayState extends FlxState
 	}
 	
 	public function placeEnemies():Void{
-		var walkerCoords:Array<FlxPoint> = enemyMap.getTileCoords(3, true);
+		var walkerCoords:Array<FlxPoint> = enemyMap.getTileCoords(75, true);
 		for(i in 0...walkerCoords.length){
 			var w:Walker = new Walker(walkerCoords[i].x, walkerCoords[i].y-50, this);
 			walkers.push(w);
 			add(w);
 		}
-		var batCoords:Array<FlxPoint> = enemyMap.getTileCoords(4, true);
+		var batCoords:Array<FlxPoint> = enemyMap.getTileCoords(76, true);
 		for(i in 0...batCoords.length){
 			var b:Batneye = new Batneye(batCoords[i].x, batCoords[i].y, 70, this);
 			batneyes.push(b);

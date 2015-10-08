@@ -253,7 +253,7 @@ class Player extends FlxSprite
 		}
 	}
 	
-	public function endJump():Void{
+	public function endJump():Void {
 		loadGraphic("assets/images/damsel/princess_blink1_307x343_8fps_strip8.png", true, 307, 343);
 		animation.add("idle", [0, 1, 2, 3, 4, 5, 6, 7], 8, true);
 		animation.play("idle", false);
