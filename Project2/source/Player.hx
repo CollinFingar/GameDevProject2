@@ -237,9 +237,9 @@ class Player extends FlxSprite
 	}
 	
 	public function setGoodHitbox():Void {
-		//scale.set(.5, .5);
-        setSize(width / 2, 2*height / 3);
-		offset.set(width/2, height/3.5);
+		scale.set(.75, .75);
+        setSize(width / 3, height / 2);
+		offset.set(width/3, height/2);
 	}
 	
 	public function finishCrossbowAnimation():Void{
