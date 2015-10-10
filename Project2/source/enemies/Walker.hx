@@ -30,9 +30,13 @@ class Walker extends FlxSprite
         acceleration.y = 3000;
         parent = Parent;
 		
-		//scale.set(.5, .5);
-        //setSize(width / 4, height / 3);
-		//offset.set(width*1.5, height);
+		loadGraphic("assets/images/enemies/skelly_walk1_340x343_12fps_strip7.png", true, 340, 343);
+		animation.add("idle", [0, 1, 2, 3, 4, 5, 6], 12, true);
+		animation.play("idle", false);
+		
+		scale.set(.75, .75);
+        setSize(width / 2, height / 1.75);
+		offset.set(width/2.75, height/3);
         //updateHitbox();
     }
     
@@ -41,11 +45,13 @@ class Walker extends FlxSprite
 		if(facingLeft && velocity.x ==0){
 			facingLeft = false;
 			acceleration.x = -drag.x;
+			flipX = true;
 		} else if(facingLeft){
 			acceleration.x = drag.x;
 		} else if(!facingLeft && velocity.x ==0){
 			facingLeft = true;
 			acceleration.x = drag.x;
+			flipX = false;
 		} else {
 			acceleration.x = -drag.x;
 		}

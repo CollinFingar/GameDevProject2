@@ -61,6 +61,7 @@ class PlayState extends FlxState
 		
         tileMap.loadMap(mapData, mapTilePath, 64, 64);
 		tileMap.setTileProperties(19, FlxObject.NONE);
+		tileMap.setTileProperties(4, FlxObject.NONE);
 		tileMap.setTileProperties(18, FlxObject.ANY);
 		tileMap.immovable = true;
         add(tileMap);
@@ -94,7 +95,7 @@ class PlayState extends FlxState
 		var Heart = new FlxSprite();
 		Heart.makeGraphic( 32, 32, FlxColor.RED );
 		hud = new HUD( this, 3, Heart, 9999 );
-		
+		*/
 		var Joe = new FlxSprite( 0, 0 );
 		var Mike = new FlxSprite( 0, 0 );
 		
@@ -303,12 +304,12 @@ class PlayState extends FlxState
 			walkers.push(w);
 			add(w);
 		}
-		//var batCoords:Array<FlxPoint> = enemyMap.getTileCoords(34, true);
-		//for(i in 0...batCoords.length){
-			//var b:Batneye = new Batneye(batCoords[i].x, batCoords[i].y, 70, this);
-			//batneyes.push(b);
-			//add(b);
-		//}
+		var batCoords:Array<FlxPoint> = enemyMap.getTileCoords(34, true);
+		for(i in 0...batCoords.length){
+			var b:Batneye = new Batneye(batCoords[i].x, batCoords[i].y, 70, this);
+			batneyes.push(b);
+			add(b);
+		}
 		//var walkerCoords:Array<FlxPoint> = enemyMap.getTileCoords(33, true);
 		//for(i in 0...coinCoords.length){
 			//var w:Walker = new Walker(walkerCoords[i].x, walkerCoords[i].y, this);

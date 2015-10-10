@@ -14,7 +14,7 @@ import flixel.FlxObject;
  */
 class Player extends FlxSprite
 {
-    public static inline var RUN_SPEED:Int =  200;
+    public static inline var RUN_SPEED:Int =  300;
 	public static inline var JUMP_MIN:Int = 1500;
 	public static inline var JUMP_MAX:Int = 2000;
 	public static inline var JUMP_FRAMES:Int = 10;
@@ -23,6 +23,7 @@ class Player extends FlxSprite
     var parent:PlayState;
     
 	var justShotCrossbow:Bool = false;
+	var justSword:Bool = false;
 	
     var playerJumping:Bool = false;
 	var playerRunning:Bool = true;
@@ -86,6 +87,9 @@ class Player extends FlxSprite
 				setShootAnimation();
 			}
 			shootCrossbow();
+		} else if(FlxG.keys.anyJustPressed(["Z"])){
+			setSwordAnimation();
+			
 		}
 		
 		//Set which animation to show
@@ -109,6 +113,9 @@ class Player extends FlxSprite
 		
 		if(justShotCrossbow){
 			finishCrossbowAnimation();
+		}
+		if(justSword){
+			finishSwordAnimation();
 		}
 		
         super.update();
@@ -215,6 +222,16 @@ class Player extends FlxSprite
 		}
 	}
 	
+	public function setSwordAnimation():Void {
+		if (this.parent.bolts.length < 2) {
+			loadGraphic("assets/images/damsel/princess_attack1_307x343_20fps_strip7.png", true, 307, 343);
+			animation.add("swing", [0, 1, 2, 3, 4,5,6], 20, false);
+			animation.play("swing", false);
+			setGoodHitbox();
+			justSword = true;	
+		}
+	}
+	
 	public function setJumpUpAnimation():Void{
 		loadGraphic("assets/images/damsel/princess_jump1_307x343_12fps_strip3.png", true, 307, 343);
         animation.add("idle", [0, 1, 2], 12, false);
@@ -238,8 +255,8 @@ class Player extends FlxSprite
 	
 	public function setGoodHitbox():Void {
 		scale.set(.75, .75);
-        setSize(width / 3, height / 2);
-		offset.set(width/3, height/2);
+        setSize(width / 2.5, height / 1.75);
+		offset.set(width/1.9, height/3);
 	}
 	
 	public function finishCrossbowAnimation():Void{
@@ -253,11 +270,22 @@ class Player extends FlxSprite
 		}
 	}
 	
+	public function finishSwordAnimation():Void{
+		if(animation.finished){
+			loadGraphic("assets/images/damsel/princess_blink1_307x343_8fps_strip8.png", true, 307, 343);
+			animation.add("idle", [0, 1, 2, 3, 4, 5, 6, 7], 8, true);
+			animation.play("idle", false);
+			playerRunning = false;
+			setGoodHitbox();
+			justSword = false;
+		}
+	}
+	
 	public function endJump():Void {
 		loadGraphic("assets/images/damsel/princess_blink1_307x343_8fps_strip8.png", true, 307, 343);
 		animation.add("idle", [0, 1, 2, 3, 4, 5, 6, 7], 8, true);
 		animation.play("idle", false);
-		playerRunning = false;
+		//playerRunning = false;
 		playerJumping = false;
 		playerFalling= false;
 		setGoodHitbox();

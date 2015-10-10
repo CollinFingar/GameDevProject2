@@ -30,7 +30,7 @@ class Batneye extends FlxSprite
     public function new(X:Float=0, Y:Float=0, SR:Int = 70, Parent:PlayState) 
     {
         super(X, Y);
-        makeGraphic(120, 70, FlxColor.CORAL);
+        //makeGraphic(120, 70, FlxColor.CORAL);
 		
 		
         drag.set(MOVE_SPEED * 3, MOVE_SPEED * 3);
@@ -41,6 +41,15 @@ class Batneye extends FlxSprite
 		minHeight = Y;
 		shootRate = SR;
 		shootIndex = 0;
+		
+		
+		loadGraphic("assets/images/enemies/bat_idle1_307x266_14fps_strip5.png", true, 307, 266);
+		animation.add("idle", [0, 1, 2, 3, 4], 14, true);
+		animation.play("idle", false);
+		
+		scale.set(.75, .75);
+        setSize(width / 2, height / 1.75);
+		offset.set(width/2.75, height/3);
 		
 		//scale.set(.5, .5);
         //setSize(width / 4, height / 3);
@@ -72,11 +81,11 @@ class Batneye extends FlxSprite
 		if(shootIndex % shootRate == 0){
 			if(changed){
 				changed = !changed;
-				makeGraphic(120, 70, FlxColor.CORAL);
+				//makeGraphic(120, 70, FlxColor.CORAL);
 				shoot();
 			} else {
 				changed = !changed;
-				makeGraphic(120, 70, FlxColor.FOREST_GREEN);
+				//makeGraphic(120, 70, FlxColor.FOREST_GREEN);
 				shoot();
 			}
 		}
