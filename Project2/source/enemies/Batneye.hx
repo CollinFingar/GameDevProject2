@@ -60,9 +60,11 @@ class Batneye extends FlxSprite
     public override function update():Void {
         velocity.y = 0;
 		
-		if(this.parent.player.x < this.x){
+		if (this.parent.player.x < this.x) {
+			flipX = false;	
 			facingLeft = true;
 		} else {
+			flipX = true;
 			facingLeft = false;
 		}
 		if(goingUp){

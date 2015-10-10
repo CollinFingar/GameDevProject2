@@ -1,6 +1,7 @@
 package;
 
 import enemies.Batneye;
+import enemies.ShieldGuy;
 import enemies.Walker;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -35,7 +36,7 @@ class PlayState extends FlxState
 	public var walkers:Array<enemies.Walker> = [];
 	public var batShots:Array<enemies.Batshot> = [];
 	public var batneyes:Array<enemies.Batneye> = [];
-	
+	public var shieldGuys:Array<ShieldGuy> = [];
 	
 	
 	
@@ -95,7 +96,7 @@ class PlayState extends FlxState
 		var Heart = new FlxSprite();
 		Heart.makeGraphic( 32, 32, FlxColor.RED );
 		hud = new HUD( this, 3, Heart, 9999 );
-		*/
+		
 		var Joe = new FlxSprite( 0, 0 );
 		var Mike = new FlxSprite( 0, 0 );
 		
@@ -151,6 +152,8 @@ class PlayState extends FlxState
 		checkBats();
 		//check batShots for colliding with walls, players, and lifespan
 		checkBatShots();
+		//check shield guys for colliding with walls, etc..
+		checkShieldGuys();
 		
 		if ( FlxG.keys.justPressed.Q ) {
 			cs.change();
@@ -236,6 +239,21 @@ class PlayState extends FlxState
 		}
 	}
 	
+	public function checkShieldGuys():Void {
+		for(i in 0...shieldGuys.length){
+			FlxG.collide(shieldGuys[i], tileMap);
+			if(FlxG.overlap(player, shieldGuys[i])){
+				hud.damage(1);
+				if(shieldGuys[i].x > player.x){
+					player.velocity.x = -5500; //shieldGuys[i].velocity.x = 1500;
+				} else {
+					player.velocity.x = 5500; //shieldGuys[i].velocity.x = -1500;
+				}
+			}
+			
+		}
+	}
+	
 	public function checkBats():Void {
 		for(i in 0...batneyes.length){
 			if(FlxG.collide(batneyes[i], tileMap)){
@@ -310,12 +328,12 @@ class PlayState extends FlxState
 			batneyes.push(b);
 			add(b);
 		}
-		//var walkerCoords:Array<FlxPoint> = enemyMap.getTileCoords(33, true);
-		//for(i in 0...coinCoords.length){
-			//var w:Walker = new Walker(walkerCoords[i].x, walkerCoords[i].y, this);
-			//walkers.push(w);
-			//add(w);
-		//}
+		var shieldCoords:Array<FlxPoint> = enemyMap.getTileCoords(33, true);
+		for(i in 0...shieldCoords.length){
+			var s:ShieldGuy = new ShieldGuy(shieldCoords[i].x, shieldCoords[i].y, this);
+			shieldGuys.push(s);
+			add(s);
+		}
 	}
 	
 }
