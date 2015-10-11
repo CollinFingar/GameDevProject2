@@ -25,11 +25,22 @@ class Bolt extends FlxSprite
     {
 		super(X, Y);
 		var dx:Float = DX;
-		makeGraphic(40, 10, FlxColor.CORAL);
+		//makeGraphic(40, 10, FlxColor.CORAL);
 		velocity.x = dx * VELOCTIY;
 		parent = Parent;
         
-
+		loadGraphic("assets/images/damsel/bowbolt_117x59_18fps_strip4.png", true, 117, 59);
+		animation.add("fly", [0, 1, 2, 3], 18, true);
+		animation.play("fly", false);
+		
+		scale.set(.75, .75);
+		updateHitbox();
+		
+		if(velocity.x > 0){
+			flipX = true;
+		} else {
+			flipX = false; 
+		}
     }
     
     public override function update():Void {

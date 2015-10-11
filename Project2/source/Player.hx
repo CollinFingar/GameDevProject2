@@ -179,6 +179,13 @@ class Player extends FlxSprite
 		for(i in 0...this.parent.walkers.length){
 			if(FlxG.collide(this.parent.walkers[i], swingArea)){
 					this.parent.walkers[i].healthRemaining -= 1;
+					
+					if(this.parent.walkers[i].x > this.x){
+						this.parent.walkers[i].velocity.x = 1500;
+					} else {
+						this.parent.walkers[i].velocity.x = -1500;
+					}
+				
 					if(this.parent.walkers[i].healthRemaining < 1){
 						this.parent.remove(this.parent.walkers[i]);
 						this.parent.walkers.splice(i, 1);
@@ -188,6 +195,13 @@ class Player extends FlxSprite
 		for(i in 0...this.parent.batneyes.length){
 				if(FlxG.collide(this.parent.batneyes[i], swingArea)){
 					this.parent.batneyes[i].healthRemaining -= 1;
+					
+					if(this.parent.batneyes[i].x > this.x){
+						this.parent.batneyes[i].velocity.x = 1500;
+					} else {
+						this.parent.batneyes[i].velocity.x = -1500;
+					}
+					
 					if(this.parent.batneyes[i].healthRemaining < 1){
 						this.parent.remove(this.parent.batneyes[i]);
 						this.parent.batneyes.splice(i, 1);
@@ -197,6 +211,13 @@ class Player extends FlxSprite
 		for(i in 0...this.parent.shieldGuys.length){
 			if(FlxG.collide(this.parent.shieldGuys[i], swingArea)){
 					this.parent.shieldGuys[i].healthRemaining -= 1;
+					
+					if(this.parent.shieldGuys[i].x > this.x){
+						this.parent.shieldGuys[i].velocity.x = 1500;
+					} else {
+						this.parent.shieldGuys[i].velocity.x = -1500;
+					}
+					
 					if(this.parent.shieldGuys[i].healthRemaining < 1){
 						this.parent.remove(this.parent.shieldGuys[i]);
 						this.parent.shieldGuys.splice(i, 1);

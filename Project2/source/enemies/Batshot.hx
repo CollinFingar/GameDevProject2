@@ -28,10 +28,13 @@ class Batshot extends FlxSprite
 		startX = X;
 		startY = Y;
 		var dx:Float = DX;
-		makeGraphic(40, 40, FlxColor.LIME);
+		//makeGraphic(40, 40, FlxColor.LIME);
 		velocity.x = dx * VELOCTIY;
 		parent = Parent;
         
+		loadGraphic("assets/images/enemies/batBULLET.png", false, 34, 34);
+		//animation.add("fly", [0, 1, 2, 3], 18, true);
+		//animation.play("fly", false);
 
     }
     

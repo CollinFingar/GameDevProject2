@@ -30,13 +30,13 @@ class Walker extends FlxSprite
         acceleration.y = 3000;
         parent = Parent;
 		
-		//loadGraphic("assets/images/enemies/skelly_walk1_340x343_12fps_strip7.png", true, 340, 343);
-		//animation.add("idle", [0, 1, 2, 3, 4, 5, 6], 12, true);
-		//animation.play("idle", false);
+		loadGraphic("assets/images/enemies/walker_walk_307x343_10fps_strip6.png", true, 307, 343);
+		animation.add("walk", [0, 1, 2, 3, 4, 5], 10, true);
+		animation.play("walk", false);
 		
-		//scale.set(.75, .75);
-        //setSize(width / 2, height / 1.75);
-		//offset.set(width/2.75, height/3);
+		scale.set(.75, .75);
+        setSize(width / 2, height / 1.75);
+		offset.set(width/2.75, height/3);
         //updateHitbox();
     }
     
