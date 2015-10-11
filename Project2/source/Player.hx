@@ -87,7 +87,8 @@ class Player extends FlxSprite
 				setShootAnimation();
 			}
 			shootCrossbow();
-		} else if(FlxG.keys.anyJustPressed(["Z"])){
+		} else if (FlxG.keys.anyJustPressed(["Z"])) {
+			swingSword();
 			setSwordAnimation();
 			
 		}
@@ -162,6 +163,48 @@ class Player extends FlxSprite
 			}
 		}
 	}
+	
+	public function swingSword():Void {
+		var swingArea:FlxSprite = new FlxSprite(this.x, this.y);
+		if (facingLeft) {
+			swingArea.x = this.x - this.width;
+			swingArea.width = this.width;
+			swingArea.height = this.height;
+		} else {
+			swingArea.x = this.x + this.width;
+			swingArea.width = this.width;
+			swingArea.height = this.height;
+		}
+		
+		for(i in 0...this.parent.walkers.length){
+			if(FlxG.collide(this.parent.walkers[i], swingArea)){
+					this.parent.walkers[i].healthRemaining -= 1;
+					if(this.parent.walkers[i].healthRemaining < 1){
+						this.parent.remove(this.parent.walkers[i]);
+						this.parent.walkers.splice(i, 1);
+					}
+			}
+		}
+		for(i in 0...this.parent.batneyes.length){
+				if(FlxG.collide(this.parent.batneyes[i], swingArea)){
+					this.parent.batneyes[i].healthRemaining -= 1;
+					if(this.parent.batneyes[i].healthRemaining < 1){
+						this.parent.remove(this.parent.batneyes[i]);
+						this.parent.batneyes.splice(i, 1);
+					}
+			}
+		}
+		for(i in 0...this.parent.shieldGuys.length){
+			if(FlxG.collide(this.parent.shieldGuys[i], swingArea)){
+					this.parent.shieldGuys[i].healthRemaining -= 1;
+					if(this.parent.shieldGuys[i].healthRemaining < 1){
+						this.parent.remove(this.parent.shieldGuys[i]);
+						this.parent.shieldGuys.splice(i, 1);
+					}
+			}
+		}
+	}
+	
 	override public function destroy():Void {
 		super.destroy();
 	}
