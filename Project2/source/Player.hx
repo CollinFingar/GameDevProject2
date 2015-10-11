@@ -211,7 +211,9 @@ class Player extends FlxSprite
 		for(i in 0...this.parent.shieldGuys.length){
 			if(FlxG.collide(this.parent.shieldGuys[i], swingArea)){
 					this.parent.shieldGuys[i].healthRemaining -= 1;
-					
+					if(this.parent.shieldGuys[i].shieldBroken == false){
+						this.parent.shieldGuys[i].shieldBroken = true;
+					}
 					if(this.parent.shieldGuys[i].x > this.x){
 						this.parent.shieldGuys[i].velocity.x = 1500;
 					} else {

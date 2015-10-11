@@ -17,7 +17,7 @@ class ShieldGuy extends FlxSprite
     public static inline var RUN_SPEED:Int =  200;
     var parent:PlayState;
 	var facingLeft:Bool = true;
-	public var healthRemaining:Int = 3;
+	public var healthRemaining:Int = 5;
 	public var shieldBroken:Bool = false;
 	public var animationStarted:Bool = false;
     
@@ -35,7 +35,7 @@ class ShieldGuy extends FlxSprite
 		loadGraphic("assets/images/enemies/skelly_walk1_340x343_12fps_strip7.png", true, 340, 343);
 		animation.add("idle", [0, 1, 2, 3, 4, 5, 6], 12, true);
 		//animation.play("idle", false);
-		animation.add("stand", [0], 4, true);
+		animation.add("stand", [0], 4, false);
 		animation.play("stand", false);
 		
 		scale.set(.75, .75);
@@ -53,18 +53,17 @@ class ShieldGuy extends FlxSprite
 			}
 		} else {
 			if(this.parent.player.x > this.x){
-				flipX = true;
-				acceleration.x = -drag.x;
-				if(animationStarted = false){
-					animationStarted = true;
-					animation.play("idle", false);
-				}
-			} else {
 				flipX = false;
 				acceleration.x = drag.x;
-				if(animationStarted = false){
-					animationStarted = true;
-					animation.play("idle", false);
+				if(animationStarted == false){
+					setWalkingAnimation();
+
+				}
+			} else {
+				flipX = true;
+				acceleration.x = -drag.x;
+				if(animationStarted == false){
+					setWalkingAnimation();
 				}
 			}
 		}
@@ -74,5 +73,15 @@ class ShieldGuy extends FlxSprite
         super.update();
     }
     
+	public function setWalkingAnimation():Void{
+		animationStarted = true;
+		loadGraphic("assets/images/enemies/skelly_walk1_340x343_12fps_strip7.png", true, 340, 343);
+		animation.add("idle", [0, 1, 2, 3, 4, 5, 6], 12, true);
+		animation.play("idle", false);
+		
+		scale.set(.75, .75);
+        setSize(width / 2.5, height / 1.75);
+		offset.set(width/1.9, height/3);
+	}
     
 }

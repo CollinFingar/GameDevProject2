@@ -200,6 +200,19 @@ class PlayState extends FlxState
 					}
 				}
 			}
+			for(j in 0...shieldGuys.length){
+				if(FlxG.overlap(bolts[i], shieldGuys[j])){
+					d[i] = true;
+					if(shieldGuys[j].shieldBroken){
+						shieldGuys[j].healthRemaining -= 1;
+						if(shieldGuys[j].healthRemaining < 1){
+							remove(shieldGuys[j]);
+							shieldGuys.splice(j, 1);
+						}
+					}
+					
+				}
+			}
 		}
 		for(i in 0...d.length){
 			if(d[i]){
