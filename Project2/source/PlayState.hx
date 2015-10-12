@@ -60,49 +60,11 @@ class PlayState extends FlxState
 		var backMap = new PlatformTiles( tileMap, "Back Map", "assets/data/Level1/Level1_Background.csv", [20], false );
 		var mainMap = new PlatformTiles( tileMap, "Main Map", "assets/data/Level1/Level1_Walls.csv", [18] );
 		
-		var platMove = new PlatformMoveBasic( tileMap, "Movement1", "assets/data/Level1/Level1_Platform1.csv", [64] );
-		
-		var starts:Array<FlxPoint> = platMove.getTileCoords(64, true);
-		var ends:Array<FlxPoint> = platMove.getTileCoords(63, true);
-		
-		var endpt:FlxPoint = ends[0];
-		
-		var lowest:FlxPoint = new FlxPoint( 30000, 30000 );
-		var highest:FlxPoint = new FlxPoint( 0, 0 );
-		
-		for ( i in starts ) {
-			if ( i.x < lowest.x ) lowest.x = i.x;
-			if ( i.x > highest.x ) highest.x = i.x;
-			if ( i.y < lowest.y ) lowest.y = i.y;
-			if ( i.y > highest.y ) highest.y = i.y;
-		}
-		for ( i in starts ) {
-			var tx:Int = Std.int(i.x / 64.0);
-			var ty:Int = Std.int(i.y / 64.0);
-			if ( i.x == lowest.x ) {
-				
-			} else if ( i.x == highest.x ) {
-				
-			}
-			platMove.setTile( tx, ty, 18 );
-		}
-		var ex:Int = Std.int(endpt.x / 64.0);
-		var ey:Int = Std.int(endpt.y / 64.0);
-		platMove.setTile( ex, ey, -1 );
-		trace( lowest, highest );
-		trace( endpt );
-		
-		var btwX = lowest.x <= endpt.x && endpt.x <= highest.x;
-		var btwY = lowest.y <= endpt.y && endpt.y <= highest.y;
-		if ( btwX && !btwY ) {
-			trace( endpt.y - highest.y );
-			platMove.setControl( new PlatformUpDown( 0, cast(endpt.y - highest.y,Int), 2 ) );
-		} else if ( !btwX && btwY ) {
-			
-		} else {
-			
-		}
-		
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement1", "assets/data/Level1/Level1_Platform1.csv", [64] ), 3 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement2", "assets/data/Level1/Level1_Platform2.csv", [64] ), 3 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement3", "assets/data/Level1/Level1_Platform3.csv", [64] ), 8 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement4", "assets/data/Level1/Level1_Platform4.csv", [64] ), 8 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement5", "assets/data/Level1/Level1_Platform5.csv", [64] ), 8 );
 		
 		//coinMap = new FlxTilemap();
 		//var coinData:String = Assets.getText("assets/data/Level1/Level1_Coins.csv");

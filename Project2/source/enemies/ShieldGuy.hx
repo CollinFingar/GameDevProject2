@@ -29,7 +29,7 @@ class ShieldGuy extends FlxSprite
 		
         drag.set(RUN_SPEED * 3, RUN_SPEED * 3);
         maxVelocity.set(RUN_SPEED * 1, RUN_SPEED * 3);
-        acceleration.y = 3000;
+        acceleration.y = 3200;
         parent = Parent;
 		
 		loadGraphic("assets/images/enemies/skelly_walk1_340x343_12fps_strip7.png", true, 340, 343);

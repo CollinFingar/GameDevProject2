@@ -15,12 +15,12 @@ class PlatformLeftRight extends PlatformController {
 	
 	public override function new( mn:Int, mx:Int, spd:Int = 3 ) {
 		super();
-		minWidth = mn;
-		maxWidth = -mx;
+		minWidth = cast(Math.min( cast(mn,Float), cast(mx,Float) ),Int);
+		maxWidth = cast(Math.max( cast(mn,Float), cast(mx,Float) ),Int);
 		mspd = spd;
 	}
 	public override function setObject():Void {
-		slave.setSpeedX( -mspd );
+		slave.setSpeedX( (maxWidth > minWidth)? -mspd:mspd );
 	}
 	public override function control():Void {
 		super.control();

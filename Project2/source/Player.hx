@@ -33,12 +33,13 @@ class Player extends MoveBase
 	["fall", "assets/images/damsel/princess_fallloop1_307x343_20fps_strip4.png", 307, 343, [0, 1, 2, 3], 							true,  14 ],
 	["jump", "assets/images/damsel/princess_jump1_307x343_12fps_strip3.png", 	 307, 343, [0, 1, 2],								false, 24 ],
 	["run", "assets/images/damsel/princess_run1_307x343_18fps_strip12.png", 	 307, 343, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 	true,  11 ],
-	["sword", "assets/images/damsel/princess_attack1_307x343_20fps_strip7.png",	 307, 343, [0, 1, 2, 3, 4, 5, 6], 					false, 20  ] ];
+	["sword", "assets/images/damsel/princess_attack1_307x343_20fps_strip7.png",	 307, 343, [0, 1, 2, 3, 4, 5, 6], 					false, 20 ],
+	["land", "assets/images/princess_landrecoil_307x343_10fps_strip3.png",	 	 307, 343, [0, 1, 2], 								false, 10 ] ];
 	
     public static inline var RUN_SPEED:Int 		= 200;
 	public static inline var JUMP_MIN:Int 		= 1500;
-	public static inline var JUMP_MAX:Int 		= 3000;
-	public static inline var JUMP_FRAMES:Int 	= 10;
+	public static inline var JUMP_MAX:Int 		= 5000;
+	public static inline var JUMP_FRAMES:Int 	= 20;
 	
 	var jumpAmountMax:Int;
 	var parentComponent:FlxPoint;
@@ -193,11 +194,8 @@ class Player extends MoveBase
 					return;
 					
 			case ANIM_RUN:
-				
-				if ( shooting != -1 )
-					setAnimation( ANIM_SHOOT );
 					
-				else if ( swinging != -1 )
+				if ( swinging != -1 )
 					setAnimation( ANIM_SWORD );
 				
 				else if ( !(ctrlLeft || ctrlRight) )
