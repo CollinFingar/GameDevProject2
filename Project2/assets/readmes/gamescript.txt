@@ -7,20 +7,20 @@ NPC3: Another Knight who failed at rescuing Licia
 
 Opening Cutscene
 <Knight> enters Princess Chamber
+Cage raises
 Knight: Princess Licia, I've come to rescue you from this tower!
 Licia: Well, it's about time SOMEONE came. Who are you with? The Royal Army? 
-Knight: No, Princess. I came here on my own accord, so you would have my hand in marriage.
+Knight: No, Princess. I have come from a faraway land of my own accord, to have the beutiful maiden's hand in marriage.
 Licia: Marriage? MARRIAGE? You do realize that we're going to have to fight our way out of this tower?
 Knight: That should be no problem at all! I fought my way up here for you, I can fight my way out!
-Licia: For ME? No. You fought your way up here so I would have to marry you. 
+Licia: For ME, huh!? I am royalty! How dare you speak to me thusly. On whose divine authority do I owe you anything, sir knight? 
 Knight: Well, isn't that how it goes? The Knight climbs the tower. The Knight rescues the Princess. They escape and get married.
-Licia: You really expect me to marry some self-centered jerk who is only in this for himself? 
-Knight: Well, of course! That's how it goes!
-Licia: Well, okay then.
+Licia: Are you serious? You really expect me to just walk off with you, don't you? Well, come here and let me see the face of my BRAVE savior. 
+Knight: But of course! 
 <Licia> walks towards <Knight>, knocks him out, takes his stuff
-Licia: Ugh, men. They always think that just because they're saving Princesses, that they have to elope. They never think about how we feel.
+Licia: Marriage, pah! This second rate baffoon couldn't hope to conquer a shetland pony, much less my kingdom.
 <Licia> pauses, game HUD pops up.
-Licia: WHATEVER. I'm out of this place.
+Licia: Enough of this drudgery. I'm out of this place.
 
 Level 1: Tower
 Boss Room:
