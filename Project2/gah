@@ -1,0 +1,17 @@
+state update
+	plat main update
+	plat move update
+		controller update
+			-- compound position
+player update
+	-- handle input
+	-- set velocity
+	-- set animation
+	-- compound position/velocity/acceleration
+plat collision
+	-- check collision
+player end update
+	-- move player by base movement
+	
+AFTER parent position updated
+BEFORE collision
