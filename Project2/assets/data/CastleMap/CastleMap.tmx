@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="70" height="140" tilewidth="64" tileheight="64" nextobjectid="1">
+ <tileset firstgid="1" name="tiles1" tilewidth="64" tileheight="64" tilecount="225">
+  <image source="../../images/tiles1.png" trans="f6d2ff" width="1000" height="1000"/>
+ </tileset>
+ <layer name="Background" width="70" height="140">
+  <data encoding="base64" compression="zlib">
+   eJzt2UsKhDAQRdFM3IH7X6sLEMH4e2VyDtTAxoFeqiFga1Sx/mAS0u+siy666KLLfpbO66PfRuvyxvS0Tkj/R+yLLrrooku9SbjynE+eTUbqYl9q7E9Cehdm6nJ2f87el5DeBV100UUXXb6ZnjNPQnoXZu9y50yckN6F2br4HmBfdKk1Cel3rtoFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKraAFIlaOM=
+  </data>
+ </layer>
+ <layer name="Walls" width="70" height="140">
+  <data encoding="base64" compression="zlib">
+   eJzt2EEOwiAQQNEaPYHe/666aYwGUCAZSnkvmV2t5pfY0m2LdX3NbYKJdn/NY4KJtne5BEzPNYimS5ouaSO6tHwumi5pkV16ekar7dKq51wju6SepUavk5nWiy6fM3K/cOT79Oj9QjTPdWm6pLXcj3aRHaOVrmGpU8oqXXKdotbQEbrU/MZcn28rdKnpszf695y5Y2fqUttnlfUS2WfmLr19SseeoUupz6+9T+77z9TF/4su0bO/0zjC/mh0i1yPlbuUeqzY5Z8eK3Wp6bFCl5Yes3Tpef/d0mOWLqPefwMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAb082ACG/
+  </data>
+ </layer>
+ <layer name="Coins" width="70" height="140">
+  <data encoding="base64" compression="zlib">
+   eJzt1zEKADAIA0Dx/4/u3sF2aijcLe5CMFYBAHCrtwkACe4QvCVzM/sBfuCfBwDIOXUwHQ0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIGsB2y8AEw==
+  </data>
+ </layer>
+ <layer name="Enemies" width="70" height="140">
+  <data encoding="base64" compression="zlib">
+   eJztzgENAAAIAyADav86xrhzkIAqAAAAAAC4q9MBAF6bdAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACCFpbkAJo=
+  </data>
+ </layer>
+</map>

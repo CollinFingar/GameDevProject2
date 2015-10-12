@@ -1,4 +1,4 @@
-package;
+package enemies;
 
 
 import flixel.FlxSprite;
@@ -13,34 +13,29 @@ import haxe.Constraints.FlatEnum;
  * ...
  * @author Team 8
  */
-class Bolt extends FlxSprite
+class Batshot extends FlxSprite
 {
 
     var parent:PlayState;
-	public static inline var VELOCTIY = 1000;
+	public static inline var VELOCTIY = 500;
     
-	
+	public var startX:Float;
+	public var startY:Float;
 	
     public function new(X:Float = 0, Y:Float = 0, DX:Float = 0, Parent:PlayState) 
     {
 		super(X, Y);
+		startX = X;
+		startY = Y;
 		var dx:Float = DX;
-		//makeGraphic(40, 10, FlxColor.CORAL);
+		//makeGraphic(40, 40, FlxColor.LIME);
 		velocity.x = dx * VELOCTIY;
 		parent = Parent;
         
-		loadGraphic("assets/images/damsel/bowbolt_117x59_18fps_strip4.png", true, 117, 59);
-		animation.add("fly", [0, 1, 2, 3], 18, true);
-		animation.play("fly", false);
-		
-		scale.set(.75, .75);
-		updateHitbox();
-		
-		if(velocity.x > 0){
-			flipX = true;
-		} else {
-			flipX = false; 
-		}
+		loadGraphic("assets/images/enemies/batBULLET.png", false, 34, 34);
+		//animation.add("fly", [0, 1, 2, 3], 18, true);
+		//animation.play("fly", false);
+
     }
     
     public override function update():Void {

@@ -1,6 +1,7 @@
 package;
 
 import enemies.Batneye;
+import enemies.ShieldGuy;
 import enemies.Walker;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -35,10 +36,14 @@ class PlayState extends FlxState
 	var cs:CutScene;
 	public var hud:HUD;
 	public var coinMap:FlxTilemap;
+	public var enemyMap:FlxTilemap;
 	public var bolts:Array<Bolt> = [];
 	public var coins:Array<Collectible> = [];
 	public var walkers:Array<enemies.Walker> = [];
+	public var batShots:Array<enemies.Batshot> = [];
 	public var batneyes:Array<enemies.Batneye> = [];
+	public var shieldGuys:Array<ShieldGuy> = [];
+	
 	var tmpspd:FlxText;
 	
 	/**
@@ -49,33 +54,25 @@ class PlayState extends FlxState
 		super.create();
 		
 		FlxG.state.bgColor = FlxColor.AZURE;
-		FlxG.worldBounds.set(0, 0, 50 * 64, 50 * 64);
+		FlxG.worldBounds.set(0, 0, 200 * 64, 150 * 64);
 		
-		tileMap = new PlatformGroup( this, "assets/images/map/tiles2.png" );
+		tileMap = new PlatformGroup( this, "assets/images/tiles1.png" );
+		var backMap = new PlatformTiles( tileMap, "Main Map", "assets/data/Level1/Level1_Background.csv", [20], false );
+		var mainMap = new PlatformTiles( tileMap, "Main Map", "assets/data/Level1/Level1_Walls.csv", [18] );
 		
-		var mainMap = new PlatformTiles( tileMap, "Main Map", "assets/data/testWorld.csv", [1, 2] );
-		var moveMap1 = new PlatformMoveBasic( tileMap, "Vert", "assets/data/moving.csv", [1, 2], 21, 47 );
-		var moveMap2 = new PlatformMoveBasic( tileMap, "Circle", "assets/data/moving.csv", [1, 2], 40, 42 );
+		//coinMap = new FlxTilemap();
+		//var coinData:String = Assets.getText("assets/data/Level1/Level1_Coins.csv");
+		//coinMap.loadMap(coinData, mapTilePath, 64, 64);
+		//placeCoins();
 		
-		moveMap1.setControl( new PlatformUpDown( 0, 300, 6 ) );
-		moveMap2.setControl( new PlatformCircle( 2500,2500, 300, 0.01 ) );
+		enemyMap = new FlxTilemap();
+		var enemyData:String = Assets.getText("assets/data/Level1/Level1_Enemies.csv");
+		enemyMap.loadMap(enemyData, "assets/images/tiles1.png", 64, 64);
+		placeEnemies();
 		
-		coinMap = new FlxTilemap();
-		var coinData:String = Assets.getText("assets/data/collectibleLocations.csv");
-		coinMap.loadMap(coinData, "assets/images/map/tiles2.png");
-		placeCoins();
-		
-		var walker:enemies.Walker;
-		add(walker = new enemies.Walker(2500, 2500, this));
-		walkers.push(walker);
-		
-		var bat:Batneye;
-		add(bat = new Batneye(1200, 2750, this));
-		batneyes.push(bat);
-		
-		add(player = new Player(1500, 1600, this));
-		FlxG.camera.follow(player, FlxCamera.STYLE_PLATFORMER, 1);
-		//FlxG.camera.deadzone = new FlxRect(FlxG.width/2,FlxG.height/2);
+		add(player = new Player(7000, 300, this));
+		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
+		FlxG.camera.zoom = 1;
 		
 		/* WILL'S CODE */
 		
@@ -149,6 +146,10 @@ class PlayState extends FlxState
 		
 		//check batneyes for colliding with walls, bolts, and players
 		checkBats();
+		//check batShots for colliding with walls, players, and lifespan
+		checkBatShots();
+		//check shield guys for colliding with walls, etc..
+		checkShieldGuys();
 		
 		if ( FlxG.keys.justPressed.Q ) {
 			cs.change();
@@ -191,6 +192,19 @@ class PlayState extends FlxState
 						remove(batneyes[j]);
 						batneyes.splice(j, 1);
 					}
+				}
+			}
+			for(j in 0...shieldGuys.length){
+				if(FlxG.overlap(bolts[i], shieldGuys[j])){
+					d[i] = true;
+					if(shieldGuys[j].shieldBroken){
+						shieldGuys[j].healthRemaining -= 1;
+						if(shieldGuys[j].healthRemaining < 1){
+							remove(shieldGuys[j]);
+							shieldGuys.splice(j, 1);
+						}
+					}
+					
 				}
 			}
 		}
@@ -241,6 +255,21 @@ class PlayState extends FlxState
 		}
 	}
 	
+	public function checkShieldGuys():Void {
+		for(i in 0...shieldGuys.length){
+			FlxG.collide(shieldGuys[i], tileMap);
+			if(FlxG.overlap(player, shieldGuys[i])){
+				hud.damage(1);
+				if(shieldGuys[i].x > player.x){
+					player.velocity.x = -5500; //shieldGuys[i].velocity.x = 1500;
+				} else {
+					player.velocity.x = 5500; //shieldGuys[i].velocity.x = -1500;
+				}
+			}
+			
+		}
+	}
+	
 	public function checkBats():Void {
 		for(i in 0...batneyes.length){
 			if(FlxG.collide(batneyes[i], tileMap)){
@@ -254,6 +283,60 @@ class PlayState extends FlxState
 					player.velocity.x = 4500;
 				}
 			}
+		}
+	}
+	
+	public function checkBatShots():Void {
+		var d:Array<Bool> = [];
+		for (i in 0...batShots.length) {
+			var b:Float = batShots[i].x;
+			if(FlxG.collide(tileMap, batShots[i])){
+				d.push(true);
+			}
+			
+			else if (b > batShots[i].startX + FlxG.camera.width  || b < batShots[i].startX - FlxG.camera.width){
+				d.push(true);
+			} else if (FlxG.collide(player, batShots[i])) {
+				hud.damage(1);
+				if(batShots[i].x > player.x){
+					player.velocity.x = -3000;
+				} else {
+					player.velocity.x = 3000;
+				}
+				d.push(true);
+			}
+			else {
+				d.push(false);
+
+			}
+			
+		}
+		for(i in 0...d.length){
+			if(d[i]){
+				remove(batShots[i]);
+				batShots.splice(i, 1);
+			}
+		}
+	}
+	
+	public function placeEnemies():Void{
+		var walkerCoords:Array<FlxPoint> = enemyMap.getTileCoords(32, true);
+		for(i in 0...walkerCoords.length){
+			var w:Walker = new Walker(walkerCoords[i].x, walkerCoords[i].y-50, this);
+			walkers.push(w);
+			add(w);
+		}
+		var batCoords:Array<FlxPoint> = enemyMap.getTileCoords(34, true);
+		for(i in 0...batCoords.length){
+			var b:Batneye = new Batneye(batCoords[i].x, batCoords[i].y, 70, this);
+			batneyes.push(b);
+			add(b);
+		}
+		var shieldCoords:Array<FlxPoint> = enemyMap.getTileCoords(33, true);
+		for(i in 0...shieldCoords.length){
+			var s:ShieldGuy = new ShieldGuy(shieldCoords[i].x, shieldCoords[i].y, this);
+			shieldGuys.push(s);
+			add(s);
 		}
 	}
 	

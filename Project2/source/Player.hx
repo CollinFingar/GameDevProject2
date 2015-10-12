@@ -16,7 +16,8 @@ class Player extends MoveBase
 	static inline var ANIM_SHOOT 	= 1;
 	static inline var ANIM_FALL 	= 2;
 	static inline var ANIM_JUMP 	= 3;
-	static inline var ANIM_RUN 	= 4;
+	static inline var ANIM_RUN 		= 4;
+	static inline var ANIM_SWORD 	= 5;
 
 	static inline var ANIMI_NAME = 0;
 	static inline var ANIMI_FNAME = 1;
@@ -31,7 +32,8 @@ class Player extends MoveBase
 	["shoot", "assets/images/damsel/princess_shoot1_307x343_16fps_strip5.png",   307, 343, [0, 1, 2, 3, 4], 						false, 14 ],
 	["fall", "assets/images/damsel/princess_fallloop1_307x343_20fps_strip4.png", 307, 343, [0, 1, 2, 3], 							true,  14 ],
 	["jump", "assets/images/damsel/princess_jump1_307x343_12fps_strip3.png", 	 307, 343, [0, 1, 2],								false, 24 ],
-	["run", "assets/images/damsel/princess_run1_307x343_18fps_strip12.png", 	 307, 343, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 	true,  11 ] ];
+	["run", "assets/images/damsel/princess_run1_307x343_18fps_strip12.png", 	 307, 343, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 	true,  11 ],
+	["sword", "assets/images/damsel/princess_attack1_307x343_20fps_strip7.png",	 307, 343, [0, 1, 2, 3, 4, 5, 6], 					false, 20  ] ];
 	
     public static inline var RUN_SPEED:Int 		= 200;
 	public static inline var JUMP_MIN:Int 		= 1500;
@@ -43,8 +45,9 @@ class Player extends MoveBase
 	
     var parent:PlayState;
     var state:Int;
-	
-	var justShotCrossbow:Float;
+    
+	var shooting:Bool = false;
+	var swinging:Bool = false;
 	
 	var retainParent:Int = 0;
     var playerJumping:Bool = false;
@@ -55,6 +58,7 @@ class Player extends MoveBase
 	var ctrlRight:Bool = false;
 	var ctrlUp:Bool = false;
 	var ctrlX:Bool = false;
+	var ctrlZ:Bool = false;
 	
 	// variable jump
 	var jumpCountDown:Int;	// Timer for when more jumping is allowed
@@ -73,7 +77,6 @@ class Player extends MoveBase
         maxVelocity.set(RUN_SPEED * 2, RUN_SPEED * 6);
 		jumpCountDown = 0;
 		jumpVel = 0;
-		justShotCrossbow = 0;
 		jumpIncrease = cast( JUMP_MAX - JUMP_MIN, Float ) / cast(JUMP_FRAMES, Float);
 		
         parent = Parent;
@@ -101,6 +104,7 @@ class Player extends MoveBase
 		ctrlRight = FlxG.keys.anyPressed(["RIGHT", "D"]);
 		ctrlUp = FlxG.keys.anyPressed(["UP", "W", "SPACE"]);
 		ctrlX = FlxG.keys.anyPressed(["X"]);
+		ctrlZ = FlxG.keys.anyPressed(["Z"]);
 	}
 	public function moveCharacter() {
 		acceleration.x = 0;
@@ -127,14 +131,10 @@ class Player extends MoveBase
 			jumpCountDown = JUMP_FRAMES;
 		}
 		
-		if ( justShotCrossbow > 0 ) {
-			justShotCrossbow -= FlxG.elapsed;
-			if ( justShotCrossbow < 0 )
-				justShotCrossbow = 0;
-		}
-		trace( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+justShotCrossbow );
 		if ( ctrlX )
 			shootCrossbow();
+		if ( ctrlZ )
+			swingSword();
 	}
 	public function updateAnimation() {
 		while ( true ) switch ( state ) {
@@ -149,8 +149,11 @@ class Player extends MoveBase
 				else if ( ctrlLeft || ctrlRight )
 					setAnimation( ANIM_RUN );
 					
-				else if ( ctrlX && ( state == ANIM_IDLE ) )
+				else if ( ctrlX && shooting )
 					setAnimation( ANIM_SHOOT );
+					
+				else if ( ctrlZ && swinging )
+					setAnimation( ANIM_SWORD );
 					
 				else
 					return;
@@ -181,17 +184,19 @@ class Player extends MoveBase
 					return;
 					
 			case ANIM_SHOOT:
-				if ( ctrlLeft || ctrlRight )
-					setAnimation( ANIM_RUN );
-					
-				else if ( velocity.y < 0 )
-					setAnimation( ANIM_JUMP );
-					
-				else if ( velocity.y > 0 && master == null )
-					setAnimation( ANIM_FALL );
-					
-				else if ( animation.finished )
+				if ( animation.finished ) {
 					setAnimation( ANIM_IDLE );
+					shooting = false;
+				}
+					
+				else
+					return;
+					
+			case ANIM_SWORD:
+				if ( animation.finished ) {
+					setAnimation( ANIM_IDLE );
+					swinging = false;
+				}
 					
 				else
 					return;
@@ -254,15 +259,83 @@ class Player extends MoveBase
 	}
 	
 	public function shootCrossbow():Void {
-		if ( justShotCrossbow == 0 && this.parent.bolts.length < 2) {
-			justShotCrossbow = cast( ANIMATIONS[ANIM_SHOOT][ANIMI_FRAMERATE], Float ) / 30.0;
-			trace( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+justShotCrossbow );
+		if ( !shooting && state == ANIM_IDLE && this.parent.bolts.length < 2) {
+			shooting = true;
 			if(facingLeft){
 				var bolt:Bolt = new Bolt(this.x - width/4, this.y + height/2, -1, this.parent);
 				this.parent.addBolt(bolt);
 			} else {
 				var bolt:Bolt = new Bolt(this.x + 3*width/4, this.y + height/2, 1, this.parent);
 				this.parent.addBolt(bolt);
+			}
+		}
+	}
+	
+	public function swingSword():Void {
+		if ( swinging || state != ANIM_IDLE )
+			return;
+		
+		swinging = true;
+		
+		var swingArea:FlxSprite = new FlxSprite(this.x, this.y);
+		if (facingLeft) {
+			swingArea.x = this.x - this.width;
+			swingArea.width = this.width;
+			swingArea.height = this.height;
+		} else {
+			swingArea.x = this.x + this.width;
+			swingArea.width = this.width;
+			swingArea.height = this.height;
+		}
+		
+		for(i in 0...this.parent.walkers.length){
+			if(FlxG.collide(this.parent.walkers[i], swingArea)){
+					this.parent.walkers[i].healthRemaining -= 1;
+					
+					if(this.parent.walkers[i].x > this.x){
+						this.parent.walkers[i].velocity.x = 1500;
+					} else {
+						this.parent.walkers[i].velocity.x = -1500;
+					}
+				
+					if(this.parent.walkers[i].healthRemaining < 1){
+						this.parent.remove(this.parent.walkers[i]);
+						this.parent.walkers.splice(i, 1);
+					}
+			}
+		}
+		for(i in 0...this.parent.batneyes.length){
+				if(FlxG.collide(this.parent.batneyes[i], swingArea)){
+					this.parent.batneyes[i].healthRemaining -= 1;
+					
+					if(this.parent.batneyes[i].x > this.x){
+						this.parent.batneyes[i].velocity.x = 1500;
+					} else {
+						this.parent.batneyes[i].velocity.x = -1500;
+					}
+					
+					if(this.parent.batneyes[i].healthRemaining < 1){
+						this.parent.remove(this.parent.batneyes[i]);
+						this.parent.batneyes.splice(i, 1);
+					}
+			}
+		}
+		for(i in 0...this.parent.shieldGuys.length){
+			if(FlxG.collide(this.parent.shieldGuys[i], swingArea)){
+					this.parent.shieldGuys[i].healthRemaining -= 1;
+					if(this.parent.shieldGuys[i].shieldBroken == false){
+						this.parent.shieldGuys[i].shieldBroken = true;
+					}
+					if(this.parent.shieldGuys[i].x > this.x){
+						this.parent.shieldGuys[i].velocity.x = 1500;
+					} else {
+						this.parent.shieldGuys[i].velocity.x = -1500;
+					}
+					
+					if(this.parent.shieldGuys[i].healthRemaining < 1){
+						this.parent.remove(this.parent.shieldGuys[i]);
+						this.parent.shieldGuys.splice(i, 1);
+					}
 			}
 		}
 	}
