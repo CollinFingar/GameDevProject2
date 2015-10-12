@@ -42,6 +42,9 @@ class ShieldGuy extends FlxSprite
         setSize(width / 2.5, height / 1.75);
 		offset.set(width/1.9, height/3);
         //updateHitbox();
+		
+		var shield:Shield = new Shield(this.x, this.y, this);
+		//add(shield);
     }
     
     public override function update():Void {
