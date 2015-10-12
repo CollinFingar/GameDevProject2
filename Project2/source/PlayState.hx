@@ -51,15 +51,13 @@ class PlayState extends FlxState
 		FlxG.state.bgColor = FlxColor.AZURE;
 		FlxG.worldBounds.set(0, 0, 50 * 64, 50 * 64);
 		
-		tileMap = new PlatformGroup( this, "assets/images/map/tiles2.png", [1, 2] );
+		tileMap = new PlatformGroup( this, "assets/images/map/tiles2.png" );
 		
-		var mainMap = new PlatformTiles( tileMap, "Main Map", "assets/data/testWorld.csv" );
-		var moveMap1 = new PlatformMoveBasic( tileMap, "Vert", "assets/data/moving.csv", 21, 47 );
-		var moveMap2 = new PlatformMoveBasic( tileMap, "Circle", "assets/data/moving.csv", 40, 42 );
+		var mainMap = new PlatformTiles( tileMap, "Main Map", "assets/data/testWorld.csv", [1, 2] );
+		var moveMap1 = new PlatformMoveBasic( tileMap, "Vert", "assets/data/moving.csv", [1, 2], 21, 47 );
+		var moveMap2 = new PlatformMoveBasic( tileMap, "Circle", "assets/data/moving.csv", [1, 2], 40, 42 );
 		
-		moveMap1.setParent( mainMap );
 		moveMap1.setControl( new PlatformUpDown( 0, 300, 6 ) );
-		moveMap2.setParent( mainMap );
 		moveMap2.setControl( new PlatformCircle( 2500,2500, 300, 0.01 ) );
 		
 		coinMap = new FlxTilemap();

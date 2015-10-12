@@ -9,13 +9,11 @@ import openfl.Assets;
 
 class PlatformGroup extends FlxGroup {
 	public var tilepng:String;
-	public var collide:Array<Int>;
 	public var parent:FlxState;
 	
-	public override function new( p:FlxState, tpng:String, col:Array<Int> ) {
+	public override function new( p:FlxState, tpng:String ) {
 		super();
 		tilepng = tpng;
-		collide = col;
 		parent = p;
 		parent.add( this );
 	}

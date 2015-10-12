@@ -12,8 +12,8 @@ class PlatformMoveBasic extends PlatformTiles {
 	var hspd:Float;
 	var vspd:Float;
 	
-	public override function new( par:platforms.PlatformGroup, n:String, csv:String, nx:Int = 0, ny:Int = 0 ) {
-		super( par, n, csv, nx, ny );
+	public override function new( par:platforms.PlatformGroup, n:String, csv:String, col:Array<Int>, nx:Int = 0, ny:Int = 0 ) {
+		super( par, n, csv, col, nx, ny );
 		hspd = 0;
 		vspd = 0;
 		controller = null;
