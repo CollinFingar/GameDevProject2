@@ -15,12 +15,6 @@ import flixel.tile.FlxTilemap;
 import flixel.FlxCamera;
 import flixel.util.FlxRect;
 import openfl.Assets;
-import platforms.PlatformGroup;
-import platforms.PlatformMoveBasic;
-import platforms.PlatformTiles;
-import platforms.PlatformUpDown;
-import platforms.PlatformLeftRight;
-import platforms.PlatformCircle;
 
 import source.ui.CutScene;
 import source.ui.HUD;
@@ -31,7 +25,7 @@ import source.ui.HUD;
 class PlayState extends FlxState
 {
 	public var player:Player;
-	var tileMap:PlatformGroup;
+	var tileMap:FlxTilemap;
 	var cs:CutScene;
 	public var hud:HUD;
 	public var coinMap:FlxTilemap;
@@ -39,7 +33,8 @@ class PlayState extends FlxState
 	public var coins:Array<Collectible> = [];
 	public var walkers:Array<enemies.Walker> = [];
 	public var batneyes:Array<enemies.Batneye> = [];
-	var tmpspd:FlxText;
+	
+	
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -50,21 +45,18 @@ class PlayState extends FlxState
 		
 		FlxG.state.bgColor = FlxColor.AZURE;
 		FlxG.worldBounds.set(0, 0, 50 * 64, 50 * 64);
-		
-		tileMap = new PlatformGroup( this, "assets/images/map/tiles2.png", [1, 2] );
-		
-		var mainMap = new PlatformTiles( tileMap, "Main Map", "assets/data/testWorld.csv" );
-		var moveMap1 = new PlatformMoveBasic( tileMap, "Vert", "assets/data/moving.csv", 21, 47 );
-		var moveMap2 = new PlatformMoveBasic( tileMap, "Circle", "assets/data/moving.csv", 40, 42 );
-		
-		moveMap1.setParent( mainMap );
-		moveMap1.setControl( new PlatformUpDown( 0, 300, 6 ) );
-		moveMap2.setParent( mainMap );
-		moveMap2.setControl( new PlatformCircle( 2500,2500, 300, 0.01 ) );
-		
+		tileMap = new FlxTilemap();
+        var mapData:String = Assets.getText("assets/data/testWorld.csv");
+        var mapTilePath:String = "assets/images/map/tiles2.png";
+        tileMap.loadMap(mapData, mapTilePath);
+		tileMap.setTileProperties(0, FlxObject.NONE);
+		tileMap.setTileProperties(1, FlxObject.ANY);
+		tileMap.immovable = true;
+        add(tileMap);
+
 		coinMap = new FlxTilemap();
 		var coinData:String = Assets.getText("assets/data/collectibleLocations.csv");
-		coinMap.loadMap(coinData, "assets/images/map/tiles2.png");
+		coinMap.loadMap(coinData, mapTilePath);
 		placeCoins();
 		
 		var walker:enemies.Walker;
@@ -75,9 +67,8 @@ class PlayState extends FlxState
 		add(bat = new Batneye(1200, 2750, this));
 		batneyes.push(bat);
 		
-		add(player = new Player(1500, 1600, this));
+		add(player = new Player(1700, 1600, this));
 		FlxG.camera.follow(player, FlxCamera.STYLE_PLATFORMER, 1);
-		//FlxG.camera.deadzone = new FlxRect(FlxG.width/2,FlxG.height/2);
 		
 		/* WILL'S CODE */
 		
@@ -106,10 +97,7 @@ class PlayState extends FlxState
 		
 		/* WILL'S CODE */
 		
-		tmpspd = new FlxText( 16, FlxG.height - 48, FlxG.width );
-		tmpspd.scrollFactor.set( 0, 0 );
-		tmpspd.size = 24;
-		add( tmpspd );
+		add( new FlxText( 32, 32, 1000, "What the heck is going on" ) );
 	}
 	
 	/**
@@ -129,32 +117,24 @@ class PlayState extends FlxState
 		if ( FlxG.keys.justPressed.ESCAPE ) {
 			FlxG.switchState(new MenuState());
 		}
-		
-		var plx = player.x;
-		var ply = player.y;
-		
-		tileMap.override_update();
-		super.update();
-		tileMap.collisionCheck( player );
-		player.late_update();
-		
-		trace( "PLAYER: " + (player.x - plx) + ", " + (player.y - ply) );
+		if ( FlxG.collide(tileMap, player) ) {
+			player.jumpReset();
+		}
 		
 		//check if bolts need to reset
 		checkBolts();
-		
 		//check if coins are collected
 		checkCoins();
-		
 		//check if walkers are colliding with ground
 		checkWalkers();
-		
 		//check batneyes for colliding with walls, bolts, and players
 		checkBats();
 		
 		if ( FlxG.keys.justPressed.Q ) {
 			cs.change();
 		}
+		
+		super.update();
 	}
 	
 	
@@ -164,7 +144,7 @@ class PlayState extends FlxState
 	}
 	
 	
-	public function checkBolts():Void {
+	public function checkBolts():Void{
 		var d:Array<Bool> = [false, false];
 		for (i in 0...bolts.length) {
 			var b:Float = bolts[i].x;
@@ -204,7 +184,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	public function checkCoins():Void {
+	public function checkCoins():Void{
 		var d:Array<Int> = [];
 		for (i in 0...coins.length){
 			if (FlxG.overlap(player, coins[i])) {
@@ -218,9 +198,9 @@ class PlayState extends FlxState
 		}
 	}
 	
-	public function placeCoins():Void {
+	public function placeCoins():Void{
 		var coinCoords:Array<FlxPoint> = coinMap.getTileCoords(2, true);
-		for(i in 0...coinCoords.length) {
+		for(i in 0...coinCoords.length){
 			var c:Collectible = new Collectible(coinCoords[i].x, coinCoords[i].y, this);
 			
 			coins.push(c);
