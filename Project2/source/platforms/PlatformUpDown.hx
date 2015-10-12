@@ -15,12 +15,12 @@ class PlatformUpDown extends PlatformController {
 	
 	public override function new( mn:Int, mx:Int, spd:Int = 3 ) {
 		super();
-		minHeight = mn;
-		maxHeight = -mx;
+		minHeight = cast(Math.max( cast(mn,Float), cast(mx,Float) ),Int);
+		maxHeight = cast(Math.min( cast(mn,Float), cast(mx,Float) ),Int);
 		mspd = spd;
 	}
 	public override function setObject():Void {
-		slave.setSpeedY( -mspd );
+		slave.setSpeedY( (maxHeight > minHeight)? -mspd:mspd );
 	}
 	public override function control():Void {
 		super.control();
