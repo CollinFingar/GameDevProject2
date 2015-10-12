@@ -112,17 +112,17 @@ class PlayState extends FlxState
 		lavaMap.loadMap(lavaData, "assets/images/tiles1.png", 64, 64);
 		add(lavaMap);
 		
-		//coinMap = new FlxTilemap();
-		//var coinData:String = Assets.getText("assets/data/Level1/Level1_Coins.csv");
-		//coinMap.loadMap(coinData, mapTilePath, 64, 64);
-		//placeCoins();
+		coinMap = new FlxTilemap();
+		var coinData:String = Assets.getText("assets/data/Level1/Level1_Coins.csv");
+		coinMap.loadMap(coinData, "assets/images/tiles1.png", 64, 64);
+		placeCoins();
 		
 		enemyMap = new FlxTilemap();
 		var enemyData:String = Assets.getText("assets/data/Level1/Level1_Enemies.csv");
 		enemyMap.loadMap(enemyData, "assets/images/tiles1.png", 64, 64);
 		placeEnemies();
 		
-		add(player = new Player(5000, 7000, this));	//12300, 300 is start
+		add(player = new Player(12300, 300, this));	//12300, 300 is start
 		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
 		FlxG.camera.zoom = 1;
 		
@@ -295,7 +295,7 @@ class PlayState extends FlxState
 	}
 	
 	public function placeCoins():Void {
-		var coinCoords:Array<FlxPoint> = coinMap.getTileCoords(2, true);
+		var coinCoords:Array<FlxPoint> = coinMap.getTileCoords(65, true);
 		for(i in 0...coinCoords.length) {
 			var c:Collectible = new Collectible(coinCoords[i].x, coinCoords[i].y, this);
 			
