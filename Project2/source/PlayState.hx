@@ -22,6 +22,7 @@ import platforms.PlatformTiles;
 import platforms.PlatformUpDown;
 import platforms.PlatformLeftRight;
 import platforms.PlatformCircle;
+import source.ui.SpeechBubble;
 
 import source.ui.CutScene;
 import source.ui.HUD;
@@ -43,6 +44,7 @@ class PlayState extends FlxState
 	public var batShots:Array<enemies.Batshot> = [];
 	public var batneyes:Array<enemies.Batneye> = [];
 	public var shieldGuys:Array<ShieldGuy> = [];
+	public var NPCs:Array<NPC> = [];
 	
 	var tmpspd:FlxText;
 	
@@ -105,6 +107,9 @@ class PlayState extends FlxState
 		tmpspd.scrollFactor.set( 0, 0 );
 		tmpspd.size = 24;
 		add( tmpspd );
+		
+		
+		placeSpeechBubbles1();
 	}
 	
 	/**
@@ -150,6 +155,9 @@ class PlayState extends FlxState
 		checkBatShots();
 		//check shield guys for colliding with walls, etc..
 		checkShieldGuys();
+		
+		
+		checkSpeechBubbles();
 		
 		if ( FlxG.keys.justPressed.Q ) {
 			cs.change();
@@ -339,5 +347,23 @@ class PlayState extends FlxState
 			add(s);
 		}
 	}
+	
+	
+	public function placeSpeechBubbles1():Void{
+		var pnt:FlxPoint = new FlxPoint(7000, 300);
+		var spch:SpeechBubble = new SpeechBubble(this, pnt, 200, 100, "What a jerk..", .1, 1.2);
+		var npc:NPC = new NPC(7000, 300, spch, true, 600, this);
+		NPCs.push(npc);
+		add(npc);
+		
+	}
+	
+	public function checkSpeechBubbles():Void{
+		for(i in 0...NPCs.length){
+			NPCs[i].checkIfPlayerNear();
+		}
+	}
+	
+	
 	
 }

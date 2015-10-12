@@ -29,7 +29,7 @@ class SpeechBubble extends FlxBasic {
 	
 	var state:SPEECH_STATE;
 	
-	var bubble:FlxSprite;
+	public var bubble:FlxSprite;
 	var text:FlxText;
 	
 	var srctext:String;
