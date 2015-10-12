@@ -24,9 +24,9 @@ class NPC extends FlxSprite
 	var followPlayer:Bool;
 	var dist:Float;
 	
-    public function new(X:Float = 0, Y:Float = 0, SpBu:SpeechBubble, FollowPlayer:Bool = false, DIST:Float, Parent:PlayState) 
+    public function new(start:FlxPoint, SpBu:SpeechBubble, FollowPlayer:Bool = false, DIST:Float, Parent:PlayState) 
     {
-		super(X, Y);
+		super(start.x, start.y);
 		parent = Parent;
 		followPlayer = FollowPlayer;
         speechBubble = SpBu;

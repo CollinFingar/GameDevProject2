@@ -116,7 +116,7 @@ class PlayState extends FlxState
 		enemyMap.loadMap(enemyData, "assets/images/tiles1.png", 64, 64);
 		placeEnemies();
 		
-		add(player = new Player(7000, 300, this));
+		add(player = new Player(6000, 300, this));	//12300, 300 is start
 		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
 		FlxG.camera.zoom = 1;
 		
@@ -394,9 +394,33 @@ class PlayState extends FlxState
 	
 	
 	public function placeSpeechBubbles1():Void{
-		var pnt:FlxPoint = new FlxPoint(7000, 300);
-		var spch:SpeechBubble = new SpeechBubble(this, pnt, 200, 100, "What a jerk..", .1, 1.2);
-		var npc:NPC = new NPC(7000, 500, spch, true, 300, this);
+		var pnt:FlxPoint = new FlxPoint(11500, 600);
+		var spch:SpeechBubble = new SpeechBubble(this, pnt, 180, 50, "What a jerk..", .1, 1.2);
+		var npc:NPC = new NPC(pnt, spch, true, 300, this);
+		NPCs.push(npc);
+		add(npc);
+		
+		pnt = new FlxPoint(12300, 600);
+		spch = new SpeechBubble(this, pnt, 200, 100, "I should probably get out of here.", .1, 1.2);
+		npc = new NPC(pnt, spch, true, 300, this);
+		NPCs.push(npc);
+		add(npc);
+		
+		pnt = new FlxPoint(10500, 600);
+		spch = new SpeechBubble(this, pnt, 200, 100, "Was that knight actually powerful?", .1, 1.2);
+		npc = new NPC(pnt, spch, true, 300, this);
+		NPCs.push(npc);
+		add(npc);
+		
+		pnt = new FlxPoint(9600, 600);
+		spch = new SpeechBubble(this, pnt, 200, 100, "I could have taken this guy out.", .1, 1.2);
+		npc = new NPC(pnt, spch, true, 300, this);
+		NPCs.push(npc);
+		add(npc);
+		
+		pnt = new FlxPoint(6000, 1000);
+		spch = new SpeechBubble(this, pnt, 200, 120, "My legs are going to be great when I'm out of here.", .1, 1.2);
+		npc = new NPC(pnt, spch, true, 500, this);
 		NPCs.push(npc);
 		add(npc);
 		
