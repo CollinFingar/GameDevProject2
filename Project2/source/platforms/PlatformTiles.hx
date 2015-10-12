@@ -25,12 +25,12 @@ class PlatformTiles extends FlxTilemap {
 	
 	public var orig_pos:FlxPoint;
 	
-	public override function new( par:platforms.PlatformGroup, n:String, csv:String, col:Array<Int>, nx:Int=0, ny:Int=0 ) {
+	public override function new( par:platforms.PlatformGroup, n:String, csv:String, col:Array<Int>, ncol:Bool = true, nx:Int = 0, ny:Int = 0 ) {
 		super();
 		
-		loadMap( Assets.getText( csv ), par.tilepng );
+		loadMap( Assets.getText( csv ), par.tilepng, 64, 64 );
 		for ( x in col ) {
-			setTileProperties(x, FlxObject.ANY);
+			setTileProperties(x, (ncol) ? FlxObject.ANY : FlxObject.NONE );
 		}
 		twidth = cast( width / widthInTiles, Int );
 		theight = cast( height / heightInTiles, Int );
