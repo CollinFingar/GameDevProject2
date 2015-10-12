@@ -31,6 +31,10 @@ class NPC extends FlxSprite
 		followPlayer = FollowPlayer;
         speechBubble = SpBu;
 		dist = DIST;
+		
+		if(followPlayer){
+			makeGraphic( 2, 2, FlxColor.TRANSPARENT );
+		}
     }
     
     public override function update():Void {
@@ -52,8 +56,8 @@ class NPC extends FlxSprite
 		}
 		
 		if(followPlayer){
-			//var pnt:FlxPoint = new FlxPoint(this.parent.player.x, this.parent.player.y);
-			this.speechBubble.bubble.x = this.parent.player.x;
+			var pnt:FlxPoint = new FlxPoint(this.parent.player.x + 100, this.parent.player.y - 100);
+			this.speechBubble.setPosition(pnt);
 			
 		}
 	}

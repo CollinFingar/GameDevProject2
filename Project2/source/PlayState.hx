@@ -396,7 +396,7 @@ class PlayState extends FlxState
 	public function placeSpeechBubbles1():Void{
 		var pnt:FlxPoint = new FlxPoint(7000, 300);
 		var spch:SpeechBubble = new SpeechBubble(this, pnt, 200, 100, "What a jerk..", .1, 1.2);
-		var npc:NPC = new NPC(7000, 300, spch, true, 600, this);
+		var npc:NPC = new NPC(7000, 500, spch, true, 300, this);
 		NPCs.push(npc);
 		add(npc);
 		
