@@ -34,6 +34,7 @@ class PlayState extends FlxState
 {
 	public var player:Player;
 	var tileMap:PlatformGroup;
+	public var lavaMap:FlxTilemap;
 	var cs:CutScene;
 	public var hud:HUD;
 	public var coinMap:FlxTilemap;
@@ -106,6 +107,11 @@ class PlayState extends FlxState
 		}
 		
 		
+		lavaMap = new FlxTilemap();
+		var lavaData:String = Assets.getText("assets/data/Level1/Level1_Lava.csv");
+		lavaMap.loadMap(lavaData, "assets/images/tiles1.png", 64, 64);
+		add(lavaMap);
+		
 		//coinMap = new FlxTilemap();
 		//var coinData:String = Assets.getText("assets/data/Level1/Level1_Coins.csv");
 		//coinMap.loadMap(coinData, mapTilePath, 64, 64);
@@ -116,7 +122,7 @@ class PlayState extends FlxState
 		enemyMap.loadMap(enemyData, "assets/images/tiles1.png", 64, 64);
 		placeEnemies();
 		
-		add(player = new Player(6000, 300, this));	//12300, 300 is start
+		add(player = new Player(5000, 7000, this));	//12300, 300 is start
 		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
 		FlxG.camera.zoom = 1;
 		
@@ -181,6 +187,12 @@ class PlayState extends FlxState
 		super.update();
 		tileMap.collisionCheck( player );
 		player.late_update();
+		
+		
+		if(FlxG.collide(lavaMap, player)){
+			//player.velocity.y = -7000;
+			hud.damage(3);
+		}
 		
 		trace( "PLAYER: " + (player.x - plx) + ", " + (player.y - ply) );
 		
@@ -420,6 +432,24 @@ class PlayState extends FlxState
 		
 		pnt = new FlxPoint(6000, 1000);
 		spch = new SpeechBubble(this, pnt, 200, 120, "My legs are going to be great when I'm out of here.", .1, 1.2);
+		npc = new NPC(pnt, spch, true, 500, this);
+		NPCs.push(npc);
+		add(npc);
+		
+		pnt = new FlxPoint(8500, 2800);
+		spch = new SpeechBubble(this, pnt, 200, 120, "I'm going to miss my bed. It was a nice bed.", .1, 1.2);
+		npc = new NPC(pnt, spch, true, 500, this);
+		NPCs.push(npc);
+		add(npc);
+		
+		pnt = new FlxPoint(9800, 4800);
+		spch = new SpeechBubble(this, pnt, 180, 50, "Am I out yet?", .1, 1.2);
+		npc = new NPC(pnt, spch, true, 500, this);
+		NPCs.push(npc);
+		add(npc);
+		
+		pnt = new FlxPoint(5000, 7000);
+		spch = new SpeechBubble(this, pnt, 200, 120, "Maybe the occasional tour of this Castle would help out.", .1, 1.2);
 		npc = new NPC(pnt, spch, true, 500, this);
 		NPCs.push(npc);
 		add(npc);
