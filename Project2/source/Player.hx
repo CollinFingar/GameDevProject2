@@ -46,8 +46,10 @@ class Player extends MoveBase
     var parent:PlayState;
     var state:Int;
     
-	var shooting:Bool = false;
-	var swinging:Bool = false;
+	var shooting:Float;
+	var swinging:Float;
+	var shootMax:Float;
+	var swingMax:Float;
 	
 	var retainParent:Int = 0;
     var playerJumping:Bool = false;
@@ -78,6 +80,12 @@ class Player extends MoveBase
 		jumpCountDown = 0;
 		jumpVel = 0;
 		jumpIncrease = cast( JUMP_MAX - JUMP_MIN, Float ) / cast(JUMP_FRAMES, Float);
+		
+		shooting = -1;
+		swinging = -1;
+		
+		shootMax = cast( ANIMATIONS[ANIM_SHOOT][ANIMI_FRAMERATE], Float ) / 60.0;
+		swingMax = cast( ANIMATIONS[ANIM_SWORD][ANIMI_FRAMERATE], Float ) / 60.0;
 		
         parent = Parent;
 		state = ANIM_IDLE;
@@ -131,6 +139,15 @@ class Player extends MoveBase
 			jumpCountDown = JUMP_FRAMES;
 		}
 		
+		if ( shooting != -1 ) {
+			shooting += FlxG.elapsed;
+		}
+		if ( swinging != -1 ) {
+			swinging += FlxG.elapsed;
+		}
+		
+		trace( shooting, swinging );
+		
 		if ( ctrlX )
 			shootCrossbow();
 		if ( ctrlZ )
@@ -140,7 +157,13 @@ class Player extends MoveBase
 		while ( true ) switch ( state ) {
 			case ANIM_IDLE:
 				
-				if ( velocity.y > 0 && master == null ) 
+				if ( shooting != -1 )
+					setAnimation( ANIM_SHOOT );
+					
+				else if ( swinging != -1 )
+					setAnimation( ANIM_SWORD );
+				
+				else if ( velocity.y > 0 && master == null ) 
 					setAnimation( ANIM_FALL );
 					
 				else if ( velocity.y < 0 ) 
@@ -149,18 +172,18 @@ class Player extends MoveBase
 				else if ( ctrlLeft || ctrlRight )
 					setAnimation( ANIM_RUN );
 					
-				else if ( ctrlX && shooting )
-					setAnimation( ANIM_SHOOT );
-					
-				else if ( ctrlZ && swinging )
-					setAnimation( ANIM_SWORD );
-					
 				else
 					return;
 					
 			case ANIM_FALL:
 				
-				if ( velocity.y == 0 )
+				if ( shooting != -1 )
+					setAnimation( ANIM_SHOOT );
+					
+				else if ( swinging != -1 )
+					setAnimation( ANIM_SWORD );
+				
+				else if ( velocity.y == 0 )
 					setAnimation( ANIM_IDLE );
 					
 				else if ( velocity.y < 0 )
@@ -171,7 +194,13 @@ class Player extends MoveBase
 					
 			case ANIM_RUN:
 				
-				if ( !(ctrlLeft || ctrlRight) )
+				if ( shooting != -1 )
+					setAnimation( ANIM_SHOOT );
+					
+				else if ( swinging != -1 )
+					setAnimation( ANIM_SWORD );
+				
+				else if ( !(ctrlLeft || ctrlRight) )
 					setAnimation( ANIM_IDLE );
 					
 				else if ( velocity.y < 0 )
@@ -183,31 +212,55 @@ class Player extends MoveBase
 				else
 					return;
 					
-			case ANIM_SHOOT:
-				if ( animation.finished ) {
-					setAnimation( ANIM_IDLE );
-					shooting = false;
-				}
-					
-				else
-					return;
-					
-			case ANIM_SWORD:
-				if ( animation.finished ) {
-					setAnimation( ANIM_IDLE );
-					swinging = false;
-				}
-					
-				else
-					return;
-					
 			case ANIM_JUMP:
-				if ( velocity.y > 0 && master == null )
+				if ( shooting != -1 )
+					setAnimation( ANIM_SHOOT );
+					
+				else if ( swinging != -1 )
+					setAnimation( ANIM_SWORD );
+				
+				else if ( velocity.y > 0 && master == null )
 					setAnimation( ANIM_FALL );
 					
 				else if ( velocity.y == 0 && master != null )
 					setAnimation( ANIM_IDLE );
 					
+				else
+					return;
+					
+			case ANIM_SHOOT:
+				if ( animation.finished || shooting >= shootMax ) {
+					shooting = -1;
+					if ( velocity.y > 0 && master == null ) 
+						setAnimation( ANIM_FALL );
+						
+					else if ( velocity.y < 0 ) 
+						setAnimation( ANIM_JUMP );
+						
+					else if ( ctrlLeft || ctrlRight )
+						setAnimation( ANIM_RUN );
+						
+					else
+						setAnimation( ANIM_IDLE );
+				}
+				else
+					return;
+					
+			case ANIM_SWORD:
+				if ( animation.finished || swinging >= swingMax ) {
+					swinging = -1;
+					if ( velocity.y > 0 && master == null ) 
+						setAnimation( ANIM_FALL );
+						
+					else if ( velocity.y < 0 ) 
+						setAnimation( ANIM_JUMP );
+						
+					else if ( ctrlLeft || ctrlRight )
+						setAnimation( ANIM_RUN );
+						
+					else
+						setAnimation( ANIM_IDLE );
+				}
 				else
 					return;
 					
@@ -259,8 +312,8 @@ class Player extends MoveBase
 	}
 	
 	public function shootCrossbow():Void {
-		if ( !shooting && state == ANIM_IDLE && this.parent.bolts.length < 2) {
-			shooting = true;
+		if ( shooting == -1 && swinging == -1 && this.parent.bolts.length < 2) {
+			shooting = 0;
 			if(facingLeft){
 				var bolt:Bolt = new Bolt(this.x - width/4, this.y + height/2, -1, this.parent);
 				this.parent.addBolt(bolt);
@@ -272,10 +325,10 @@ class Player extends MoveBase
 	}
 	
 	public function swingSword():Void {
-		if ( swinging || state != ANIM_IDLE )
+		if ( swinging != -1 || shooting != -1 )
 			return;
 		
-		swinging = true;
+		swinging = 0;
 		
 		var swingArea:FlxSprite = new FlxSprite(this.x, this.y);
 		if (facingLeft) {

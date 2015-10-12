@@ -66,6 +66,13 @@ class SpeechBubble extends FlxBasic {
 		par.add( this );
 	}
 	
+	public function setPosition( pos:FlxPoint ) {
+		bubble.x = pos.x;
+		bubble.y = pos.y;
+		text.x = pos.x + 16;
+		text.y = pos.y + 16;
+	}
+	
 	private function grow():Void {
 		if ( bubble.scale.x <= 1 - speed ) {
 			bubble.scale.x += speed;
