@@ -7,134 +7,240 @@ import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
 import flixel.util.FlxColor;
 import flixel.FlxObject;
+import flixel.util.FlxPoint;
+import platforms.PlatformTiles;
 
-/**
- * ...
- * @author ...
- */
-class Player extends FlxSprite
+class Player extends MoveBase
 {
-    public static inline var RUN_SPEED:Int =  300;
-	public static inline var JUMP_MIN:Int = 1500;
-	public static inline var JUMP_MAX:Int = 2000;
-	public static inline var JUMP_FRAMES:Int = 10;
+	static inline var ANIM_IDLE 	= 0;
+	static inline var ANIM_SHOOT 	= 1;
+	static inline var ANIM_FALL 	= 2;
+	static inline var ANIM_JUMP 	= 3;
+	static inline var ANIM_RUN 		= 4;
+	static inline var ANIM_SWORD 	= 5;
+
+	static inline var ANIMI_NAME = 0;
+	static inline var ANIMI_FNAME = 1;
+	static inline var ANIMI_W = 2;
+	static inline var ANIMI_H = 3;
+	static inline var ANIMI_FRAMES = 4;
+	static inline var ANIMI_LOOP = 5;
+	static inline var ANIMI_FRAMERATE = 6;
+
+	private static var ANIMATIONS:Array<Dynamic> = [
+	["idle", "assets/images/damsel/princess_blink1_307x343_8fps_strip8.png", 	 307, 343, [0, 1, 2, 3, 4, 5, 6, 7],				true,  14 ],
+	["shoot", "assets/images/damsel/princess_shoot1_307x343_16fps_strip5.png",   307, 343, [0, 1, 2, 3, 4], 						false, 14 ],
+	["fall", "assets/images/damsel/princess_fallloop1_307x343_20fps_strip4.png", 307, 343, [0, 1, 2, 3], 							true,  14 ],
+	["jump", "assets/images/damsel/princess_jump1_307x343_12fps_strip3.png", 	 307, 343, [0, 1, 2],								false, 24 ],
+	["run", "assets/images/damsel/princess_run1_307x343_18fps_strip12.png", 	 307, 343, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 	true,  11 ],
+	["sword", "assets/images/damsel/princess_attack1_307x343_20fps_strip7.png",	 307, 343, [0, 1, 2, 3, 4, 5, 6], 					false, 20  ] ];
+	
+    public static inline var RUN_SPEED:Int 		= 200;
+	public static inline var JUMP_MIN:Int 		= 1500;
+	public static inline var JUMP_MAX:Int 		= 3000;
+	public static inline var JUMP_FRAMES:Int 	= 10;
+	
 	var jumpAmountMax:Int;
+	var parentComponent:FlxPoint;
 	
     var parent:PlayState;
+    var state:Int;
     
-	var justShotCrossbow:Bool = false;
-	var justSword:Bool = false;
+	var shooting:Bool = false;
+	var swinging:Bool = false;
 	
+	var retainParent:Int = 0;
     var playerJumping:Bool = false;
-	var playerRunning:Bool = true;
+	var playerJumpStart:Bool = false;
 	var facingLeft:Bool = true;
 	
-	// variable jump
-	var jumpCountDown:Int;
-	var jumpVel:Float;
-	var jumpAdjust:Float;
-	var jumpIncrease:Float;
-	var jumpAscend:Bool;
+	var ctrlLeft:Bool = false;
+	var ctrlRight:Bool = false;
+	var ctrlUp:Bool = false;
+	var ctrlX:Bool = false;
+	var ctrlZ:Bool = false;
 	
-	var playerFalling:Bool;
+	// variable jump
+	var jumpCountDown:Int;	// Timer for when more jumping is allowed
+	var jumpVel:Float;		// Floating point representation of velocity.y
+	var jumpAdjust:Float;	// Amount of jump based on horizontal motion
+	var jumpIncrease:Float;	// Amount of extra vertical velocity per frame
+	
+	var idtmr:Int;
     
     public function new(X:Float=0, Y:Float=0, Parent:PlayState) 
     {
         super(X, Y);
 		
+		// FlxSprite values
         drag.set(RUN_SPEED * 8, RUN_SPEED * 8);
         maxVelocity.set(RUN_SPEED * 2, RUN_SPEED * 6);
-		
-		playerFalling = false;
-		
-        acceleration.y = 3200;
-		
 		jumpCountDown = 0;
 		jumpVel = 0;
 		jumpIncrease = cast( JUMP_MAX - JUMP_MIN, Float ) / cast(JUMP_FRAMES, Float);
 		
         parent = Parent;
-		
-		setIdleAnimation();
+		state = ANIM_IDLE;
+		idtmr = 0;
     }
     
     public override function update():Void {
-		jumpAscend = ( velocity.y < 0 );
+		handleInput();
+		moveCharacter();
+		updateAnimation();
 		
-        acceleration.x = 0;
-        if (FlxG.keys.anyPressed(["LEFT", "A"])) {
+        super.update();
+		
+		idtmr ++ ;
+    }
+	public function late_update():Void {
+		if ( retainParent == 0 )
+			assignBase();
+		else
+			retainParent -- ;
+	}
+	public function handleInput() {
+		ctrlLeft = FlxG.keys.anyPressed(["LEFT", "A"]);
+		ctrlRight = FlxG.keys.anyPressed(["RIGHT", "D"]);
+		ctrlUp = FlxG.keys.anyPressed(["UP", "W", "SPACE"]);
+		ctrlX = FlxG.keys.anyPressed(["X"]);
+		ctrlZ = FlxG.keys.anyPressed(["Z"]);
+	}
+	public function moveCharacter() {
+		acceleration.x = 0;
+		if ( master == null && !(jumpCountDown < JUMP_FRAMES ) )
+			acceleration.y = 3200;
+		
+		if ( ctrlLeft ) {
 			facingLeft = true;
-            acceleration.x = -drag.x;
-            flipX = false;
-        }
-        if (FlxG.keys.anyPressed(["RIGHT", "D"])) {
+			acceleration.x = -drag.x;
+			flipX = false;
+		}
+		if ( ctrlRight ) {
 			facingLeft = false;
-            acceleration.x = drag.x;
-            flipX = true;
-        }
-        if (FlxG.keys.anyPressed(["UP", "W", "SPACE"])) {
-			
+			acceleration.x = drag.x;
+			flipX = true;
+		}
+		if ( ctrlUp ) {
 			if ( playerJumping ) {
 				jumpMoar();
 			} else {
 				jumpStart();
 			}
-			
-        }
+		} else {
+			jumpCountDown = JUMP_FRAMES;
+		}
 		
-		if (FlxG.keys.anyJustPressed(["X"])) {
-			if (!playerRunning) {
-				setShootAnimation();
-			}
+		if ( ctrlX )
 			shootCrossbow();
-		} else if (FlxG.keys.anyJustPressed(["Z"])) {
+		if ( ctrlZ )
 			swingSword();
-			setSwordAnimation();
-			
+	}
+	public function updateAnimation() {
+		while ( true ) switch ( state ) {
+			case ANIM_IDLE:
+				
+				if ( velocity.y > 0 && master == null ) 
+					setAnimation( ANIM_FALL );
+					
+				else if ( velocity.y < 0 ) 
+					setAnimation( ANIM_JUMP );
+					
+				else if ( ctrlLeft || ctrlRight )
+					setAnimation( ANIM_RUN );
+					
+				else if ( ctrlX && shooting )
+					setAnimation( ANIM_SHOOT );
+					
+				else if ( ctrlZ && swinging )
+					setAnimation( ANIM_SWORD );
+					
+				else
+					return;
+					
+			case ANIM_FALL:
+				
+				if ( velocity.y == 0 )
+					setAnimation( ANIM_IDLE );
+					
+				else if ( velocity.y < 0 )
+					setAnimation( ANIM_JUMP );
+					
+				else
+					return;
+					
+			case ANIM_RUN:
+				
+				if ( !(ctrlLeft || ctrlRight) )
+					setAnimation( ANIM_IDLE );
+					
+				else if ( velocity.y < 0 )
+					setAnimation( ANIM_JUMP );
+					
+				else if ( velocity.y > 0 && master == null )
+					setAnimation( ANIM_FALL );
+					
+				else
+					return;
+					
+			case ANIM_SHOOT:
+				if ( animation.finished ) {
+					setAnimation( ANIM_IDLE );
+					shooting = false;
+				}
+					
+				else
+					return;
+					
+			case ANIM_SWORD:
+				if ( animation.finished ) {
+					setAnimation( ANIM_IDLE );
+					swinging = false;
+				}
+					
+				else
+					return;
+					
+			case ANIM_JUMP:
+				if ( velocity.y > 0 && master == null )
+					setAnimation( ANIM_FALL );
+					
+				else if ( velocity.y == 0 && master != null )
+					setAnimation( ANIM_IDLE );
+					
+				else
+					return;
+					
+			default:
+				return;
 		}
-		
-		//Set which animation to show
-		if ( velocity.y <= 0 && playerJumping ){
-			
-			
-			
-		} else if ( velocity.y > 0 ){
-			
-			setFallAnimation();
-			
-		} else if ( velocity.x > 0 || velocity.x < 0 ) {
-			
-			setRunAnimation();
-			
-        } else {
-		
-            setIdleAnimation();
-			
-		}
-		
-		if(justShotCrossbow){
-			finishCrossbowAnimation();
-		}
-		if(justSword){
-			finishSwordAnimation();
-		}
-		
-        super.update();
-    }
-    
-    public function jumpReset():Void {
-		if ( velocity.y == 0 ) {
-			if ( jumpAscend ) { // hit her head
-				jumpCountDown = JUMP_FRAMES;
-			} else if ( playerJumping || playerFalling ) { // else
-				endJump();
+	}
+	
+	public override function shouldCollide( other:platforms.PlatformTiles ):Bool {
+		return super.shouldCollide( other );
+	}
+	public override function collision( other:platforms.PlatformTiles, xsep:Bool, ysep:Bool ):Void {
+		if ( ysep ) {
+			if ( playerJumping ) {
+				if ( ( touching & FlxObject.UP ) != 0 ) {
+					jumpCountDown = JUMP_FRAMES;
+				} else {
+					playerJumping = false;
+					retainParent = 4;
+					assignBase( other );
+				}
+			} else if ( ( touching & FlxObject.DOWN ) != 0 ) {
+				retainParent = 4;
+				assignBase( other );
 			}
 		}
-    }
+		super.collision( other, xsep, ysep );
+	}
+    
 	public function jumpMoar():Void {
 		if ( jumpCountDown < JUMP_FRAMES ) {
-			jumpVel += jumpIncrease * cast(jumpCountDown,Float)/cast(JUMP_FRAMES,Float) * jumpAdjust;
-			velocity.y = -jumpVel;
+			var t:Float = -jumpIncrease * cast(jumpCountDown, Float) / cast(JUMP_FRAMES, Float) * jumpAdjust;
+			velocity.y += t;
 			jumpCountDown ++ ;
 		}
 	}
@@ -144,16 +250,17 @@ class Player extends FlxSprite
 			jumpAdjust = 0.5 + Math.sqrt( Math.abs( cast(velocity.x,Float) ) ) / 100.0;
 			jumpVel = cast(JUMP_MIN, Float) * jumpAdjust;
 			jumpCountDown = 0;
-			velocity.y = -jumpVel;
+			velocity.y += -jumpVel;
+			playerJumpStart = true;
 			playerJumping = true;
+			assignBase();
 			
-			setJumpUpAnimation();
 		}
 	}
 	
 	public function shootCrossbow():Void {
-		if (this.parent.bolts.length < 2) {
-
+		if ( !shooting && state == ANIM_IDLE && this.parent.bolts.length < 2) {
+			shooting = true;
 			if(facingLeft){
 				var bolt:Bolt = new Bolt(this.x - width/4, this.y + height/2, -1, this.parent);
 				this.parent.addBolt(bolt);
@@ -165,6 +272,11 @@ class Player extends FlxSprite
 	}
 	
 	public function swingSword():Void {
+		if ( swinging || state != ANIM_IDLE )
+			return;
+		
+		swinging = true;
+		
 		var swingArea:FlxSprite = new FlxSprite(this.x, this.y);
 		if (facingLeft) {
 			swingArea.x = this.x - this.width;
@@ -228,133 +340,25 @@ class Player extends FlxSprite
 		}
 	}
 	
-	override public function destroy():Void {
-		super.destroy();
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	public function setRunAnimation():Void {
-		if ( !playerRunning && !playerJumping ) {
-			
-			loadGraphic("assets/images/damsel/princess_run1_307x343_18fps_strip12.png", true, 307, 343);
-			
-			animation.add( "run",  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 12, true);
-			animation.play("run", false);
-			
-			playerRunning = true;
-			setGoodHitbox();
-			
+	public function setAnimation( st:Int ) {
+		if ( state != st ) {
+			state = st;
+			loadGraphic( ANIMATIONS[st][ANIMI_FNAME],
+						 true,
+						 ANIMATIONS[st][ANIMI_W],
+						 ANIMATIONS[st][ANIMI_H] );
+						 
+			animation.add( ANIMATIONS[st][ANIMI_NAME],
+						   ANIMATIONS[st][ANIMI_FRAMES], 
+						   ANIMATIONS[st][ANIMI_FRAMERATE], 
+						   ANIMATIONS[st][ANIMI_LOOP] );
+						   
+			animation.play( ANIMATIONS[st][ANIMI_NAME],
+							false );
+							
+			scale.set(.5, .5);
+			setSize(width / 4, height / 3);
+			offset.set(width*1.5, height);
 		}
 	}
-	
-	public function setIdleAnimation():Void {
-		if ( playerRunning && !playerJumping ) {
-			
-			loadGraphic("assets/images/damsel/princess_blink1_307x343_8fps_strip8.png", true, 307, 343);
-			
-			animation.add( "idle", [0, 1, 2, 3, 4, 5, 6, 7], 8, true);
-			animation.play("idle", false);
-			
-			playerRunning = false;
-			setGoodHitbox();
-			
-		}
-		
-	}
-	
-	public function setShootAnimation():Void {
-		if (this.parent.bolts.length < 2) {
-			loadGraphic("assets/images/damsel/princess_shoot1_307x343_16fps_strip5.png", true, 307, 343);
-			animation.add("shoot", [0, 1, 2, 3, 4], 16, false);
-			animation.play("shoot", false);
-			setGoodHitbox();
-			justShotCrossbow = true;	
-		}
-	}
-	
-	public function setSwordAnimation():Void {
-		if (this.parent.bolts.length < 2) {
-			loadGraphic("assets/images/damsel/princess_attack1_307x343_20fps_strip7.png", true, 307, 343);
-			animation.add("swing", [0, 1, 2, 3, 4,5,6], 20, false);
-			animation.play("swing", false);
-			setGoodHitbox();
-			justSword = true;	
-		}
-	}
-	
-	public function setJumpUpAnimation():Void{
-		loadGraphic("assets/images/damsel/princess_jump1_307x343_12fps_strip3.png", true, 307, 343);
-        animation.add("idle", [0, 1, 2], 12, false);
-		animation.play("idle", false);
-		playerRunning = false;
-		//updateHitbox();
-		setGoodHitbox();
-	}
-	
-	public function setFallAnimation():Void {
-		if ( !playerFalling ) {	
-			loadGraphic("assets/images/damsel/princess_fallloop1_307x343_20fps_strip4.png", true, 307, 343);
-			animation.add("idle", [0, 1, 2, 3], 20, true);
-			animation.play("idle", false);
-			playerRunning = false;
-			//updateHitbox();
-			setGoodHitbox();
-			playerFalling = true;
-		}
-	}
-	
-	public function setGoodHitbox():Void {
-		scale.set(.75, .75);
-        setSize(width / 2.5, height / 1.75);
-		offset.set(width/1.9, height/3);
-	}
-	
-	public function finishCrossbowAnimation():Void{
-		if(animation.finished){
-			loadGraphic("assets/images/damsel/princess_blink1_307x343_8fps_strip8.png", true, 307, 343);
-			animation.add("idle", [0, 1, 2, 3, 4, 5, 6, 7], 8, true);
-			animation.play("idle", false);
-			playerRunning = false;
-			setGoodHitbox();
-			justShotCrossbow = false;
-		}
-	}
-	
-	public function finishSwordAnimation():Void{
-		if(animation.finished){
-			loadGraphic("assets/images/damsel/princess_blink1_307x343_8fps_strip8.png", true, 307, 343);
-			animation.add("idle", [0, 1, 2, 3, 4, 5, 6, 7], 8, true);
-			animation.play("idle", false);
-			playerRunning = false;
-			setGoodHitbox();
-			justSword = false;
-		}
-	}
-	
-	public function endJump():Void {
-		loadGraphic("assets/images/damsel/princess_blink1_307x343_8fps_strip8.png", true, 307, 343);
-		animation.add("idle", [0, 1, 2, 3, 4, 5, 6, 7], 8, true);
-		animation.play("idle", false);
-		//playerRunning = false;
-		playerJumping = false;
-		playerFalling= false;
-		setGoodHitbox();
-	}
-    
 }
