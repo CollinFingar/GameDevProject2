@@ -34,7 +34,8 @@ class Bolt extends FlxSprite
 		animation.play("fly", false);
 		
 		scale.set(.75, .75);
-		updateHitbox();
+        setSize(width / 2, height / 1.75);
+		offset.set(width / 2.75, height / 3);
 		
 		if(velocity.x > 0){
 			flipX = true;

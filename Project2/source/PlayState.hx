@@ -208,6 +208,8 @@ class PlayState extends FlxState
 			var b:Float = bolts[i].x;
 			if(FlxG.collide(tileMap, bolts[i])){
 				d[i] = true;
+				FlxG.sound.play("assets/sounds/bolthitwall.wav", .3, false);
+
 			}
 			
 			else if (b < (player.x - FlxG.camera.width/2) || b > (player.x + FlxG.camera.width/2)){

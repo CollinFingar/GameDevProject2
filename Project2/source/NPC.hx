@@ -24,6 +24,7 @@ class NPC extends FlxSprite
 	var followPlayer:Bool;
 	var dist:Float;
 	
+	
     public function new(start:FlxPoint, SpBu:SpeechBubble, FollowPlayer:Bool = false, DIST:Float, Parent:PlayState) 
     {
 		super(start.x, start.y);
@@ -51,6 +52,7 @@ class NPC extends FlxSprite
 		var distance:Float = getDistance(this.parent.player.x, this.parent.player.y, this.x, this.y);
 		if(distance < dist){
 			speechBubble.open();
+			
 		} else { 
 			speechBubble.close();
 		}
