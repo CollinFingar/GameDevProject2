@@ -182,7 +182,7 @@ class ShieldGuy extends FlxSprite
 					return;
 			}
 			scale.set(.75, .75);
-			setSize(width / 2.5, height / 1.75);
+			setSize(width / 2, height / 1.75);
 			offset.set(width/1.9, height/3);
 		}
 	}

@@ -135,6 +135,11 @@ class PlayState extends FlxState
 		tmpspd.size = 24;
 		add( tmpspd );
 		
+		//pnt = new FlxPoint(10500, 600);
+		var durgen:Durgen = new Durgen(10000, 700, this);
+		add(durgen);
+		
+		
 		placeSpeechBubbles1();
 		
 		FlxG.sound.playMusic("assets/music/towerbgm.ogg", .2, true);
