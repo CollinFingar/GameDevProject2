@@ -50,6 +50,7 @@ class PlayState extends FlxState
 	public var batneyes:Array<enemies.Batneye> = [];
 	public var shieldGuys:Array<ShieldGuy> = [];
 	public var NPCs:Array<NPC> = [];
+	public var durgen:Durgen;
 	
 	// she is dead
 	var dead_and_dying:Int = 0;
@@ -136,7 +137,8 @@ class PlayState extends FlxState
 		add( tmpspd );
 		
 		//pnt = new FlxPoint(10500, 600);
-		var durgen:Durgen = new Durgen(10000, 700, this);
+		durgen = new Durgen(10000, 730, this);
+		durgen.immovable = true;
 		add(durgen);
 		
 		
@@ -196,7 +198,8 @@ class PlayState extends FlxState
 			hud.damage(3);
 			player.setDead();
 		}
-
+		
+		FlxG.collide(player, durgen);
 		checkBolts();
 		checkCoins();
 		checkHearts();

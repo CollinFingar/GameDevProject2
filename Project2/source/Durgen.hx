@@ -28,14 +28,10 @@ class Durgen extends FlxSprite
 		loadGraphic("assets/images/durgen.png", true, 501, 383);
 		
 		//scale.set(.75, .75);
-        setSize(width / 2, height / 1.75);
-		offset.set(width / 2.75, height / 3);
+        setSize(width / 1.4, height / 1.2);
+		offset.set(width / 6, height / 4);
 		
-		if(velocity.x > 0){
-			flipX = true;
-		} else {
-			flipX = false; 
-		}
+	
     }
     
     public override function update():Void {
