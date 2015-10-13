@@ -81,6 +81,26 @@ class Walker extends FlxSprite
 			walkerHurt = true;
 		healthRemaining -= val;
 		trace( "WALKER HURT" );
+		
+		
+		if(healthRemaining > 0){
+			var num = Math.random();
+			if(num >=.6){
+				FlxG.sound.play("assets/sounds/vrsfx/guard/guardhit1.wav", .3, false);
+			} else if (num >= .3){
+				FlxG.sound.play("assets/sounds/vrsfx/guard/guardhit2.wav", .3, false);
+			} else {
+				FlxG.sound.play("assets/sounds/vrsfx/guard/guardhit3.wav", .3, false);
+			}
+		} else {
+			var num = Math.random();
+			if(num >=.5){
+				FlxG.sound.play("assets/sounds/vrsfx/guard/guarddie1.wav", .3, false);
+			} else {
+				FlxG.sound.play("assets/sounds/vrsfx/guard/guarddie2.wav", .3, false);
+			}
+		}
+		
 	}
 	public function removeFromParent():Void {
 		this.parent.remove( this );

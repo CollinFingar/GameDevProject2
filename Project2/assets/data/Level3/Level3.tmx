@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="200" height="50" tilewidth="64" tileheight="64" nextobjectid="1">
+ <tileset firstgid="1" name="tiles1" tilewidth="64" tileheight="64" tilecount="225">
+  <image source="../../images/tiles1.png" trans="f6d2ff" width="1000" height="1000"/>
+ </tileset>
+ <layer name="Background" width="200" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt06EBADAIxECWqcB3/9lqa9C8OHE+Jl1VDQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACsOQENkOoGNEAqf8DMHzDzB8z+Px7y2EIe
+  </data>
+ </layer>
+ <layer name="Lava" width="200" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt0yEOACAMBMFqLIr/fxSLqABFKDPJ+jMXAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUFdLetnr+7kj+0Hl4MT4LNjVP2w1AaVmDPg=
+  </data>
+ </layer>
+ <layer name="Walls" width="200" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt2GEKgjAYgGGhTlBXKC9Q3v9qLXAwYTVFJ9meB75/mv7Y2wd2HQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcyynMeRxg6hLmOg4cxS3MPUxf+Tn64IgeYZ5hhsrP0Qe/Ku6I3J7QB62LDeQ60ActmLMj9EGr5jSgD/7Z2h2xdR/p+5RGHyz1Pl+l76rpNWsb2LqP9HdLow+Wiufr2/9uenb36KO0E/rMvfqghrnna88+Su80ZO7VBzXoAz5rtY8Xwhk5dA==
+  </data>
+ </layer>
+ <layer name="Platform1" width="200" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztzrENADAIwDBOg/+f6tILWEDIlrInAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYIecHgAAAAAAoKV+AAAAVzzb7QDD
+  </data>
+ </layer>
+ <layer name="Coins" width="200" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt2MEJACAMBMGrLf0X5VdEn4GAM59rILCQBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAbnUsAOwqGgHAnUYA8DKxEX5gdJh46wAAAMAfFixiAxk=
+  </data>
+ </layer>
+ <layer name="Enemies" width="200" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztzjEBAAAIAyCraP+QVvByDySgCgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4F+nA8DJpAMAAAAAELAVDgBE
+  </data>
+ </layer>
+</map>
