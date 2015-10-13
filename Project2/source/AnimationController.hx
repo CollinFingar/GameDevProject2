@@ -43,14 +43,11 @@ class AnimateCatcher {
 	
 	public function get():Int {
 		if ( cancel == null || !cancel() ) {
-			trace( "CHECK " + index );
 			for ( a in plist ) {
 				if ( a == null )
 					continue;
-				if ( a.check() ) {
-					trace( "    GOT " + a.index );
+				if ( a.check() )
 					return a.index;
-				}
 			}
 		}
 		return -1;

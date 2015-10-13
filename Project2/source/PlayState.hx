@@ -175,9 +175,12 @@ class PlayState extends FlxState
 		
 		tmpspd.text = Player.ANIMATIONS[player.animctrl.current][Player.ANIMI_NAME];
 		
-		if(FlxG.collide(lavaMap, player)){
+		if(!player.isDead() && FlxG.collide(lavaMap, player)){
 			player.velocity.y = -7000;
-			player.velocity.x = -1000;
+			if ( Std.random(2) == 0 )
+				player.velocity.x = 1000;
+			else
+				player.velocity.x = -1000;
 			hud.damage(3);
 			player.setDead();
 		}
@@ -214,21 +217,14 @@ class PlayState extends FlxState
 			for(j in 0...walkers.length){
 				if(FlxG.overlap(bolts[i], walkers[j])){
 					d[i] = true;
-					walkers[j].healthRemaining -= 1;
-					if(walkers[j].healthRemaining < 1){
-						remove(walkers[j]);
-						walkers.splice(j, 1);
-					}
+					walkers[i].damage( 1 );
+					walkers[i].velocity.x = bolts[i].velocity.x;
 				}
 			}
 			for(j in 0...batneyes.length){
-				if(FlxG.overlap(bolts[i], batneyes[j])){
+				if (FlxG.overlap(bolts[i], batneyes[j])) {
 					d[i] = true;
-					batneyes[j].healthRemaining -= 1;
-					if(batneyes[j].healthRemaining < 1){
-						remove(batneyes[j]);
-						batneyes.splice(j, 1);
-					}
+					batneyes[j].killByWeapon();
 				}
 			}
 			for(j in 0...shieldGuys.length){
@@ -315,7 +311,7 @@ class PlayState extends FlxState
 	public static var ENEMY_BOUNCE:Array<Array<Int>> =
 	[
 	[ 1, 2500, 1500 ],
-	[ 1, 5500, 0 ],
+	[ 1, 5500, 1000 ],
 	[ 1, 4500, 0 ],
 	[ 1, 3000, 0 ]
 	];
@@ -352,7 +348,8 @@ class PlayState extends FlxState
 	public function checkWalkers():Void {
 		for(i in 0...walkers.length){
 			FlxG.collide(walkers[i], tileMap);
-			checkHit( walkers[i], ENEMY_WALKER );
+			if ( !walkers[i].isDead() )
+				checkHit( walkers[i], ENEMY_WALKER );
 		}
 	}
 	
@@ -364,11 +361,52 @@ class PlayState extends FlxState
 	}
 	
 	public function checkBats():Void {
-		for(i in 0...batneyes.length){
-			if(FlxG.collide(batneyes[i], tileMap)){
-				batneyes[i].goingUp = !batneyes[i].goingUp;
+		for (i in 0...batneyes.length) {
+			
+			var col:Bool = FlxG.collide(batneyes[i], tileMap);
+			if ( !batneyes[i].isDead() ) {
+				if( col ){
+					batneyes[i].goingUp = !batneyes[i].goingUp;
+				}
+				if ( FlxG.overlap( player, batneyes[i] ) ) {
+					if ( !player.isDeadOrHurt() ) {
+						FlxObject.separateX( player, batneyes[i] );
+						FlxObject.separateY( player, batneyes[i] );
+						
+						trace( batneyes[i].touching, player.touching );
+						
+						if ( ( batneyes[i].touching & FlxObject.UP != 0 ) && ( player.touching & FlxObject.DOWN != 0 ) ) {
+							
+							batneyes[i].killByStomp();
+							
+						} else {
+							hud.damage( ENEMY_BOUNCE[ENEMY_BAT][PLAYER_HEALTH] );
+							
+							if ( hud.getHealth() == 0 ) {
+								player.setDead();
+								player.velocity.y = -2000;
+								if ( batneyes[i].x < player.x ) {
+									player.velocity.x = 6000;
+								} else {
+									player.velocity.x = -6000;
+								}
+							} else {
+								player.setHurt();
+								if ( batneyes[i].x < player.x ) {
+									player.velocity.x = ENEMY_BOUNCE[ENEMY_BAT][PLAYER_RECOIL];
+									batneyes[i].velocity.x = -ENEMY_BOUNCE[ENEMY_BAT][ENEMY_RECOIL];
+								} else {
+									player.velocity.x = -ENEMY_BOUNCE[ENEMY_BAT][PLAYER_RECOIL];
+									batneyes[i].velocity.x = ENEMY_BOUNCE[ENEMY_BAT][ENEMY_RECOIL];
+								}
+								player.velocity.y *= .25;
+							}
+						}
+					}
+				}
+			} else {
+				trace( batneyes[i].velocity, batneyes[i].acceleration );
 			}
-			checkHit( batneyes[i], ENEMY_BAT );
 		}
 	}
 	

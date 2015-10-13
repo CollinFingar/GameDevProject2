@@ -337,36 +337,20 @@ class Player extends MoveBase
 			swingArea.height = this.height;
 		}
 		
-		for(i in 0...this.parent.walkers.length){
-			if(FlxG.collide(this.parent.walkers[i], swingArea)){
-					this.parent.walkers[i].healthRemaining -= 1;
-					
+		var len:Int = this.parent.walkers.length;
+		for(i in 0...len) {
+			if (FlxG.collide(this.parent.walkers[i], swingArea)) {
 					if(this.parent.walkers[i].x > this.x){
 						this.parent.walkers[i].velocity.x = 1500;
 					} else {
 						this.parent.walkers[i].velocity.x = -1500;
 					}
-				
-					if(this.parent.walkers[i].healthRemaining < 1){
-						this.parent.remove(this.parent.walkers[i]);
-						this.parent.walkers.splice(i, 1);
-					}
+					this.parent.walkers[i].damage( 1 );
 			}
 		}
 		for(i in 0...this.parent.batneyes.length){
 				if(FlxG.collide(this.parent.batneyes[i], swingArea)){
-					this.parent.batneyes[i].healthRemaining -= 1;
-					
-					if(this.parent.batneyes[i].x > this.x){
-						this.parent.batneyes[i].velocity.x = 1500;
-					} else {
-						this.parent.batneyes[i].velocity.x = -1500;
-					}
-					
-					if(this.parent.batneyes[i].healthRemaining < 1){
-						this.parent.remove(this.parent.batneyes[i]);
-						this.parent.batneyes.splice(i, 1);
-					}
+					this.parent.batneyes[i].killByWeapon();
 			}
 		}
 		for(i in 0...this.parent.shieldGuys.length){
