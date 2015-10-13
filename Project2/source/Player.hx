@@ -417,9 +417,9 @@ class Player extends MoveBase
 			animation.play( ANIMATIONS[st][ANIMI_NAME],
 							false );
 							
-			scale.set(.5, .5);
-			setSize(width / 4, height / 3);
-			offset.set(width * 1.5, height);
+			scale.set(.75, .75);
+			setSize(width / 3, height / 1.75);
+			offset.set(width , height / 3);
 		}
 	}
 }
