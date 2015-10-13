@@ -131,7 +131,8 @@ class Walker extends FlxSprite
 			}
 			scale.set(.75, .75);
 			setSize(width / 2, height / 1.75);
-			offset.set(width/2.75, height/3);
+			offset.set(width / 2.75, height / 3);
+			
 		}
 	}
     

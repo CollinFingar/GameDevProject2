@@ -9,12 +9,13 @@ import flixel.tile.FlxTilemap;
 import flixel.util.FlxPoint;
 import openfl.Assets;
 
-class PlatformTiles extends FlxTilemap {
+class PlatformTiles extends FlxTilemap implements PlatformCollision {
 	public var name:String;
 	
-	var overmind:platforms.PlatformGroup;
+	public var overmind:platforms.PlatformGroup;
+	public var slot:MoveBase;
+	
 	var parent:PlatformTiles;
-	var slot:MoveBase;
 	
 	var control:Bool;
 	var twidth:Int;

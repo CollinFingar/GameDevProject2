@@ -48,7 +48,7 @@ class PlatformMoveBasic extends PlatformTiles {
 		return vspd;
 	}
 	
-	static public function makeController( platMove:PlatformMoveBasic, spd:Int = 3 ) {
+	static public function makeController( platMove:PlatformMoveBasic, spd:Int = 3 ):PlatformController {
 		var starts:Array<FlxPoint> = platMove.getTileCoords(64, true);
 		var ends:Array<FlxPoint> = platMove.getTileCoords(63, true);
 		
@@ -87,16 +87,15 @@ class PlatformMoveBasic extends PlatformTiles {
 		var ex:Int = Std.int(endpt.x / 64.0);
 		var ey:Int = Std.int(endpt.y / 64.0);
 		platMove.setTile( ex, ey, -1 );
-		trace( lowest, highest );
-		trace( endpt );
 		
 		var btwX = lowest.x <= endpt.x && endpt.x <= highest.x;
 		var btwY = lowest.y <= endpt.y && endpt.y <= highest.y;
 		if ( btwX && !btwY ) {
-			trace( endpt.y - highest.y );
 			platMove.setControl( new PlatformUpDown( 0, cast(endpt.y - highest.y,Int), spd ) );
 		} else if ( !btwX && btwY ) {
 			platMove.setControl( new PlatformUpDown( 0, cast(endpt.y - highest.y,Int), spd ) );
 		}
+		
+		return platMove.controller;
 	}
 }

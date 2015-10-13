@@ -9,13 +9,13 @@ import flixel.util.FlxColor;
 import flixel.FlxObject;
 import flixel.util.FlxPoint;
 import lime.project.Platform;
-import platforms.PlatformTiles;
+import platforms.PlatformCollision;
 
 class MoveBase extends FlxSprite
 {
 	// platform to which the object is bound
 	// NULL if the player is not bound to an object
-	var master:platforms.PlatformTiles;
+	var master:PlatformCollision;
 	
 	// when the movable leaves the platform, an echo of the
 	// platforms speed remains
@@ -29,7 +29,7 @@ class MoveBase extends FlxSprite
 		master = null;
 		echo = new FlxPoint();
 	}
-	public function assignBase( mov:platforms.PlatformTiles = null ) {
+	public function assignBase( mov:platforms.PlatformCollision = null ) {
 		if ( master != null )
 			master.setSlot( null );
 		master = mov;
@@ -39,13 +39,13 @@ class MoveBase extends FlxSprite
 		} //else
 			//color = FlxColor.WHITE;
 	}
-	public function getBase():PlatformTiles {
+	public function getBase():PlatformCollision {
 		return master;
 	}
-	public function shouldCollide( other:PlatformTiles ):Bool {
+	public function shouldCollide( other:PlatformCollision ):Bool {
 		return true;
 	}
-	public function collision( other:platforms.PlatformTiles, xs:Bool, ys:Bool ):Void {
+	public function collision( other:platforms.PlatformCollision, xs:Bool, ys:Bool ):Void {
 		return;
 	}
 	public function postCollision():Void {

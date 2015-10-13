@@ -18,10 +18,12 @@ import flixel.util.FlxRect;
 import openfl.Assets;
 import platforms.PlatformGroup;
 import platforms.PlatformMoveBasic;
+import platforms.PlatformControlSignaller;
 import platforms.PlatformTiles;
 import platforms.PlatformUpDown;
 import platforms.PlatformLeftRight;
 import platforms.PlatformCircle;
+import platforms.PlatformFalling;
 import source.ui.SpeechBubble;
 
 import source.ui.CutScene;
@@ -33,9 +35,9 @@ import source.ui.HUD;
 class PlayState extends FlxState
 {
 	public var player:Player;
-	var tileMap:PlatformGroup;
+	public var tileMap:PlatformGroup;
 	public var lavaMap:FlxTilemap;
-	var cs:CutScene;
+	public var cs:CutScene;
 	public var hud:HUD;
 	public var coinMap:FlxTilemap;
 	public var heartMap:FlxTilemap;
@@ -49,6 +51,7 @@ class PlayState extends FlxState
 	public var shieldGuys:Array<ShieldGuy> = [];
 	public var NPCs:Array<NPC> = [];
 	
+	// she is dead
 	var dead_and_dying:Int = 0;
 	var tmpspd:FlxText;
 	
@@ -66,13 +69,15 @@ class PlayState extends FlxState
 		var backMap = new PlatformTiles( tileMap, "Back Map", "assets/data/Level1/Level1_Background.csv", [5, 20], false );
 		var mainMap = new PlatformTiles( tileMap, "Main Map", "assets/data/Level1/Level1_Walls.csv", [18] );
 		
-		var gah = PlatformMoveBasic.makeController;
-		
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement1", "assets/data/Level1/Level1_Platform1.csv", [64] ), 3 );
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement2", "assets/data/Level1/Level1_Platform2.csv", [64] ), 3 );
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement3", "assets/data/Level1/Level1_Platform3.csv", [64] ), 8 );
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement4", "assets/data/Level1/Level1_Platform4.csv", [64] ), 8 );
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement5", "assets/data/Level1/Level1_Platform5.csv", [64] ), 8 );
+		
+		var sw:PlatformControlSignaller = new PlatformControlSignaller( tileMap, 12000, 300, "assets/images/misc/switch_UNPRESSED.png" );
+		
+		new PlatformFalling( tileMap, 11500, 400 );
 		
 		lavaMap = new FlxTilemap();
 		var lavaData:String = Assets.getText("assets/data/Level1/Level1_Lava.csv");
@@ -102,7 +107,7 @@ class PlayState extends FlxState
 		
 		var Heart = new FlxSprite();
 		Heart.makeGraphic( 32, 32, FlxColor.RED );
-		hud = new HUD( this, 3, Heart, 9999 );
+		hud = new HUD( this, 5, Heart, 10000, 9999 );
 		
 		var Joe = new FlxSprite( 0, 0 );
 		var Mike = new FlxSprite( 0, 0 );
@@ -204,7 +209,6 @@ class PlayState extends FlxState
 		add(B);
 	}
 	
-	
 	public function checkBolts():Void {
 		var d:Array<Bool> = [false, false];
 		for (i in 0...bolts.length) {
@@ -234,12 +238,8 @@ class PlayState extends FlxState
 			for(j in 0...shieldGuys.length){
 				if(FlxG.overlap(bolts[i], shieldGuys[j])){
 					d[i] = true;
-					if(shieldGuys[j].shieldBroken){
-						shieldGuys[j].healthRemaining -= 1;
-						if(shieldGuys[j].healthRemaining < 1){
-							remove(shieldGuys[j]);
-							shieldGuys.splice(j, 1);
-						}
+					if(shieldGuys[j].shield.isDestroyed){
+						shieldGuys[j].damage( 1 );
 					}
 					
 				}
@@ -254,6 +254,8 @@ class PlayState extends FlxState
 	}
 	
 	public function checkCoins():Void {
+		if ( player.isDead() )
+			return;
 		var d:Array<Int> = [];
 		for (i in 0...coins.length){
 			if (FlxG.overlap(player, coins[i])) {
@@ -269,7 +271,9 @@ class PlayState extends FlxState
 	}
 	
 	
-	public function checkHearts():Void{
+	public function checkHearts():Void {
+		if ( player.isDead() )
+			return;
 		var d:Array<Int> = [];
 		for (i in 0...heartPickups.length){
 			if (FlxG.overlap(player, heartPickups[i])) {
@@ -317,35 +321,33 @@ class PlayState extends FlxState
 	public static var ENEMY_BOUNCE:Array<Array<Int>> =
 	[
 	[ 1, 2500, 1500 ],
-	[ 1, 5500, 1000 ],
+	[ 1, 5500, 0 ],
 	[ 1, 4500, 0 ],
 	[ 1, 3000, 0 ]
 	];
 	
 	public function checkHit( obj:FlxSprite, id:Int ):Bool {
-		if ( FlxG.overlap( player, obj ) ) {
-			if ( !player.isDeadOrHurt() ) {
-				hud.damage( ENEMY_BOUNCE[id][PLAYER_HEALTH] );
-				
-				if ( hud.getHealth() == 0 ) {
-					player.setDead();
-					player.velocity.y = -2000;
-					if ( obj.x < player.x ) {
-						player.velocity.x = 6000;
-					} else {
-						player.velocity.x = -6000;
-					}
+		if ( !player.isDeadOrHurt() && FlxG.overlap( player, obj ) ) {
+			hud.damage( ENEMY_BOUNCE[id][PLAYER_HEALTH] );
+			
+			if ( hud.getHealth() == 0 ) {
+				player.setDead();
+				player.velocity.y = -2000;
+				if ( obj.x < player.x ) {
+					player.velocity.x = 6000;
 				} else {
-					player.setHurt();
-					if ( obj.x < player.x ) {
-						player.velocity.x = ENEMY_BOUNCE[id][PLAYER_RECOIL];
-						obj.velocity.x = -ENEMY_BOUNCE[id][ENEMY_RECOIL];
-					} else {
-						player.velocity.x = -ENEMY_BOUNCE[id][PLAYER_RECOIL];
-						obj.velocity.x = ENEMY_BOUNCE[id][ENEMY_RECOIL];
-					}
-					player.velocity.y *= .25;
+					player.velocity.x = -6000;
 				}
+			} else {
+				player.setHurt();
+				if ( obj.x < player.x ) {
+					player.velocity.x = ENEMY_BOUNCE[id][PLAYER_RECOIL];
+					obj.velocity.x = -ENEMY_BOUNCE[id][ENEMY_RECOIL];
+				} else {
+					player.velocity.x = -ENEMY_BOUNCE[id][PLAYER_RECOIL];
+					obj.velocity.x = ENEMY_BOUNCE[id][ENEMY_RECOIL];
+				}
+				player.velocity.y *= .25;
 			}
 			return true;
 		} return false;
@@ -360,9 +362,34 @@ class PlayState extends FlxState
 	}
 	
 	public function checkShieldGuys():Void {
-		for(i in 0...shieldGuys.length){
+		for(i in 0...shieldGuys.length) {
 			FlxG.collide(shieldGuys[i], tileMap);
-			checkHit( shieldGuys[i], ENEMY_SHIELDGUY);
+			if ( !player.isDeadOrHurt() && !shieldGuys[i].isDead() && FlxG.overlap( player, shieldGuys[i] ) ) {
+				if ( shieldGuys[i].isAttacking ) {
+					hud.damage( ENEMY_BOUNCE[ENEMY_SHIELDGUY][PLAYER_HEALTH] );
+					if ( hud.getHealth() == 0 ) {
+						player.setDead();
+						player.velocity.y = -2000;
+						if ( shieldGuys[i].x < player.x ) {
+							player.velocity.x = 6000;
+						} else {
+							player.velocity.x = -6000;
+						}
+					} else {
+						player.setHurt();
+						if ( shieldGuys[i].x < player.x ) {
+							player.velocity.x = ENEMY_BOUNCE[ENEMY_SHIELDGUY][PLAYER_RECOIL];
+							shieldGuys[i].velocity.x = -ENEMY_BOUNCE[ENEMY_SHIELDGUY][ENEMY_RECOIL];
+						} else {
+							player.velocity.x = -ENEMY_BOUNCE[ENEMY_SHIELDGUY][PLAYER_RECOIL];
+							shieldGuys[i].velocity.x = ENEMY_BOUNCE[ENEMY_SHIELDGUY][ENEMY_RECOIL];
+						}
+						player.velocity.y *= .25;
+					}
+				} else {
+					FlxObject.separateX( player, shieldGuys[i] );
+				}
+			}
 		}
 	}
 	
@@ -378,8 +405,6 @@ class PlayState extends FlxState
 					if ( !player.isDeadOrHurt() ) {
 						FlxObject.separateX( player, batneyes[i] );
 						FlxObject.separateY( player, batneyes[i] );
-						
-						trace( batneyes[i].touching, player.touching );
 						
 						if ( ( batneyes[i].touching & FlxObject.UP != 0 ) && ( player.touching & FlxObject.DOWN != 0 ) ) {
 							
@@ -410,8 +435,6 @@ class PlayState extends FlxState
 						}
 					}
 				}
-			} else {
-				trace( batneyes[i].velocity, batneyes[i].acceleration );
 			}
 		}
 	}
@@ -463,7 +486,6 @@ class PlayState extends FlxState
 			for(i in 0...shieldCoords.length){
 				var s:ShieldGuy = new ShieldGuy(shieldCoords[i].x, shieldCoords[i].y, this);
 				shieldGuys.push(s);
-				add(s);
 			}
 		//}
 		

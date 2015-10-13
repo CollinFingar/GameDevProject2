@@ -23,12 +23,14 @@ class HUD extends FlxSubState {
 	
 	var health:Int;
 	var score:Int;
+	var maxscore:Int;
 	
-	public override function new( par:FlxState, hcount:Int, htemplate:FlxSprite, sscore:Int ) {
+	public override function new( par:FlxState, hcount:Int, htemplate:FlxSprite, sscore:Int, mscore:Int ) {
 		super();
 		
 		health = hcount;
 		score = sscore;
+		maxscore = mscore;
 		
 		heart = new Array<FlxSprite>();
 		for ( i in 0...hcount ) {
@@ -44,7 +46,8 @@ class HUD extends FlxSubState {
 		healthlab.scrollFactor.set( 0, 0 );
 		add( healthlab );
 		
-		textbox = new FlxText( 16, 16, FlxG.width-32, Std.string( score ) );
+		textbox = new FlxText( 16, 16, FlxG.width - 32, "" );
+		SetScore();
 		textbox.size = htemplate.height;
 		textbox.alignment = "right";
 		textbox.scrollFactor.set( 0, 0 );
@@ -59,9 +62,16 @@ class HUD extends FlxSubState {
 		par.add( this );
 	}
 	
+	public function SetScore():Void {
+		if ( score > maxscore ) {
+			textbox.text = Std.string( maxscore );
+		} else {
+			textbox.text = Std.string( score );
+		}
+	}
 	public function AddScore( value:Int ) {
 		score -= value;
-		textbox.text = Std.string( score );
+		SetScore();
 	}
 	public function setHealth( amt:Int ) {
 		// Cannot take damage outside of range

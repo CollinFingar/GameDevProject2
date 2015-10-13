@@ -1,5 +1,5 @@
 package platforms;
-;
+
 import flixel.FlxState;
 import flixel.FlxSprite;
 import flixel.FlxG;
@@ -10,12 +10,15 @@ import flixel.tile.FlxTilemap;
 import flixel.util.FlxPoint;
 import openfl.Assets;
 
-class PlatformSwitch extends FlxSprite {
+class PlatformControlSignaller extends FlxSprite {
+	var parent:PlatformGroup;
 	var target:PlatformController;
 	
-	public override function new( nx:Float, ny:Float, spr:FlxSprite, ctrl:PlatformController = null ) {
+	public override function new( par:PlatformGroup, nx:Float, ny:Float, spr:String, ctrl:PlatformController = null ) {
 		super( nx, ny );
-		loadGraphicFromSprite( spr );
+		loadGraphic(spr);
+		parent = par;
+		parent.parent.add( this );
 		target = ctrl;
 	}
 	public function setTarget( targ:PlatformController = null ) {
@@ -23,6 +26,6 @@ class PlatformSwitch extends FlxSprite {
 	}
 	public function send_signal( sig:Int ) {
 		if ( target != null )
-			taret.receive_signal( sig );
+			target.receive_signal( sig );
 	}
 }

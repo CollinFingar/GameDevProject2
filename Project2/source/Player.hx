@@ -9,6 +9,7 @@ import flixel.util.FlxColor;
 import flixel.FlxObject;
 import flixel.util.FlxPoint;
 import haxe.macro.Expr.Var;
+import platforms.PlatformCollision;
 import platforms.PlatformTiles;
 import AnimationController;
 
@@ -276,10 +277,10 @@ class Player extends MoveBase
 	public function isDeadOrHurt():Bool {
 		return playerDead || playerHurt;
 	}
-	public override function shouldCollide( other:platforms.PlatformTiles ):Bool {
+	public override function shouldCollide( other:PlatformCollision ):Bool {
 		return super.shouldCollide( other );
 	}
-	public override function collision( other:platforms.PlatformTiles, xsep:Bool, ysep:Bool ):Void {
+	public override function collision( other:PlatformCollision, xsep:Bool, ysep:Bool ):Void {
 		if ( ysep ) {
 			if ( playerJumping ) {
 				if ( ( touching & FlxObject.UP ) != 0 ) {
@@ -385,19 +386,16 @@ class Player extends MoveBase
 		}
 		for(i in 0...this.parent.shieldGuys.length){
 			if(FlxG.collide(this.parent.shieldGuys[i], swingArea)){
-					this.parent.shieldGuys[i].healthRemaining -= 1;
-					if(this.parent.shieldGuys[i].shieldBroken == false){
-						this.parent.shieldGuys[i].shieldBroken = true;
+					
+					if ( !this.parent.shieldGuys[i].shield.isDestroyed ) {
+						this.parent.shieldGuys[i].damage( 1 );
 					}
+					this.parent.shieldGuys[i].destroyShield();
+					
 					if(this.parent.shieldGuys[i].x > this.x){
 						this.parent.shieldGuys[i].velocity.x = 1500;
 					} else {
 						this.parent.shieldGuys[i].velocity.x = -1500;
-					}
-					
-					if(this.parent.shieldGuys[i].healthRemaining < 1){
-						this.parent.remove(this.parent.shieldGuys[i]);
-						this.parent.shieldGuys.splice(i, 1);
 					}
 			}
 		}
