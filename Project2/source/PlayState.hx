@@ -38,9 +38,11 @@ class PlayState extends FlxState
 	var cs:CutScene;
 	public var hud:HUD;
 	public var coinMap:FlxTilemap;
+	public var heartMap:FlxTilemap;
 	public var enemyMap:FlxTilemap;
 	public var bolts:Array<Bolt> = [];
 	public var coins:Array<Collectible> = [];
+	public var heartPickups:Array<Heart> = [];
 	public var walkers:Array<enemies.Walker> = [];
 	public var batShots:Array<enemies.Batshot> = [];
 	public var batneyes:Array<enemies.Batneye> = [];
@@ -116,6 +118,11 @@ class PlayState extends FlxState
 		var coinData:String = Assets.getText("assets/data/Level1/Level1_Coins.csv");
 		coinMap.loadMap(coinData, "assets/images/tiles1.png", 64, 64);
 		placeCoins();
+		
+		heartMap = new FlxTilemap();
+		var heartData:String = Assets.getText("assets/data/Level1/Level1_Health.csv");
+		heartMap.loadMap(heartData, "assets/images/tiles1.png", 64, 64);
+		placeHearts();
 		
 		enemyMap = new FlxTilemap();
 		var enemyData:String = Assets.getText("assets/data/Level1/Level1_Enemies.csv");
@@ -201,7 +208,7 @@ class PlayState extends FlxState
 		
 		//check if coins are collected
 		checkCoins();
-		
+		checkHearts();
 		//check if walkers are colliding with ground
 		checkWalkers();
 		
@@ -294,6 +301,22 @@ class PlayState extends FlxState
 		}
 	}
 	
+	
+	public function checkHearts():Void{
+		var d:Array<Int> = [];
+		for (i in 0...heartPickups.length){
+			if (FlxG.overlap(player, heartPickups[i])) {
+				hud.heal(1);
+				d.push(i);
+			}
+		}
+		for(i in 0...d.length){
+			remove(heartPickups[d[i]]);
+			heartPickups.splice(d[i], 1);
+		}
+	}
+	
+	
 	public function placeCoins():Void {
 		var coinCoords:Array<FlxPoint> = coinMap.getTileCoords(65, true);
 		for(i in 0...coinCoords.length) {
@@ -301,6 +324,16 @@ class PlayState extends FlxState
 			
 			coins.push(c);
 			add(c);
+		}
+	}
+	
+	public function placeHearts():Void {
+		var heartCoords:Array<FlxPoint> = heartMap.getTileCoords(79, true);
+		for(i in 0...heartCoords.length) {
+			var h:Heart = new Heart(heartCoords[i].x, heartCoords[i].y, this);
+			
+			heartPickups.push(h);
+			add(h);
 		}
 	}
 	
@@ -383,25 +416,34 @@ class PlayState extends FlxState
 		}
 	}
 	
-	public function placeEnemies():Void{
+	public function placeEnemies():Void {	
 		var walkerCoords:Array<FlxPoint> = enemyMap.getTileCoords(32, true);
-		for(i in 0...walkerCoords.length){
-			var w:Walker = new Walker(walkerCoords[i].x, walkerCoords[i].y-50, this);
-			walkers.push(w);
-			add(w);
-		}
+		//if(walkerCoords.length > 0){
+			for(i in 0...walkerCoords.length){
+				var w:Walker = new Walker(walkerCoords[i].x, walkerCoords[i].y-50, this);
+				walkers.push(w);
+				add(w);
+			}
+		//}
+		
 		var batCoords:Array<FlxPoint> = enemyMap.getTileCoords(34, true);
-		for(i in 0...batCoords.length){
-			var b:Batneye = new Batneye(batCoords[i].x, batCoords[i].y, 70, this);
-			batneyes.push(b);
-			add(b);
-		}
+		//if(batCoords.length > 0){
+			for(i in 0...batCoords.length){
+				var b:Batneye = new Batneye(batCoords[i].x, batCoords[i].y, 70, this);
+				batneyes.push(b);
+				add(b);
+			}
+		//}
+		
 		var shieldCoords:Array<FlxPoint> = enemyMap.getTileCoords(33, true);
-		for(i in 0...shieldCoords.length){
-			var s:ShieldGuy = new ShieldGuy(shieldCoords[i].x, shieldCoords[i].y, this);
-			shieldGuys.push(s);
-			add(s);
-		}
+		//if(shieldCoords.length > 0){
+			for(i in 0...shieldCoords.length){
+				var s:ShieldGuy = new ShieldGuy(shieldCoords[i].x, shieldCoords[i].y, this);
+				shieldGuys.push(s);
+				add(s);
+			}
+		//}
+		
 	}
 	
 	
