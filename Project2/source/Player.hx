@@ -248,8 +248,19 @@ class Player extends MoveBase
 		if ( playerHurt )
 			return;
 		playerHurt = true;
+		
+		var num = Math.random();
+		if(num >=.6){
+			FlxG.sound.play("assets/sounds/vrsfx/Licia/hurt1.wav", .3, false);
+		} else if (num >= .3){
+			FlxG.sound.play("assets/sounds/vrsfx/Licia/hurt2.wav", .3, false);
+		} else {
+			FlxG.sound.play("assets/sounds/vrsfx/Licia/hurt3.wav", .3, false);
+		}
 	}
 	public function setDead():Void {
+		FlxG.sound.play("assets/sounds/vrsfx/Licia/death.wav", .6, false);
+		
 		acceleration.y = 3200;
 		drag.set( 0, 0 );
 		FlxG.camera.follow( null );
@@ -304,17 +315,28 @@ class Player extends MoveBase
 			playerJumping = true;
 			assignBase();
 			
+			
+			var num = Math.random();
+			if(num >=.6){
+				FlxG.sound.play("assets/sounds/vrsfx/Licia/jump1.wav", .3, false);
+			} else if (num >= .3){
+				FlxG.sound.play("assets/sounds/vrsfx/Licia/jump2.wav", .3, false);
+			} else {
+				FlxG.sound.play("assets/sounds/vrsfx/Licia/jump3.wav", .3, false);
+			}
+			
 		}
 	}
 	
 	public function shootCrossbow():Void {
 		if ( shooting == -1 && swinging == -1 && this.parent.bolts.length < 2) {
 			shooting = 0;
+			FlxG.sound.play("assets/sounds/bowshoot.wav", 1, false);
 			if(facingLeft){
-				var bolt:Bolt = new Bolt(this.x - width/4, this.y + height/2, -1, this.parent);
+				var bolt:Bolt = new Bolt(this.x - width/4, this.y + height/3, -1, this.parent);
 				this.parent.addBolt(bolt);
 			} else {
-				var bolt:Bolt = new Bolt(this.x + 3*width/4, this.y + height/2, 1, this.parent);
+				var bolt:Bolt = new Bolt(this.x + 3*width/4, this.y + height/3, 1, this.parent);
 				this.parent.addBolt(bolt);
 			}
 		}
@@ -336,6 +358,16 @@ class Player extends MoveBase
 			swingArea.width = this.width;
 			swingArea.height = this.height;
 		}
+		
+		var num = Math.random();
+			if(num >=.6){
+				FlxG.sound.play("assets/sounds/vrsfx/Licia/sword1.wav", .3, false);
+			} else if (num >= .3){
+				FlxG.sound.play("assets/sounds/vrsfx/Licia/sword2.wav", .3, false);
+			} else {
+				FlxG.sound.play("assets/sounds/vrsfx/Licia/sword3.wav", .3, false);
+			}
+		
 		
 		for(i in 0...this.parent.walkers.length){
 			if(FlxG.collide(this.parent.walkers[i], swingArea)){

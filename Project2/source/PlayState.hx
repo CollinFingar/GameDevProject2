@@ -131,6 +131,8 @@ class PlayState extends FlxState
 		add( tmpspd );
 		
 		placeSpeechBubbles1();
+		
+		FlxG.sound.playMusic("assets/music/towerbgm.ogg", .2, true);
 	}
 	
 	/**
@@ -258,6 +260,7 @@ class PlayState extends FlxState
 		for (i in 0...coins.length){
 			if (FlxG.overlap(player, coins[i])) {
 				hud.AddScore( coins[i].score );
+				FlxG.sound.play("assets/sounds/coin.wav", 1, false);
 				d.push(i);
 			}
 		}
@@ -273,6 +276,7 @@ class PlayState extends FlxState
 		for (i in 0...heartPickups.length){
 			if (FlxG.overlap(player, heartPickups[i])) {
 				hud.heal(1);
+				FlxG.sound.play("assets/sounds/heartget.wav", 1, false);
 				d.push(i);
 			}
 		}
