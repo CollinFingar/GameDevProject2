@@ -34,6 +34,9 @@ import source.ui.HUD;
  */
 class PlayState extends FlxState
 {
+	public var currentLevel:Int;
+	
+	
 	public var player:Player;
 	public var tileMap:PlatformGroup;
 	public var lavaMap:FlxTilemap;
@@ -52,6 +55,8 @@ class PlayState extends FlxState
 	public var NPCs:Array<NPC> = [];
 	public var durgen:Durgen;
 	
+	public var endLocation:FlxPoint;
+	
 	// she is dead
 	var dead_and_dying:Int = 0;
 	var tmpspd:FlxText;
@@ -61,7 +66,24 @@ class PlayState extends FlxState
 	 */
 	override public function create():Void
 	{
+		
+		
+		if(Reg.level == 1){
+			buildLevel1();
+		} else if(Reg.level == 2){
+			buildLevel2();
+		} else if(Reg.level == 3){
+			buildLevel3();
+		}
+	}
+	
+	
+	public function buildLevel1():Void{
+			
+		
 		super.create();
+		
+		endLocation = new FlxPoint(1500, 9000);
 		
 		FlxG.state.bgColor = FlxColor.AZURE;
 		FlxG.worldBounds.set(0, 0, 200 * 64, 150 * 64);
@@ -100,7 +122,7 @@ class PlayState extends FlxState
 		enemyMap.loadMap(enemyData, "assets/images/tiles1.png", 64, 64);
 		placeEnemies();
 		
-		add(player = new Player(12300, 300, this));	//12300, 300 is start
+		add(player = new Player(12300, 300, this));	//12300, 300 is start of 1. 2000, 9000 by end.
 		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
 		FlxG.camera.zoom = 1;
 		
@@ -147,6 +169,109 @@ class PlayState extends FlxState
 		FlxG.sound.playMusic("assets/music/towerbgm.ogg", .2, true);
 	}
 	
+	public function buildLevel2():Void{
+			
+		
+		super.create();
+		
+		endLocation = new FlxPoint(1500, 9000);
+		
+		FlxG.state.bgColor = FlxColor.CHARCOAL;
+		FlxG.worldBounds.set(0, 0, 200 * 64, 150 * 64);
+		
+		tileMap = new PlatformGroup( this, "assets/images/tiles1.png" );
+		var backMap = new PlatformTiles( tileMap, "Back Map", "assets/data/Level2/Level2_Background.csv", [5, 20], false );
+		var mainMap = new PlatformTiles( tileMap, "Main Map", "assets/data/Level2/Level2_Walls.csv", [18] );
+		
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement1", "assets/data/Level2/Level2_Platform1.csv", [64] ), 3 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement2", "assets/data/Level2/Level2_Platform2.csv", [64] ), 3 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement3", "assets/data/Level2/Level2_Platform3.csv", [64] ), 8 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement4", "assets/data/Level2/Level2_Platform4.csv", [64] ), 8 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement5", "assets/data/Level2/Level2_Platform5.csv", [64] ), 8 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement6", "assets/data/Level2/Level2_Platform6.csv", [64] ), 8 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement7", "assets/data/Level2/Level2_Platform7.csv", [64] ), 8 );
+		
+		var sw:PlatformControlSignaller = new PlatformControlSignaller( tileMap, 12000, 300, "assets/images/misc/switch_UNPRESSED.png" );
+		
+		new PlatformFalling( tileMap, 11500, 400 );
+		
+		lavaMap = new FlxTilemap();
+		var lavaData:String = Assets.getText("assets/data/Level2/Level2_Lava.csv");
+		lavaMap.loadMap(lavaData, "assets/images/tiles1.png", 64, 64);
+		add(lavaMap);
+		
+		//coinMap = new FlxTilemap();
+		//var coinData:String = Assets.getText("assets/data/Level2/Level2_Coins.csv");
+		//coinMap.loadMap(coinData, "assets/images/tiles1.png", 64, 64);
+		//placeCoins();
+		
+		//heartMap = new FlxTilemap();
+		//var heartData:String = Assets.getText("assets/data/Level2/Level2_Health.csv");
+		//heartMap.loadMap(heartData, "assets/images/tiles1.png", 64, 64);
+		//placeHearts();
+		
+		enemyMap = new FlxTilemap();
+		var enemyData:String = Assets.getText("assets/data/Level2/Level2_Enemy.csv");
+		enemyMap.loadMap(enemyData, "assets/images/tiles1.png", 64, 64);
+		placeEnemies();
+		
+		add(player = new Player(9000, 1200, this));	//12300, 300 is start
+		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
+		FlxG.camera.zoom = 1;
+		
+		/* WILL'S CODE */
+		
+		var Heart = new FlxSprite();
+		Heart.makeGraphic( 32, 32, FlxColor.RED );
+		hud = new HUD( this, 5, Heart, 10000, 9999 );
+		
+		var Joe = new FlxSprite( 0, 0 );
+		var Mike = new FlxSprite( 0, 0 );
+		
+		Joe.makeGraphic( 120, 80, FlxColor.GREEN );
+		Mike.makeGraphic( 70, 130, FlxColor.RED );
+		
+		cs = new CutScene( this );
+		
+		cs.add_character( "Joe", Joe );
+		cs.add_character( "Mike", Mike );
+		
+		cs.add_dialogue( "Joe",  "So what are we doing" );
+		cs.add_dialogue( "Mike", "I don't know" );
+		cs.add_dialogue( "Mike", "Ask me about it later" );
+		cs.add_dialogue( "Joe",  "Yeah okay sure whatever" );
+		
+		add( Joe );
+		add( Mike );
+		
+		/* WILL'S CODE */
+		
+		tmpspd = new FlxText( 16, FlxG.height - 48, FlxG.width );
+		tmpspd.scrollFactor.set( 0, 0 );
+		tmpspd.size = 24;
+		add( tmpspd );
+		
+		//pnt = new FlxPoint(10500, 600);
+		
+		
+		
+		//placeSpeechBubbles1();
+		
+		FlxG.sound.playMusic("assets/music/towerbgm.ogg", .2, true);
+	}
+	
+	public function buildLevel3():Void{
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Function that is called when this state is destroyed - you might want to 
 	 * consider setting all objects this state uses to null to help garbage collection.
@@ -166,6 +291,14 @@ class PlayState extends FlxState
 	}
 	override public function update():Void
 	{
+		
+		if(Math.sqrt((player.x - endLocation.x)*(player.x - endLocation.x) + (player.y - endLocation.y) * (player.y - endLocation.y)) < 200){
+			Reg.level += 1;
+			Reg.score = hud.score;
+			FlxG.switchState(new PlayState());
+		}
+		
+		
 		if ( FlxG.keys.justPressed.ESCAPE ) {
 			FlxG.switchState(new MenuState());
 		}
@@ -555,6 +688,10 @@ class PlayState extends FlxState
 		for(i in 0...NPCs.length){
 			NPCs[i].checkIfPlayerNear();
 		}
+	}
+	
+	public function nextLevel():Void{
+		
 	}
 	
 	

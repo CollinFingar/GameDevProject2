@@ -334,10 +334,10 @@ class Player extends MoveBase
 			shooting = 0;
 			FlxG.sound.play("assets/sounds/bowshoot.wav", 1, false);
 			if(facingLeft){
-				var bolt:Bolt = new Bolt(this.x - width/4, this.y + height/3, -1, this.parent);
+				var bolt:Bolt = new Bolt(this.x - width/4, this.y + height/2, -1, this.parent);
 				this.parent.addBolt(bolt);
 			} else {
-				var bolt:Bolt = new Bolt(this.x + 3*width/4, this.y + height/3, 1, this.parent);
+				var bolt:Bolt = new Bolt(this.x + 3*width/4, this.y + height/2, 1, this.parent);
 				this.parent.addBolt(bolt);
 			}
 		}

@@ -22,7 +22,7 @@ class HUD extends FlxSubState {
 	var scorelab:FlxText;
 	
 	var health:Int;
-	var score:Int;
+	public var score:Int;
 	var maxscore:Int;
 	
 	public override function new( par:FlxState, hcount:Int, htemplate:FlxSprite, sscore:Int, mscore:Int ) {
