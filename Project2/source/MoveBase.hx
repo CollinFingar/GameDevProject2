@@ -22,6 +22,7 @@ class MoveBase extends FlxSprite
 	// even if the platform changes speeds before the movable
 	// finds a new master, the echo will be constant
 	public var echo:FlxPoint;
+	public var ignore:Bool = false;
 	
 	public override function new( X:Float, Y:Float ) {
 		super( X, Y );
@@ -33,10 +34,10 @@ class MoveBase extends FlxSprite
 			master.setSlot( null );
 		master = mov;
 		if ( master != null ) {
-			color = FlxColor.RED;
+			//color = FlxColor.RED;
 			master.setSlot( this );
-		} else
-			color = FlxColor.WHITE;
+		} //else
+			//color = FlxColor.WHITE;
 	}
 	public function getBase():PlatformTiles {
 		return master;

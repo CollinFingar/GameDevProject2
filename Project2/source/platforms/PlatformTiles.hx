@@ -113,7 +113,7 @@ class PlatformTiles extends FlxTilemap {
 		var ys = false;
 		obj.velocity.x -= x - orig_pos.x;
 		obj.velocity.y -= y - orig_pos.y;
-		if ( FlxG.overlap( this, obj ) ) {
+		if ( !obj.ignore && FlxG.overlap( this, obj ) ) {
 			if ( obj.shouldCollide( this ) ) {
 				xs = FlxObject.separateX( obj, this );
 				ys = FlxObject.separateY( obj, this );
@@ -128,7 +128,6 @@ class PlatformTiles extends FlxTilemap {
 		orig_pos.set( x, y );
 		moveX( hspeed() );
 		moveY( vspeed() );
-		trace( "TILEMAP: " + (x - orig_pos.x) + ", " + (x - orig_pos.x) );
 		super.update();
 	}
 	

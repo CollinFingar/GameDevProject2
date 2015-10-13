@@ -46,6 +46,7 @@ class PlayState extends FlxState
 	public var shieldGuys:Array<ShieldGuy> = [];
 	public var NPCs:Array<NPC> = [];
 	
+	var dead_and_dying:Int = 0;
 	var tmpspd:FlxText;
 	
 	/**
@@ -62,6 +63,8 @@ class PlayState extends FlxState
 		var backMap = new PlatformTiles( tileMap, "Back Map", "assets/data/Level1/Level1_Background.csv", [20], false );
 		var mainMap = new PlatformTiles( tileMap, "Main Map", "assets/data/Level1/Level1_Walls.csv", [18] );
 		
+		var gah = PlatformMoveBasic.makeController;
+		
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement1", "assets/data/Level1/Level1_Platform1.csv", [64] ), 3 );
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement2", "assets/data/Level1/Level1_Platform2.csv", [64] ), 3 );
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement3", "assets/data/Level1/Level1_Platform3.csv", [64] ), 8 );
@@ -70,7 +73,7 @@ class PlayState extends FlxState
 		
 		//coinMap = new FlxTilemap();
 		//var coinData:String = Assets.getText("assets/data/Level1/Level1_Coins.csv");
-		//coinMap.loadMap(coinData, mapTilePath, 64, 64);
+		//coinMap.loadMap(coinData, mapTilePath, 64,zz 64);
 		//placeCoins();
 		
 		enemyMap = new FlxTilemap();
@@ -78,7 +81,7 @@ class PlayState extends FlxState
 		enemyMap.loadMap(enemyData, "assets/images/tiles1.png", 64, 64);
 		placeEnemies();
 		
-		add(player = new Player(6000, 300, this));	//12300, 300 is start
+		add(player = new Player(12300, 300, this));	//12300, 300 is start
 		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
 		FlxG.camera.zoom = 1;
 		
@@ -114,7 +117,6 @@ class PlayState extends FlxState
 		tmpspd.size = 24;
 		add( tmpspd );
 		
-		
 		placeSpeechBubbles1();
 	}
 	
@@ -130,44 +132,44 @@ class PlayState extends FlxState
 	/**
 	 * Function that is called once every frame.
 	 */
+	public function offOfScreen():Bool {
+		var xdist = Math.abs( ( FlxG.camera.scroll.x + FlxG.camera.width / 2 ) - player.x );
+		var ydist = Math.abs( ( FlxG.camera.scroll.y + FlxG.camera.height / 2 ) - player.y );
+		return xdist > FlxG.camera.width / 2 || ydist > FlxG.camera.height / 2;
+	}
 	override public function update():Void
 	{
 		if ( FlxG.keys.justPressed.ESCAPE ) {
 			FlxG.switchState(new MenuState());
 		}
 		
-		var plx = player.x;
-		var ply = player.y;
+		if ( player.isDead() ) {
+			if ( dead_and_dying > 0 ) {
+				FlxG.camera.color -= 0x00030303;
+				dead_and_dying -- ;
+				if ( dead_and_dying == 0) {
+					FlxG.switchState(new GameOverState());
+				}
+			} else if ( offOfScreen() ) {
+				dead_and_dying = cast(0xFF / 0x03,Int);
+			}
+		}
 		
 		tileMap.override_update();
 		super.update();
 		tileMap.collisionCheck( player );
 		player.late_update();
 		
-		trace( "PLAYER: " + (player.x - plx) + ", " + (player.y - ply) );
+		tmpspd.text = Player.ANIMATIONS[player.animctrl.current][Player.ANIMI_NAME];
 		
-		//check if bolts need to reset
 		checkBolts();
-		
-		//check if coins are collected
 		checkCoins();
-		
-		//check if walkers are colliding with ground
 		checkWalkers();
-		
-		//check batneyes for colliding with walls, bolts, and players
 		checkBats();
-		//check batShots for colliding with walls, players, and lifespan
 		checkBatShots();
-		//check shield guys for colliding with walls, etc..
 		checkShieldGuys();
-		
-		
 		checkSpeechBubbles();
 		
-		if ( FlxG.keys.justPressed.Q ) {
-			cs.change();
-		}
 	}
 	
 	
@@ -254,33 +256,64 @@ class PlayState extends FlxState
 		}
 	}
 	
+	
+	public static inline var ENEMY_WALKER:Int 	= 0;
+	public static inline var ENEMY_SHIELDGUY:Int= 1;
+	public static inline var ENEMY_BAT:Int	 	= 2;
+	public static inline var ENEMY_BULLET:Int 	= 3;
+	
+	public static inline var PLAYER_HEALTH:Int 	= 0;
+	public static inline var PLAYER_RECOIL:Int 	= 1;
+	public static inline var ENEMY_RECOIL:Int 	= 2;
+	
+	public static var ENEMY_BOUNCE:Array<Array<Int>> =
+	[
+	[ 1, 2500, 1500 ],
+	[ 1, 5500, 0 ],
+	[ 1, 4500, 0 ],
+	[ 1, 3000, 0 ]
+	];
+	
+	public function checkHit( obj:FlxSprite, id:Int ):Bool {
+		if ( FlxG.overlap( player, obj ) ) {
+			if ( !player.isDeadOrHurt() ) {
+				hud.damage( ENEMY_BOUNCE[id][PLAYER_HEALTH] );
+				
+				if ( hud.getHealth() == 0 ) {
+					player.setDead();
+					player.velocity.y = -2000;
+					if ( obj.x < player.x ) {
+						player.velocity.x = 6000;
+					} else {
+						player.velocity.x = -6000;
+					}
+				} else {
+					player.setHurt();
+					if ( obj.x < player.x ) {
+						player.velocity.x = ENEMY_BOUNCE[id][PLAYER_RECOIL];
+						obj.velocity.x = -ENEMY_BOUNCE[id][ENEMY_RECOIL];
+					} else {
+						player.velocity.x = -ENEMY_BOUNCE[id][PLAYER_RECOIL];
+						obj.velocity.x = ENEMY_BOUNCE[id][ENEMY_RECOIL];
+					}
+					player.velocity.y *= .25;
+				}
+			}
+			return true;
+		} return false;
+	}
+	
 	public function checkWalkers():Void {
 		for(i in 0...walkers.length){
 			FlxG.collide(walkers[i], tileMap);
-			if(FlxG.overlap(player, walkers[i])){
-				hud.damage(1);
-				if(walkers[i].x > player.x){
-					player.velocity.x = -2500; walkers[i].velocity.x = 1500;
-				} else {
-					player.velocity.x = 2500; walkers[i].velocity.x = -1500;
-				}
-			}
-			
+			checkHit( walkers[i], ENEMY_WALKER );
 		}
 	}
 	
 	public function checkShieldGuys():Void {
 		for(i in 0...shieldGuys.length){
 			FlxG.collide(shieldGuys[i], tileMap);
-			if(FlxG.overlap(player, shieldGuys[i])){
-				hud.damage(1);
-				if(shieldGuys[i].x > player.x){
-					player.velocity.x = -5500; //shieldGuys[i].velocity.x = 1500;
-				} else {
-					player.velocity.x = 5500; //shieldGuys[i].velocity.x = -1500;
-				}
-			}
-			
+			checkHit( shieldGuys[i], ENEMY_SHIELDGUY);
 		}
 	}
 	
@@ -289,14 +322,7 @@ class PlayState extends FlxState
 			if(FlxG.collide(batneyes[i], tileMap)){
 				batneyes[i].goingUp = !batneyes[i].goingUp;
 			}
-			if(FlxG.overlap(player, batneyes[i])){
-				hud.damage(1);
-				if(batneyes[i].x > player.x){
-					player.velocity.x = -4500;
-				} else {
-					player.velocity.x = 4500;
-				}
-			}
+			checkHit( batneyes[i], ENEMY_BAT );
 		}
 	}
 	
@@ -304,24 +330,14 @@ class PlayState extends FlxState
 		var d:Array<Bool> = [];
 		for (i in 0...batShots.length) {
 			var b:Float = batShots[i].x;
-			if(FlxG.collide(tileMap, batShots[i])){
+			if ( FlxG.collide(tileMap, batShots[i]) ) {
 				d.push(true);
-			}
-			
-			else if (b > batShots[i].startX + FlxG.camera.width  || b < batShots[i].startX - FlxG.camera.width){
+			} else if (b > batShots[i].startX + FlxG.camera.width  || b < batShots[i].startX - FlxG.camera.width){
 				d.push(true);
-			} else if (FlxG.collide(player, batShots[i])) {
-				hud.damage(1);
-				if(batShots[i].x > player.x){
-					player.velocity.x = -3000;
-				} else {
-					player.velocity.x = 3000;
-				}
+			} else if ( checkHit( batShots[i], ENEMY_BULLET ) ) {
 				d.push(true);
-			}
-			else {
+			} else {
 				d.push(false);
-
 			}
 			
 		}

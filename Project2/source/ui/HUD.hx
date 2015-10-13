@@ -82,6 +82,9 @@ class HUD extends FlxSubState {
 		// Set new health value
 		health = amt;
 	}
+	public function getHealth():Int {
+		return health;
+	}
 	public function heal( amt:Int ) {
 		setHealth( health + amt );
 	}
