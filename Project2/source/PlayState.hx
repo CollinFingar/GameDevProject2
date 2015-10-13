@@ -60,7 +60,7 @@ class PlayState extends FlxState
 		FlxG.worldBounds.set(0, 0, 200 * 64, 150 * 64);
 		
 		tileMap = new PlatformGroup( this, "assets/images/tiles1.png" );
-		var backMap = new PlatformTiles( tileMap, "Back Map", "assets/data/Level1/Level1_Background.csv", [20], false );
+		var backMap = new PlatformTiles( tileMap, "Back Map", "assets/data/Level1/Level1_Background.csv", [5, 20], false );
 		var mainMap = new PlatformTiles( tileMap, "Main Map", "assets/data/Level1/Level1_Walls.csv", [18] );
 		
 		var platMove = new PlatformMoveBasic( tileMap, "Movement1", "assets/data/Level1/Level1_Platform1.csv", [64] );
