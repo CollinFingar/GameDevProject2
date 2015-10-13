@@ -90,6 +90,12 @@ class PlayState extends FlxState
 		
 		tileMap = new PlatformGroup( this, "assets/images/tiles1.png" );
 		var backMap = new PlatformTiles( tileMap, "Back Map", "assets/data/Level1/Level1_Background.csv", [5, 20], false );
+		
+		lavaMap = new FlxTilemap();
+		var lavaData:String = Assets.getText("assets/data/Level1/Level1_Lava.csv");
+		lavaMap.loadMap(lavaData, "assets/images/tiles1.png", 64, 64);
+		add(lavaMap);
+		
 		var mainMap = new PlatformTiles( tileMap, "Main Map", "assets/data/Level1/Level1_Walls.csv", [18] );
 		
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement1", "assets/data/Level1/Level1_Platform1.csv", [64] ), 3 );
@@ -102,10 +108,7 @@ class PlayState extends FlxState
 		
 		new PlatformFalling( tileMap, 11500, 400 );
 		
-		lavaMap = new FlxTilemap();
-		var lavaData:String = Assets.getText("assets/data/Level1/Level1_Lava.csv");
-		lavaMap.loadMap(lavaData, "assets/images/tiles1.png", 64, 64);
-		add(lavaMap);
+		
 		
 		coinMap = new FlxTilemap();
 		var coinData:String = Assets.getText("assets/data/Level1/Level1_Coins.csv");
@@ -174,13 +177,19 @@ class PlayState extends FlxState
 		
 		super.create();
 		
-		endLocation = new FlxPoint(1500, 9000);
+		endLocation = new FlxPoint(1500, 600);
 		
 		FlxG.state.bgColor = FlxColor.CHARCOAL;
 		FlxG.worldBounds.set(0, 0, 200 * 64, 150 * 64);
 		
 		tileMap = new PlatformGroup( this, "assets/images/tiles1.png" );
-		var backMap = new PlatformTiles( tileMap, "Back Map", "assets/data/Level2/Level2_Background.csv", [5, 20], false );
+		var backMap = new PlatformTiles( tileMap, "Back Map", "assets/data/Level2/Level2_Background.csv", [5, 8, 20], false );
+		
+		lavaMap = new FlxTilemap();
+		var lavaData:String = Assets.getText("assets/data/Level2/Level2_Lava.csv");
+		lavaMap.loadMap(lavaData, "assets/images/tiles1.png", 64, 64);
+		add(lavaMap);
+		
 		var mainMap = new PlatformTiles( tileMap, "Main Map", "assets/data/Level2/Level2_Walls.csv", [18] );
 		
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement1", "assets/data/Level2/Level2_Platform1.csv", [64] ), 3 );
@@ -195,20 +204,17 @@ class PlayState extends FlxState
 		
 		new PlatformFalling( tileMap, 11500, 400 );
 		
-		lavaMap = new FlxTilemap();
-		var lavaData:String = Assets.getText("assets/data/Level2/Level2_Lava.csv");
-		lavaMap.loadMap(lavaData, "assets/images/tiles1.png", 64, 64);
-		add(lavaMap);
 		
-		//coinMap = new FlxTilemap();
-		//var coinData:String = Assets.getText("assets/data/Level2/Level2_Coins.csv");
-		//coinMap.loadMap(coinData, "assets/images/tiles1.png", 64, 64);
-		//placeCoins();
 		
-		//heartMap = new FlxTilemap();
-		//var heartData:String = Assets.getText("assets/data/Level2/Level2_Health.csv");
-		//heartMap.loadMap(heartData, "assets/images/tiles1.png", 64, 64);
-		//placeHearts();
+		coinMap = new FlxTilemap();
+		var coinData:String = Assets.getText("assets/data/Level2/Level2_Coins.csv");
+		coinMap.loadMap(coinData, "assets/images/tiles1.png", 64, 64);
+		placeCoins();
+		
+		heartMap = new FlxTilemap();
+		var heartData:String = Assets.getText("assets/data/Level2/Level2_Health.csv");
+		heartMap.loadMap(heartData, "assets/images/tiles1.png", 64, 64);
+		placeHearts();
 		
 		enemyMap = new FlxTilemap();
 		var enemyData:String = Assets.getText("assets/data/Level2/Level2_Enemy.csv");
