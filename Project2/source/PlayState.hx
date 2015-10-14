@@ -284,10 +284,10 @@ class PlayState extends FlxState
 		enemyMap.loadMap(enemyData, "assets/images/tiles1.png", 64, 64);
 		placeEnemies();
 		
-		var pnt:FlxPoint = new FlxPoint(9000, 1200);
-		var speechpnt:FlxPoint = new FlxPoint(9000, 1200);
-		var spch:SpeechBubble = new SpeechBubble(this, speechpnt, 200, 210, "He was... too powerful... \n\nand brave... \n\n\nand handsome....", .1, 1.2);
-		noob3 = new Noob(pnt, spch, 600, "assets/images/trappedguy1_idle_307x343_1fps_strip2.png", this);
+		var pnt:FlxPoint = new FlxPoint(8600, 4540);
+		var speechpnt:FlxPoint = new FlxPoint(8900, 4400);
+		var spch:SpeechBubble = new SpeechBubble(this, speechpnt, 200, 250, "Oh, Princess Licia, is that you? I, Sir Reginald was captured trying to rescue you! If you let me out of here, we can escape together and get married!", .1, 1.2);
+		noob3 = new Noob(pnt, spch, 700, "assets/images/trappedguy1_idle_307x343_1fps_strip2.png", this);
 		add(noob3);
 		noob3InPlay = true;
 		
