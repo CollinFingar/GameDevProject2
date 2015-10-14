@@ -101,7 +101,7 @@ class PlayState extends FlxState
 		
 		tileMap = new PlatformGroup( this, "assets/images/tiles1.png" );
 		var backMap = new PlatformTiles( tileMap, "Back Map", "assets/data/Level1/Level1_Background.csv", [5, 20], false );
-		
+
 		lavaMap = new PlatformTiles( tileMap, "Lava Map", "assets/data/Level1/Level1_Lava.csv", [9], true);
 		lavaMap.ignore = true;
 		
@@ -244,7 +244,7 @@ class PlayState extends FlxState
 		
 		super.create();
 		
-		endLocation = new FlxPoint(1500, 600);
+		endLocation = new FlxPoint(1500, 1500);
 		
 		FlxG.state.bgColor = FlxColor.CHARCOAL;
 		FlxG.worldBounds.set(0, 0, 200 * 64, 150 * 64);
@@ -284,7 +284,7 @@ class PlayState extends FlxState
 		enemyMap.loadMap(enemyData, "assets/images/tiles1.png", 64, 64);
 		placeEnemies();
 		
-		add(player = new Player(9000, 1200, this));	//12300, 300 is start
+		add(player = new Player(9000, 1200, this));	//9000, 1200 is start. 2000, 1200 is end
 		player.animctrl.force_state(Player.ANIM_IDLE);
 		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
 		FlxG.camera.zoom = 1;
@@ -320,11 +320,11 @@ class PlayState extends FlxState
 		tileMap = new PlatformGroup( this, "assets/images/tiles1.png" );
 		var backMap = new PlatformTiles( tileMap, "Back Map", "assets/data/Level3/Level3_Background.csv", [5, 8, 20, 39, 40], false );
 		
-		//lavaMap = new FlxTilemap();
+		lavaMap = new FlxTilemap();
 		//var lavaData:String = Assets.getText("assets/data/Level3/Level3_Lava.csv");
 		//lavaMap.loadMap(lavaData, "assets/images/tiles1.png", 64, 64);
 		//add(lavaMap);
-		
+
 		lavaMap = new PlatformTiles( tileMap, "Lava Map", "assets/data/Level3/Level3_Lava.csv", [9], true);
 		lavaMap.ignore = true;
 		
@@ -413,6 +413,18 @@ class PlayState extends FlxState
 		
 		if ( FlxG.keys.justPressed.ESCAPE ) {
 			FlxG.switchState(new MenuState());
+		} else if(FlxG.keys.justPressed.ONE){
+			Reg.level =1;
+			Reg.score = hud.score;
+			FlxG.switchState(new PlayState());
+		} else if(FlxG.keys.justPressed.TWO){
+			Reg.level =2;
+			Reg.score = hud.score;
+			FlxG.switchState(new PlayState());
+		} else if(FlxG.keys.justPressed.THREE){
+			Reg.level =3;
+			Reg.score = hud.score;
+			FlxG.switchState(new PlayState());
 		}
 
 		
