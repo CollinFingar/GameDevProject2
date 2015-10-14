@@ -234,7 +234,11 @@ class PlayState extends FlxState
 		
 		placeSpeechBubbles1();
 		
-		FlxG.sound.playMusic("assets/music/towerbgm.ogg", .2, true);
+		if ( WillG.skipCutScene ) {
+			FlxG.sound.playMusic("assets/music/towerbgm.ogg", .2, true);
+		} else {
+			FlxG.sound.playMusic("assets/music/openingscenebgm.ogg", .2, true);
+		}
 	}
 	
 	public function buildLevel2():Void{
@@ -259,11 +263,11 @@ class PlayState extends FlxState
 		
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement1", "assets/data/Level2/Level2_Platform1.csv", [64] ), 3 );
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement2", "assets/data/Level2/Level2_Platform2.csv", [64] ), 3 );
-		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement3", "assets/data/Level2/Level2_Platform3.csv", [64] ), 8 );
-		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement4", "assets/data/Level2/Level2_Platform4.csv", [64] ), 8 );
-		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement5", "assets/data/Level2/Level2_Platform5.csv", [64] ), 8 );
-		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement6", "assets/data/Level2/Level2_Platform6.csv", [64] ), 8 );
-		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement7", "assets/data/Level2/Level2_Platform7.csv", [64] ), 8 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement3", "assets/data/Level2/Level2_Platform3.csv", [64] ), 3 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement4", "assets/data/Level2/Level2_Platform4.csv", [64] ), 3 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement5", "assets/data/Level2/Level2_Platform5.csv", [64] ), 3 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement6", "assets/data/Level2/Level2_Platform6.csv", [64] ), 3 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement7", "assets/data/Level2/Level2_Platform7.csv", [64] ), 3 );
 		
 		//var sw:PlatformControlSignaller = new PlatformControlSignaller( tileMap, 12000, 300, "assets/images/misc/switch_UNPRESSED.png" );
 		

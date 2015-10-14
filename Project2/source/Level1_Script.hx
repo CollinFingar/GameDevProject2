@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxG;
 import source.ui.CutScene;
 
 class ScriptLvl1 extends Script {
@@ -10,6 +11,8 @@ class ScriptLvl1 extends Script {
 		var prince = arr[1];
 		var cage = arr[2];
 		var cloud = arr[3];
+		
+		silence();
 		
 		action( prince, "move", ["right", 320, 1.5] );
 		
@@ -43,6 +46,7 @@ class ScriptLvl1 extends Script {
 		action( princess, "signal", [Player.SIG_PRINCESS_ANGRY] );
 		
 		wait( 2.0 );
+		music( "assets/music/towerbgm.ogg", .2, true );	
 		
 		action( princess, "move", ["left", 300, 0.25] );
 		
