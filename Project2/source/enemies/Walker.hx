@@ -80,8 +80,6 @@ class Walker extends FlxSprite
 		if ( val > 0 )
 			walkerHurt = true;
 		healthRemaining -= val;
-		trace( "WALKER HURT" );
-		
 		
 		if(healthRemaining > 0){
 			var num = Math.random();
@@ -132,7 +130,6 @@ class Walker extends FlxSprite
 	public function setAnimation( st:Int ) {
 		if ( state != st ) {
 			state = st;
-			trace( "NEW STATE = ",state );
 			switch( state ) {
 				case ANIM_WALK:
 					loadGraphic("assets/images/enemies/walker_walk_307x343_10fps_strip6.png", true, 307, 343);

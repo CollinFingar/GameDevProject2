@@ -61,7 +61,6 @@ class Shield extends FlxSprite
 	
 	public function setAnimation( st:Int ):Void {
 		if ( st != state ) {
-			trace( "SHIELD NEW ANIM " + st );
 			state = st;
 			switch ( state ) {
 				case ANIM_WALK:
