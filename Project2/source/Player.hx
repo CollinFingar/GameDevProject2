@@ -61,7 +61,7 @@ class Player extends MoveBase implements Actor
 	
     public static inline var RUN_SPEED:Int 		= 200;
 	public static inline var JUMP_MIN:Int 		= 1500;
-	public static inline var JUMP_MAX:Int 		= 5000;
+	public static inline var JUMP_MAX:Int 		= 3500;
 	public static inline var JUMP_FRAMES:Int 	= 20;
 	
 	var jumpAmountMax:Int;
@@ -160,7 +160,7 @@ class Player extends MoveBase implements Actor
 												new AnimateCatcher( ANIM_DEATH, [dedl], cancelDead ),
 												new AnimateCatcher( ANIM_DEATH_LOOP, [] ),
 												new AnimateCatcher( ANIM_IDLE, [dead, hurt, shoot, fall, jump, run, sword] ),
-												new AnimateCatcher( ANIM_FALL, [dead, hurt, land] ), 
+												new AnimateCatcher( ANIM_FALL, [dead, hurt, land, sword] ), 
 												new AnimateCatcher( ANIM_SHOOT, [dead, hurt, fall, jump, run, idle], cancelShoot ), 
 												new AnimateCatcher( ANIM_JUMP, [dead, hurt, fall, idle, run, sword] ), 
 												new AnimateCatcher( ANIM_RUN, [dead, hurt, fall, jump, idle, sword] ), 
@@ -383,19 +383,20 @@ class Player extends MoveBase implements Actor
 			swingArea.height = this.height;
 		}
 		
+		var num = Math.random();
+		if(num >=.6){
+			FlxG.sound.play("assets/sounds/vrsfx/Licia/sword1.wav", .3, false);
+		} else if (num >= .3){
+			FlxG.sound.play("assets/sounds/vrsfx/Licia/sword2.wav", .3, false);
+		} else {
+			FlxG.sound.play("assets/sounds/vrsfx/Licia/sword3.wav", .3, false);
+		}
+		
 		var d:Array<Bool> = [];
 		var len:Int = this.parent.batShots.length;
 		for(i in 0...len) {
 			if (FlxG.overlap(this.parent.batShots[i], swingArea)) {
 				trace( "overlap" );
-				var num:Int= Std.random( 10 );
-				if(num >= 6) {
-					FlxG.sound.play("assets/sounds/vrsfx/Licia/sword1.wav", .3, false);
-				} else if (num >= 3) {
-					FlxG.sound.play("assets/sounds/vrsfx/Licia/sword2.wav", .3, false);
-				} else {
-					FlxG.sound.play("assets/sounds/vrsfx/Licia/sword3.wav", .3, false);
-				}
 				d.push( true );
 			} else {
 				d.push( false );
@@ -410,14 +411,6 @@ class Player extends MoveBase implements Actor
 		var len:Int = this.parent.walkers.length;
 		for(i in 0...len) {
 			if (FlxG.collide(this.parent.walkers[i], swingArea)) {
-				var num = Math.random();
-				if(num >=.6){
-					FlxG.sound.play("assets/sounds/vrsfx/Licia/sword1.wav", .3, false);
-				} else if (num >= .3){
-					FlxG.sound.play("assets/sounds/vrsfx/Licia/sword2.wav", .3, false);
-				} else {
-					FlxG.sound.play("assets/sounds/vrsfx/Licia/sword3.wav", .3, false);
-				}
 				if(this.parent.walkers[i].x > this.x){
 					this.parent.walkers[i].velocity.x = 1500;
 				} else {

@@ -42,7 +42,7 @@ class PlayState extends FlxState
 	public var player:Player;
 	public var prince:Prince;
 	public var tileMap:PlatformGroup;
-	public var lavaMap:FlxTilemap;
+	public var lavaMap:Dynamic;
 	public var cs:CutScene;
 	public var hud:HUD;
 	public var coinMap:FlxTilemap;
@@ -234,7 +234,11 @@ class PlayState extends FlxState
 		
 		placeSpeechBubbles1();
 		
-		FlxG.sound.playMusic("assets/music/towerbgm.ogg", .2, true);
+		if ( WillG.skipCutScene ) {
+			FlxG.sound.playMusic("assets/music/towerbgm.ogg", .2, true);
+		} else {
+			FlxG.sound.playMusic("assets/music/openingscenebgm.ogg", .2, true);
+		}
 	}
 	
 	public function buildLevel2():Void{
@@ -259,11 +263,11 @@ class PlayState extends FlxState
 		
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement1", "assets/data/Level2/Level2_Platform1.csv", [64] ), 3 );
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement2", "assets/data/Level2/Level2_Platform2.csv", [64] ), 3 );
-		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement3", "assets/data/Level2/Level2_Platform3.csv", [64] ), 8 );
-		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement4", "assets/data/Level2/Level2_Platform4.csv", [64] ), 8 );
-		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement5", "assets/data/Level2/Level2_Platform5.csv", [64] ), 8 );
-		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement6", "assets/data/Level2/Level2_Platform6.csv", [64] ), 8 );
-		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement7", "assets/data/Level2/Level2_Platform7.csv", [64] ), 8 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement3", "assets/data/Level2/Level2_Platform3.csv", [64] ), 3 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement4", "assets/data/Level2/Level2_Platform4.csv", [64] ), 3 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement5", "assets/data/Level2/Level2_Platform5.csv", [64] ), 3 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement6", "assets/data/Level2/Level2_Platform6.csv", [64] ), 3 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement7", "assets/data/Level2/Level2_Platform7.csv", [64] ), 3 );
 		
 		//var sw:PlatformControlSignaller = new PlatformControlSignaller( tileMap, 12000, 300, "assets/images/misc/switch_UNPRESSED.png" );
 		
@@ -324,8 +328,9 @@ class PlayState extends FlxState
 		//var lavaData:String = Assets.getText("assets/data/Level3/Level3_Lava.csv");
 		//lavaMap.loadMap(lavaData, "assets/images/tiles1.png", 64, 64);
 		//add(lavaMap);
-		
-		lavaMap = new PlatformTiles(tileMap, "Lava Map", "assets/data/Level3/Level3_Lava.csv", [9]);
+
+		lavaMap = new PlatformTiles( tileMap, "Lava Map", "assets/data/Level3/Level3_Lava.csv", [9], true);
+		lavaMap.ignore = true;
 		
 		var mainMap = new PlatformTiles( tileMap, "Main Map", "assets/data/Level3/Level3_Walls.csv", [18] );
 		

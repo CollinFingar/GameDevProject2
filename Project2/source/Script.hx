@@ -20,6 +20,9 @@ class Script {
 	function talk( n:String, sn:String, txt:String ):Void {
 		actions.push( ["talk",n,sn,txt] );
 	}
+	function music( fname:String, del:Float, rep:Bool ):Void {
+		actions.push( ["music",fname,del,rep] );
+	}
 	function silence():Void {
 		actions.push( ["silent"] );
 	}
@@ -76,6 +79,9 @@ class Script {
 									actions[index][3] );
 						writingscene = true;
 					}
+				} else if ( actions[index][0] == "music" ) {
+					FlxG.sound.playMusic( actions[index][1], actions[index][2], actions[index][3] );
+					index ++ ;
 				} else if ( actions[index][0] == "silent" ) {
 					cs.hide_dialogue();
 					index ++ ;
