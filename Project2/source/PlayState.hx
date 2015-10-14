@@ -442,23 +442,28 @@ class PlayState extends FlxState
 		}
 		if ( FlxG.keys.justPressed.ESCAPE ) {
 			FlxG.switchState(new MenuState());
+			return;
 		} else if(FlxG.keys.justPressed.ONE){
-			Reg.level =1;
+			Reg.level = 1;
 			Reg.score = hud.score;
 			FlxG.switchState(new PlayState());
+			return;
 		} else if(FlxG.keys.justPressed.TWO){
-			Reg.level =2;
+			Reg.level = 2;
 			Reg.score = hud.score;
 			FlxG.switchState(new PlayState());
+			return;
 		} else if(FlxG.keys.justPressed.THREE){
-			Reg.level =3;
+			Reg.level = 3;
 			Reg.score = hud.score;
 			FlxG.switchState(new PlayState());
+			return;
 		} else if(FlxG.keys.justPressed.H){
 			hud.setHealth(5);
 		}
 
 		
+		trace( Reg.level );
 		if ( Reg.level == 1 ) {
 			scr.update();
 		}
