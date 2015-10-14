@@ -363,6 +363,9 @@ class Player extends MoveBase implements Actor
 		}
 	}
 	
+	public function isSwinging():Bool {
+		return swinging != -1;
+	}
 	public function swingSword():Void {
 		if ( swinging != -1 || shooting != -1 )
 			return;
@@ -380,6 +383,30 @@ class Player extends MoveBase implements Actor
 			swingArea.height = this.height;
 		}
 		
+		var d:Array<Bool> = [];
+		var len:Int = this.parent.batShots.length;
+		for(i in 0...len) {
+			if (FlxG.overlap(this.parent.batShots[i], swingArea)) {
+				trace( "overlap" );
+				var num:Int= Std.random( 10 );
+				if(num >= 6) {
+					FlxG.sound.play("assets/sounds/vrsfx/Licia/sword1.wav", .3, false);
+				} else if (num >= 3) {
+					FlxG.sound.play("assets/sounds/vrsfx/Licia/sword2.wav", .3, false);
+				} else {
+					FlxG.sound.play("assets/sounds/vrsfx/Licia/sword3.wav", .3, false);
+				}
+				d.push( true );
+			} else {
+				d.push( false );
+			}
+		}
+		for(i in 0...d.length){
+			if(d[i]){
+				this.parent.remove(this.parent.batShots[i]);
+				this.parent.batShots.splice(i, 1);
+			}
+		}
 		var len:Int = this.parent.walkers.length;
 		for(i in 0...len) {
 			if (FlxG.collide(this.parent.walkers[i], swingArea)) {

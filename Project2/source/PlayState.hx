@@ -219,7 +219,7 @@ class PlayState extends FlxState
 		tmpspd = new FlxText( 16, FlxG.height - 48, FlxG.width );
 		tmpspd.scrollFactor.set( 0, 0 );
 		tmpspd.size = 24;
-		add( tmpspd );
+		//add( tmpspd );
 		
 		if ( WillG.skipCutScene ) {
 			player.animctrl.force_state( Player.ANIM_IDLE );
@@ -297,7 +297,7 @@ class PlayState extends FlxState
 		tmpspd = new FlxText( 16, FlxG.height - 48, FlxG.width );
 		tmpspd.scrollFactor.set( 0, 0 );
 		tmpspd.size = 24;
-		add( tmpspd );
+		//add( tmpspd );
 		
 		//pnt = new FlxPoint(10500, 600);
 		
@@ -332,8 +332,6 @@ class PlayState extends FlxState
 		//var sw:PlatformControlSignaller = new PlatformControlSignaller( tileMap, 12000, 300, "assets/images/misc/switch_UNPRESSED.png" );
 		//new PlatformFalling( tileMap, 11500, 400 );
 		
-		
-		
 		coinMap = new FlxTilemap();
 		var coinData:String = Assets.getText("assets/data/Level3/Level3_Coins.csv");
 		coinMap.loadMap(coinData, "assets/images/tiles1.png", 64, 64);
@@ -362,7 +360,7 @@ class PlayState extends FlxState
 		tmpspd = new FlxText( 16, FlxG.height - 48, FlxG.width );
 		tmpspd.scrollFactor.set( 0, 0 );
 		tmpspd.size = 24;
-		add( tmpspd );
+		//add( tmpspd );
 		
 		//pnt = new FlxPoint(10500, 600);
 		
@@ -411,10 +409,8 @@ class PlayState extends FlxState
 		if ( FlxG.keys.justPressed.ESCAPE ) {
 			FlxG.switchState(new MenuState());
 		}
-		if ( FlxG.keys.justPressed.P ) {
-			scr.start();
-		}
-		scr.update();
+		if ( Reg.level == 1 )
+			scr.update();
 		
 		if ( player.isDead() ) {
 			if ( dead_and_dying > 0 ) {
