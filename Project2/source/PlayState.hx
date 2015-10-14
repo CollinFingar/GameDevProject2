@@ -305,10 +305,24 @@ class PlayState extends FlxState
 		enemyMap.loadMap(enemyData, "assets/images/tiles1.png", 64, 64);
 		placeEnemies();
 		
+		var pnt:FlxPoint = new FlxPoint(9000, 1200);
+		var speechpnt:FlxPoint = new FlxPoint(9000, 1200);
+		var spch:SpeechBubble = new SpeechBubble(this, speechpnt, 200, 210, "He was... too powerful... \n\nand brave... \n\n\nand handsome....", .1, 1.2);
+		noob3 = new Noob(pnt, spch, 600, "assets/images/trappedguy1_idle_307x343_1fps_strip2.png", this);
+		add(noob3);
+		noob3InPlay = true;
+		
+		
+		
+		
 		add(player = new Player(9000, 1200, this));	//9000, 1200 is start. 2000, 1200 is end
 		player.animctrl.force_state(Player.ANIM_IDLE);
 		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
 		FlxG.camera.zoom = 1;
+		
+		
+		
+		
 		
 		/* WILL'S CODE */
 		
@@ -446,6 +460,8 @@ class PlayState extends FlxState
 			Reg.level =3;
 			Reg.score = hud.score;
 			FlxG.switchState(new PlayState());
+		} else if(FlxG.keys.justPressed.H){
+			hud.setHealth(5);
 		}
 
 		
