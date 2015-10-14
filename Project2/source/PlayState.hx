@@ -294,7 +294,7 @@ class PlayState extends FlxState
 		
 		
 		
-		add(player = new Player(2000, 1100, this));	//9000, 1200 is start. 2000, 1200 is end
+		add(player = new Player(9000, 1200, this));	//9000, 1200 is start. 2000, 1200 is end
 		player.animctrl.force_state(Player.ANIM_IDLE);
 		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
 		FlxG.camera.zoom = 1;
