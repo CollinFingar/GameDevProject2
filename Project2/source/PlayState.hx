@@ -325,7 +325,6 @@ class PlayState extends FlxState
 		//pnt = new FlxPoint(10500, 600);
 		
 		hud.score = Reg.score;
-
 		
 		placeSpeechBubbles2();
 		
@@ -434,6 +433,7 @@ class PlayState extends FlxState
 			Reg.level += 1;
 			Reg.score = hud.score;
 			FlxG.switchState(new PlayState());
+			return;
 		}
 		
 		

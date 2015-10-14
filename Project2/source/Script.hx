@@ -17,8 +17,8 @@ class Script {
 	function action( a:Actor, fname:String, args:Array<Dynamic> = null ):Void {
 		actions.push( [ a, fname, args ] );
 	}
-	function talk( n:String, sn:String, txt:String ):Void {
-		actions.push( ["talk",n,sn,txt] );
+	function talk( n:String, sn:String, txt:String, snd:String = "" ):Void {
+		actions.push( ["talk",n,sn,txt,snd] );
 	}
 	function music( fname:String, del:Float, rep:Bool ):Void {
 		actions.push( ["music",fname,del,rep] );
@@ -81,6 +81,9 @@ class Script {
 							}
 						}
 					} else {
+						if ( actions[index][4] != "" ) {
+							FlxG.sound.play(actions[index][4], .3, false);
+						}
 						cs.go_next( actions[index][1],
 									actions[index][2],
 									actions[index][3] );
