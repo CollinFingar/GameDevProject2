@@ -305,7 +305,7 @@ class PlayState extends FlxState
 		enemyMap.loadMap(enemyData, "assets/images/tiles1.png", 64, 64);
 		placeEnemies();
 		
-		add(player = new Player(2000, 1200, this));	//9000, 1200 is start
+		add(player = new Player(9000, 1200, this));	//9000, 1200 is start. 2000, 1200 is end
 		player.animctrl.force_state(Player.ANIM_IDLE);
 		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
 		FlxG.camera.zoom = 1;
@@ -434,6 +434,18 @@ class PlayState extends FlxState
 		
 		if ( FlxG.keys.justPressed.ESCAPE ) {
 			FlxG.switchState(new MenuState());
+		} else if(FlxG.keys.justPressed.ONE){
+			Reg.level =1;
+			Reg.score = hud.score;
+			FlxG.switchState(new PlayState());
+		} else if(FlxG.keys.justPressed.TWO){
+			Reg.level =2;
+			Reg.score = hud.score;
+			FlxG.switchState(new PlayState());
+		} else if(FlxG.keys.justPressed.THREE){
+			Reg.level =3;
+			Reg.score = hud.score;
+			FlxG.switchState(new PlayState());
 		}
 
 		
