@@ -55,6 +55,8 @@ class PlayState extends FlxState
 	public var batShots:Array<enemies.Batshot> = [];
 	public var batneyes:Array<enemies.Batneye> = [];
 	public var shieldGuys:Array<ShieldGuy> = [];
+	public var switches:Array<PlatformControlSignaller> = [];
+	public var showplats:Array<PlatformTiles> = [];
 	public var NPCs:Array<NPC> = [];
 	public var scr:Script;
 	public var durgen:Durgen;
@@ -112,13 +114,20 @@ class PlayState extends FlxState
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement3", "assets/data/Level1/Level1_Platform3.csv", [64] ), 8 );
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement4", "assets/data/Level1/Level1_Platform4.csv", [64] ), 8 );
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement5", "assets/data/Level1/Level1_Platform5.csv", [64] ), 8 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement6", "assets/data/Level1/Level1_Platform6.csv", [64] ), 2 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement7", "assets/data/Level1/Level1_Platform7.csv", [64] ), 2 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement8", "assets/data/Level1/Level1_Platform8.csv", [64] ), 2 );
 		
-		var sw:PlatformControlSignaller = new PlatformControlSignaller( tileMap, 12000, 300, "assets/images/misc/switch_UNPRESSED.png" );
-		
-		new PlatformFalling( tileMap, 9500, 400 );
+		PlatformControlSignaller.makeController( this, tileMap, "assets/data/Level1/Level1_Switch1.csv", "assets/data/Level1/Level1_SwitchPlatform1.csv" );
+		PlatformControlSignaller.makeController( this, tileMap, "assets/data/Level1/Level1_Switch2.csv", "assets/data/Level1/Level1_SwitchPlatform2.csv" );
 		
 		var cageBack = new FlxSprite( 0, 0, "assets/images/enemies/cageBACK.png" );
 		add( cageBack );
+		
+		var fallMap = new FlxTilemap();
+		var fallData:String = Assets.getText("assets/data/Level1/Level1_Falling.csv");
+		fallMap.loadMap( fallData, "assets/images/tiles1.png", 64, 64 );
+		placePlatforms( fallMap );
 		
 		coinMap = new FlxTilemap();
 		var coinData:String = Assets.getText("assets/data/Level1/Level1_Coins.csv");
@@ -256,9 +265,7 @@ class PlayState extends FlxState
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement6", "assets/data/Level2/Level2_Platform6.csv", [64] ), 8 );
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement7", "assets/data/Level2/Level2_Platform7.csv", [64] ), 8 );
 		
-		var sw:PlatformControlSignaller = new PlatformControlSignaller( tileMap, 12000, 300, "assets/images/misc/switch_UNPRESSED.png" );
-		
-		new PlatformFalling( tileMap, 11500, 400 );
+		//var sw:PlatformControlSignaller = new PlatformControlSignaller( tileMap, 12000, 300, "assets/images/misc/switch_UNPRESSED.png" );
 		
 		
 		
@@ -465,12 +472,16 @@ class PlayState extends FlxState
 			if(FlxG.collide(tileMap, bolts[i])){
 				d[i] = true;
 				FlxG.sound.play("assets/sounds/bolthitwall.wav", .3, false);
-
-			}
-			
-			else if (b < (player.x - FlxG.camera.width/2) || b > (player.x + FlxG.camera.width/2)){
+			} else if (b < (player.x - FlxG.camera.width/2) || b > (player.x + FlxG.camera.width/2)){
 				d[i] = true;
-			} 
+			}
+			for(j in 0...switches.length){
+				if (FlxG.overlap(bolts[i], switches[j])) {
+					trace( "SWITCH " + i );
+					d[i] = true;
+					switches[i].send_signal( 0 );
+				}
+			}
 			for(j in 0...walkers.length){
 				if(FlxG.overlap(bolts[i], walkers[j])){
 					d[i] = true;
@@ -490,7 +501,6 @@ class PlayState extends FlxState
 					if(shieldGuys[j].shield.isDestroyed){
 						shieldGuys[j].damage( 1 );
 					}
-					
 				}
 			}
 		}
@@ -537,6 +547,11 @@ class PlayState extends FlxState
 		}
 	}
 	
+	public function placePlatforms( tmap:FlxTilemap ) {
+		var coords:Array<FlxPoint> = tmap.getTileCoords(78, false);
+		for(i in 0...coords.length)
+			new PlatformFalling( tileMap, coords[i].x, coords[i].y );
+	}
 	
 	public function placeHearts():Void {
 		var heartCoords:Array<FlxPoint> = heartMap.getTileCoords(79, true);

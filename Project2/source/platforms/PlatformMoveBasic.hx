@@ -93,7 +93,7 @@ class PlatformMoveBasic extends PlatformTiles {
 		if ( btwX && !btwY ) {
 			platMove.setControl( new PlatformUpDown( 0, cast(endpt.y - highest.y,Int), spd ) );
 		} else if ( !btwX && btwY ) {
-			platMove.setControl( new PlatformUpDown( 0, cast(endpt.y - highest.y,Int), spd ) );
+			platMove.setControl( new PlatformLeftRight( 0, cast(endpt.x - highest.x,Int), spd ) );
 		}
 		
 		return platMove.controller;
