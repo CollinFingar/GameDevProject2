@@ -42,7 +42,7 @@ class PlayState extends FlxState
 	public var player:Player;
 	public var prince:Prince;
 	public var tileMap:PlatformGroup;
-	public var lavaMap:FlxTilemap;
+	public var lavaMap:Dynamic;
 	public var cs:CutScene;
 	public var hud:HUD;
 	public var coinMap:FlxTilemap;
@@ -330,6 +330,7 @@ class PlayState extends FlxState
 		//add(lavaMap);
 		
 		lavaMap = new PlatformTiles( tileMap, "Lava Map", "assets/data/Level3/Level3_Lava.csv", [9], true);
+		lavaMap.ignore = true;
 		
 		var mainMap = new PlatformTiles( tileMap, "Main Map", "assets/data/Level3/Level3_Walls.csv", [18] );
 		
