@@ -117,7 +117,7 @@ class PlayState extends FlxState
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement8", "assets/data/Level1/Level1_Platform8.csv", [64] ), 4 );
 		
 		PlatformControlSignaller.makeController( this, tileMap, "assets/data/Level1/Level1_Switch1.csv", "assets/data/Level1/Level1_SwitchPlatform1.csv" );
-		PlatformControlSignaller.makeController( this, tileMap, "assets/data/Level1/Level1_Switch2.csv", "assets/data/Level1/Level1_SwitchPlatform2.csv" );
+		//PlatformControlSignaller.makeController( this, tileMap, "assets/data/Level1/Level1_Switch2.csv", "assets/data/Level1/Level1_SwitchPlatform2.csv" );
 		
 		var cageBack = new FlxSprite( 0, 0, "assets/images/enemies/cageBACK.png" );
 		add( cageBack );
