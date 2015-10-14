@@ -34,6 +34,10 @@ class MenuState extends FlxState
 	 */
 	override public function create():Void
 	{
+		
+		
+		
+		
 		FlxG.state.bgColor = 0xFFF0F0F0;
 		
 		title = new FlxText(0, FlxG.height / 3-128, FlxG.width, "Damsel" );

@@ -354,10 +354,10 @@ class Player extends MoveBase implements Actor
 			shooting = 0;
 			FlxG.sound.play("assets/sounds/bowshoot.wav", 1, false);
 			if(facingLeft){
-				var bolt:Bolt = new Bolt(this.x - width/4, this.y + height/3, -1, this.parent);
+				var bolt:Bolt = new Bolt(this.x - width/4, this.y + height/2, -1, this.parent);
 				this.parent.addBolt(bolt);
 			} else {
-				var bolt:Bolt = new Bolt(this.x + 3*width/4, this.y + height/3, 1, this.parent);
+				var bolt:Bolt = new Bolt(this.x + 3*width/4, this.y + height/2, 1, this.parent);
 				this.parent.addBolt(bolt);
 			}
 		}
@@ -437,9 +437,9 @@ class Player extends MoveBase implements Actor
 			animation.play( ANIMATIONS[st][ANIMI_NAME],
 							false );
 							
-			scale.set(.5, .5);
-			setSize(width / 4, height / 3);
-			offset.set(width * 1.5, height);
+			scale.set(.75, .75);
+			setSize(width / 3, height / 1.75);
+			offset.set(width , height / 3);
 		}
 	}
 	
