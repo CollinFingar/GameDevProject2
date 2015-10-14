@@ -24,12 +24,12 @@ class PlatformLeftRight extends PlatformController {
 	}
 	public override function control():Void {
 		super.control();
-		if ( slave.relX < maxWidth ) {
+		if ( slave.relX > maxWidth ) {
 			
 			slave.moveRelXTo( maxWidth );
 			slave.setSpeedX( -slave.speedX() );
 			
-		} else if ( slave.relX > minWidth ) {
+		} else if ( slave.relX < minWidth ) {
 			
 			slave.moveRelXTo( minWidth );
 			slave.setSpeedX( -slave.speedX() );

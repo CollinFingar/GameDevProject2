@@ -23,7 +23,7 @@ class PlatformTiles extends FlxTilemap implements PlatformCollision {
 	
 	public var relX:Float;
 	public var relY:Float;
-	
+	public var ignore:Bool = false;
 	public var orig_pos:FlxPoint;
 	
 	public override function new( par:platforms.PlatformGroup, n:String, csv:String, col:Array<Int>, ncol:Bool = true, nx:Int=0, ny:Int=0 ) {
@@ -110,6 +110,8 @@ class PlatformTiles extends FlxTilemap implements PlatformCollision {
 	}
 	
 	public function collisionCheck( obj:MoveBase ):Void {
+		if ( ignore )
+			return;
 		var xs = false;
 		var ys = false;
 		obj.velocity.x -= x - orig_pos.x;
