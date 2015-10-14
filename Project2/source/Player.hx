@@ -374,12 +374,12 @@ class Player extends MoveBase implements Actor
 		
 		var swingArea:FlxSprite = new FlxSprite(this.x, this.y);
 		if (facingLeft) {
-			swingArea.x = this.x - this.width;
-			swingArea.width = this.width;
+			swingArea.x = this.x - this.width * 1.5;
+			swingArea.width = this.width * 2.5;
 			swingArea.height = this.height;
 		} else {
-			swingArea.x = this.x + this.width;
-			swingArea.width = this.width;
+			swingArea.x = this.x;
+			swingArea.width = this.width * 2.5;
 			swingArea.height = this.height;
 		}
 		

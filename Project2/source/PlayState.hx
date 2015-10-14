@@ -675,6 +675,7 @@ class PlayState extends FlxState
 						if ( ( batneyes[i].touching & FlxObject.UP != 0 ) && ( player.touching & FlxObject.DOWN != 0 ) ) {
 							
 							batneyes[i].killByStomp();
+							player.velocity.y = -5000;
 							
 						} else {
 							hud.damage( ENEMY_BOUNCE[ENEMY_BAT][PLAYER_HEALTH] );
