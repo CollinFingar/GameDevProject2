@@ -24,8 +24,9 @@ import platforms.PlatformUpDown;
 import platforms.PlatformLeftRight;
 import platforms.PlatformCircle;
 import platforms.PlatformFalling;
-import source.ui.SpeechBubble;
 
+import Level1_Script;
+import source.ui.SpeechBubble;
 import source.ui.CutScene;
 import source.ui.HUD;
 
@@ -53,6 +54,7 @@ class PlayState extends FlxState
 	public var batneyes:Array<enemies.Batneye> = [];
 	public var shieldGuys:Array<ShieldGuy> = [];
 	public var NPCs:Array<NPC> = [];
+	public var scr:Script;
 	public var durgen:Durgen;
 	public var noob1:Noob;
 	public var noob2:Noob;
@@ -159,24 +161,33 @@ class PlayState extends FlxState
 		Heart.makeGraphic( 32, 32, FlxColor.RED );
 		hud = new HUD( this, 5, Heart, 10000, Reg.score );
 		
-		var Joe = new FlxSprite( 0, 0 );
-		var Mike = new FlxSprite( 0, 0 );
-		
-		Joe.makeGraphic( 120, 80, FlxColor.GREEN );
-		Mike.makeGraphic( 70, 130, FlxColor.RED );
-		
 		cs = new CutScene( this );
 		
-		cs.add_character( "Joe", Joe );
-		cs.add_character( "Mike", Mike );
+		var prinGrr = new FlxSprite(0, 0, "assets/images/talking/princess_grr.png");
+		var prinHmm = new FlxSprite(0, 0, "assets/images/talking/princess_hmm.png");
+		var prinNeutral = new FlxSprite(0, 0, "assets/images/talking/princess_neutral.png");
+		var prinSmile = new FlxSprite(0, 0, "assets/images/talking/princess_smile.png");
+		var prinUhh = new FlxSprite(0, 0, "assets/images/talking/princess_uhh.png");
 		
-		cs.add_dialogue( "Joe",  "So what are we doing" );
-		cs.add_dialogue( "Mike", "I don't know" );
-		cs.add_dialogue( "Mike", "Ask me about it later" );
-		cs.add_dialogue( "Joe",  "Yeah okay sure whatever" );
+		cs.add_character( "Princess", "grr", prinGrr );
+		cs.add_character( "Princess", "hmm", prinHmm );
+		cs.add_character( "Princess", "neutral", prinNeutral );
+		cs.add_character( "Princess", "smile", prinSmile );
+		cs.add_character( "Princess", "uhh", prinUhh );
 		
-		add( Joe );
-		add( Mike );
+		cs.add_dialogue( "Princess", "grr", "Grr I'm so mad!" );
+		cs.add_dialogue( "Princess", "hmm", "Hmm I'm so confused" );
+		cs.add_dialogue( "Princess", "neutral", "Whatever. I don't care." );
+		cs.add_dialogue( "Princess", "smile", "I'm so happy!" );
+		cs.add_dialogue( "Princess", "uhh", "Um. What." );
+		
+		add( prinGrr );
+		add( prinHmm );
+		add( prinNeutral );
+		add( prinSmile );
+		add( prinUhh );
+		
+		scr = new ScriptLvl1( cs, [player] );
 		
 		/* WILL'S CODE */
 		
@@ -264,13 +275,13 @@ class PlayState extends FlxState
 		
 		cs = new CutScene( this );
 		
-		cs.add_character( "Joe", Joe );
-		cs.add_character( "Mike", Mike );
+		cs.add_character( "Joe", "m", Joe );
+		cs.add_character( "Mike", "m", Mike );
 		
-		cs.add_dialogue( "Joe",  "So what are we doing" );
-		cs.add_dialogue( "Mike", "I don't know" );
-		cs.add_dialogue( "Mike", "Ask me about it later" );
-		cs.add_dialogue( "Joe",  "Yeah okay sure whatever" );
+		cs.add_dialogue( "Joe",  "m", "So what are we doing" );
+		cs.add_dialogue( "Mike", "m", "I don't know" );
+		cs.add_dialogue( "Mike", "m", "Ask me about it later" );
+		cs.add_dialogue( "Joe",  "m", "Yeah okay sure whatever" );
 		
 		add( Joe );
 		add( Mike );
@@ -333,6 +344,10 @@ class PlayState extends FlxState
 		if ( FlxG.keys.justPressed.ESCAPE ) {
 			FlxG.switchState(new MenuState());
 		}
+		if ( FlxG.keys.justPressed.P ) {
+			scr.start();
+		}
+		scr.update();
 		
 		if ( player.isDead() ) {
 			if ( dead_and_dying > 0 ) {
@@ -372,6 +387,10 @@ class PlayState extends FlxState
 		checkBatShots();
 		checkShieldGuys();
 		checkSpeechBubbles();
+		
+		if ( FlxG.keys.justPressed.Q ) {
+			cs.change();
+		}
 		
 	}
 	

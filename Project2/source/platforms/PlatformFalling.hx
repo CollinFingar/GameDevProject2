@@ -61,7 +61,6 @@ class PlatformFalling extends FlxSprite implements PlatformCollision {
 			changing = true;
 			hit = false;
 		}
-		trace( done, changing, hit );
 		super.update();
 	}
 	

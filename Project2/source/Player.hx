@@ -13,8 +13,11 @@ import platforms.PlatformCollision;
 import platforms.PlatformTiles;
 import AnimationController;
 
-class Player extends MoveBase
+class Player extends MoveBase implements Actor
 {
+	public static inline var SIG_PRINCESS_AWAKE = 0;
+	public static inline var SIG_PRINCESS_ANGRY = 1;
+	
 	public static inline var ANIM_IDLE 			=  0;
 	public static inline var ANIM_SHOOT 		=  1;
 	public static inline var ANIM_FALL 			=  2;
@@ -38,15 +41,15 @@ class Player extends MoveBase
 
 	public static var ANIMATIONS:Array<Dynamic> = [
 	
-		["idle", "assets/images/damsel/princess_blink1_307x343_8fps_strip8.png", 	 		307, 343, [0, 1, 2, 3, 4, 5, 6, 7],				true,  14 ],
-		["shoot", "assets/images/damsel/princess_shoot1_307x343_16fps_strip5.png",   		307, 343, [0, 1, 2, 3, 4], 						false, 14 ],
+		["idle", "assets/images/damsel/princess_blink1_307x343_8fps_strip8.png", 	 		307, 343, [0, 1, 2, 3, 4, 5, 6, 7],					true,  14 ],
+		["shoot", "assets/images/damsel/princess_shoot1_307x343_16fps_strip5.png",   		307, 343, [0, 1, 2, 3, 4], 							false, 14 ],
 		["fall", "assets/images/damsel/princess_fallloop1_307x343_20fps_strip4.png", 		307, 343, [0, 1, 2, 3], 							true,  14 ],
 		["jump", "assets/images/damsel/princess_jump1_307x343_12fps_strip3.png", 	 		307, 343, [0, 1, 2],								false, 24 ],
-		["run", "assets/images/damsel/princess_run1_307x343_18fps_strip12.png", 	 		307, 343, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 	true,  11 ],
+		["run", "assets/images/damsel/princess_run1_307x343_18fps_strip12.png", 	 		307, 343, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 	true,  18 ],
 		["sword", "assets/images/damsel/princess_attack1_307x343_20fps_strip7.png",	 		307, 343, [0, 1, 2, 3, 4, 5, 6], 					false, 20 ],
 		["land", "assets/images/damsel/princess_landrecoil_307x343_10fps_strip3.png",	 	307, 343, [0, 1, 2], 								false, 10 ],
 		["awaken", "assets/images/damsel/princess_awaken_307x343_10fps_strip15.png",	 	307, 343, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],	false, 10 ],
-		["hurt", "assets/images/damsel/princess_hurt1_307x343_14fps_strip4.png",	 		307, 343, [0, 1, 2, 3],							false,  14 ] ,
+		["hurt", "assets/images/damsel/princess_hurt1_307x343_14fps_strip4.png",	 		307, 343, [0, 1, 2, 3],								false,  14 ] ,
 		["death", "assets/images/damsel/princess_deathSTART_307x343_14fps_strip5.png",	 	307, 343, [0, 1, 2, 3, 4],							false, 14 ],
 		["deathloop", "assets/images/damsel/princess_deathLOOP_307x343_16fps_strip2.png",	307, 343, [0, 1],									true,  16 ],
 		["intro", "assets/images/damsel/princess_INTRO_307x343_8fps_strip19.png",		 	307, 343, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], false, 8 ]
@@ -102,8 +105,11 @@ class Player extends MoveBase
 	function checkDeath():Bool { return playerDead; }
 	function checkDeathLoop():Bool { return playerDead; }
 	
-	function checkAwaken():Bool { return false; }
-	function checkIntro():Bool { return false; }
+	//function checkAwaken():Bool { return initSignal == SIG_PRINCESS_AWAKE; }
+	//function checkIntro():Bool { return initSignal == SIG_PRINCESS_ANGRY; }
+	
+	function checkAwaken():Bool { return initSignal == SIG_PRINCESS_AWAKE; }
+	function checkIntro():Bool { return initSignal == SIG_PRINCESS_ANGRY;  }
 	
 	function cancelShoot():Bool {
 		var ret:Bool = !( animation.finished || shooting >= shootMax );
@@ -126,20 +132,31 @@ class Player extends MoveBase
 	function cancelDead():Bool {
 		return !animation.finished;
 	}
+	function cancelAwake():Bool {
+		var ret:Bool = animation.finished;
+		if ( ret ) {
+			initSignal = SIG_PRINCESS_ANGRY;
+		}
+		return !ret;
+	}
 	
 	public function buildAnimations():Void {
-		var dead	= new AnimateThrower( ANIM_DEATH, checkDeath, 0 );
-		var dedl	= new AnimateThrower( ANIM_DEATH_LOOP, checkDeathLoop, 1 );
-		var hurt	= new AnimateThrower( ANIM_HURT, checkHurt, 2 );
-		var shoot 	= new AnimateThrower( ANIM_SHOOT, checkShoot, 3 );
-		var sword 	= new AnimateThrower( ANIM_SWORD, checkSword, 4 );
-		var fall 	= new AnimateThrower( ANIM_FALL, checkFall, 5 );
-		var jump 	= new AnimateThrower( ANIM_JUMP, checkJump, 6 );
-		var run 	= new AnimateThrower( ANIM_RUN, checkRun, 7 );
-		var idle 	= new AnimateThrower( ANIM_IDLE, checkIdle, 8 );
-		var land	= new AnimateThrower( ANIM_LAND, checkLand, 9 );
+		var awake 	= new AnimateThrower( ANIM_AWAKEN, checkAwaken, 8 );
+		var intro 	= new AnimateThrower( ANIM_INTRO, checkIntro, 9 );
+		var dead	= new AnimateThrower( ANIM_DEATH, checkDeath, 10 );
+		var dedl	= new AnimateThrower( ANIM_DEATH_LOOP, checkDeathLoop, 11 );
+		var hurt	= new AnimateThrower( ANIM_HURT, checkHurt, 12 );
+		var shoot 	= new AnimateThrower( ANIM_SHOOT, checkShoot, 13 );
+		var sword 	= new AnimateThrower( ANIM_SWORD, checkSword, 14 );
+		var fall 	= new AnimateThrower( ANIM_FALL, checkFall, 15 );
+		var jump 	= new AnimateThrower( ANIM_JUMP, checkJump, 16 );
+		var run 	= new AnimateThrower( ANIM_RUN, checkRun, 17 );
+		var idle 	= new AnimateThrower( ANIM_IDLE, checkIdle, 18 );
+		var land	= new AnimateThrower( ANIM_LAND, checkLand, 19 );
 		
 		animctrl = new AnimationController( [
+												new AnimateCatcher( ANIM_AWAKEN, [intro], cancelAwake ),
+												new AnimateCatcher( ANIM_INTRO, [idle], cancelDead ),
 												new AnimateCatcher( ANIM_DEATH, [dedl], cancelDead ),
 												new AnimateCatcher( ANIM_DEATH_LOOP, [] ),
 												new AnimateCatcher( ANIM_IDLE, [dead, hurt, shoot, fall, jump, run, sword] ),
@@ -151,7 +168,7 @@ class Player extends MoveBase
 												new AnimateCatcher( ANIM_LAND, [dead, hurt, shoot, fall, jump, run, sword, idle] ), 
 												new AnimateCatcher( ANIM_HURT, [fall, idle, run], cancelHurt ) 
 											], 
-											ANIM_IDLE );
+											ANIM_AWAKEN );
 	}
     
     public function new(X:Float=0, Y:Float=0, Parent:PlayState) 
@@ -176,13 +193,16 @@ class Player extends MoveBase
 		idtmr = 0;
 		
 		buildAnimations();
+		setAnimation( ANIM_AWAKEN );
     }
     
     public override function update():Void {
-		acceleration.x = 0;
-		if ( !this.isDeadOrHurt() ) {
-			handleInput();
-			moveCharacter();
+		if ( !this.isActing ) {
+			acceleration.x = 0;
+			if ( !this.isDeadOrHurt() ) {
+				handleInput();
+				moveCharacter();
+			}
 		}
 		setAnimation( animctrl.update() );
 		resetShoot();
@@ -387,7 +407,7 @@ class Player extends MoveBase
 		for(i in 0...this.parent.shieldGuys.length){
 			if(FlxG.collide(this.parent.shieldGuys[i], swingArea)){
 					
-					if ( !this.parent.shieldGuys[i].shield.isDestroyed ) {
+					if ( this.parent.shieldGuys[i].shield.isDestroyed ) {
 						this.parent.shieldGuys[i].damage( 1 );
 					}
 					this.parent.shieldGuys[i].destroyShield();
@@ -421,5 +441,70 @@ class Player extends MoveBase
 			setSize(width / 3, height / 1.75);
 			offset.set(width , height / 3);
 		}
+	}
+	
+	
+	// ACTOR STUFF
+	
+	public var scr:Script;
+	var isActing:Bool;
+	var newAction:Bool = true;
+	var initX:Float;
+	var initY:Float;
+	var initSignal:Int = -1;
+	
+	public function passToScript():Void {
+		acceleration.y = 3200;
+		isActing = true;
+	}
+	public function passToGame():Void {
+		isActing = false;
+	}
+	
+	public function move( direc:String, amount:Int, time:Float ):Void {
+		trace( "MOVE" );
+		if ( newAction ) {
+			initX = x;
+			initY = y;
+			newAction = false;
+		}
+		switch ( direc ) {
+			case "left":
+				var check = ( initX - x >= amount );
+				if ( !check )
+					velocity.x = -cast(amount, Float) / time;
+				else
+					newAction = true;
+			case "right":
+				var check = ( x - initX >= amount );
+				if ( !check )
+					velocity.x = cast(amount, Float) / time;
+				else
+					newAction = true;
+		}
+	}
+	public function moveTo( direc:String, amount:Int, time:Float ):Void {
+		
+	}
+	public function impulse( direc:String, amount:Int ):Void {
+		trace( "IMPULSE "+velocity.y );
+		if ( newAction ) {
+			velocity.y = -amount;
+			newAction = false;
+		}
+		switch ( direc ) {
+			case "up":
+				if ( velocity.y == 0 )
+					newAction = true;
+		}
+	}
+	public function signal( sig:Int ):Void { 
+		switch( sig ) {
+			case SIG_PRINCESS_ANGRY:
+			case SIG_PRINCESS_AWAKE:
+		}
+	}
+	public function ready():Bool {
+		return newAction;
 	}
 }

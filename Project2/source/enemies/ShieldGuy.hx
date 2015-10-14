@@ -112,7 +112,6 @@ class ShieldGuy extends FlxSprite
 		if ( healthRemaining <= 0 ) {
 			acceleration.x = 0;
 		}
-		trace( "SHIELD GUY HURT" );
 	}
 	public function removeFromParent():Void {
 		this.parent.remove( this );
@@ -155,7 +154,6 @@ class ShieldGuy extends FlxSprite
 	
 	public function setAnimation( st:Int ):Void {
 		if ( state != st ) {
-			trace( "SHIELD GUY NEW ANIM " + st );
 			state = st;
 			switch( state ) {
 				case ANIM_ATTACK:

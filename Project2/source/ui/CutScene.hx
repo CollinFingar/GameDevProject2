@@ -62,8 +62,9 @@ class CutScene extends FlxSubState {
 	var buffer:Float;
 	var wrtspeed:Float;
 	
-	var portraits:Map<String,FlxSprite>;
+	var portraits:Map<String,Map<String,FlxSprite>>;
 	var characters:Array<String>;
+	var expressions:Array<String>;
 	var dialogue:Array<String>;
 	
 	public override function new( par:FlxState, h:Float = 0.2 ) {
@@ -105,11 +106,12 @@ class CutScene extends FlxSubState {
 		indexB = 0;
 		wrtspeed = 1.2;
 		buffer = 0.0;
-		wait_end = false;
+		wait_end = true;
 		
 		characters = new Array<String>();
+		expressions = new Array<String>();
 		dialogue = new Array<String>();
-		portraits = new Map<String,FlxSprite>();
+		portraits = new Map<String,Map<String,FlxSprite>>();
 		
 		state = CUTSCENE_CLOSED;
 		
@@ -125,37 +127,58 @@ class CutScene extends FlxSubState {
 		hide();
 		
 	}
-	public function add_character( name:String, img:FlxSprite ):Void {
-		portraits[name] = img;
+	public function add_character( name:String, subname:String, img:FlxSprite ):Void {
+		if ( portraits[name] == null )
+			portraits[name] = new Map<String,FlxSprite>();
+		portraits[name][subname] = img;
+		
 		img.x = 16 + porth / 2 - img.width / 2;
 		img.y = FlxG.height - img.height / 2 - porth / 2 - 16;
+		
 		img.alpha = 0;
+		
+		var scx = cast(porth - 32, Float) / cast(img.width, Float);
+		var scy = cast(porth - 32, Float) / cast(img.height, Float);
+		
+		img.scale.set( Math.min(scx, scy), Math.min(scx, scy) );
+		
 		img.scrollFactor.set( 0, 0 );
 	}
-	public function add_dialogue( name:String, txt:String ):Void {
+	public function add_dialogue( name:String, subname:String, txt:String ):Void {
 		characters.push( name );
+		expressions.push( subname );
 		dialogue.push( txt );
 	}
 	
-	private function show_dialogue():Void {
+	function fetch(n:Int):FlxSprite {
+		return portraits[characters[n]][expressions[n]];
+	}
+	public function show_dialogue():Void {
 		portrait.alpha = 1.0;
 		saying.alpha = 1.0;
 		said.alpha = 1.0;
 		saying.text = "";
 		said.text = "";
+		if ( indexA < characters.length )
+			fetch(indexA).alpha = 1.0;
 	}
-	private function hide_dialogue():Void {
+	public function hide_dialogue():Void {
 		portrait.alpha = 0.0;
 		saying.alpha = 0.0;
 		said.alpha = 0.0;
+		for ( i in 0...indexA ) {
+			if ( i < characters.length ) {
+				fetch(i).alpha = 0.0;
+			}
+		}
 	}
 	private function write_text():Void {
 		if ( !wait_end ) {
 			if ( indexA < dialogue.length ) {
 				saying.text = characters[indexA];
 				if ( indexA > 0 )
-					portraits[characters[indexA-1]].alpha = 0;
-				portraits[characters[indexA]].alpha = 1;
+					fetch(indexA-1).alpha = 0;
+				fetch(indexA).alpha = 1;
 				
 				var txt:String = dialogue[indexA];
 				if ( indexB < txt.length ) {
@@ -171,10 +194,12 @@ class CutScene extends FlxSubState {
 					indexA ++ ;
 				}
 			} else {
-				if ( indexA > 0 )
-					portraits[characters[indexA - 1]].alpha = 0;
-				indexA = 0;
-				indexB = 0;
+				if ( indexA > 0 ) {
+					trace( characters );
+					trace( indexA );
+					trace( characters[indexA - 1] );
+					fetch(indexA - 1).alpha = 0;
+				}
 				buffer = 0;
 				hide();
 			}
@@ -183,8 +208,10 @@ class CutScene extends FlxSubState {
 	
 	public function show():Void {
 		if ( !showing ) {
+			indexA = 0;
+			indexB = 0;
 			showing = true;
-			revive();
+			show_dialogue();
 		}
 		switch ( state ) {
 			case CUTSCENE_CLOSED | CUTSCENE_CLOSING:
@@ -195,12 +222,11 @@ class CutScene extends FlxSubState {
 	public function hide():Void {
 		if ( showing ) {
 			showing = false;
-			kill();
+			hide_dialogue();
 		}
 		switch ( state ) {
 			case CUTSCENE_OPENED | CUTSCENE_OPENING:
 				state = CUTSCENE_CLOSING;
-				hide_dialogue();
 			case CUTSCENE_CLOSED | CUTSCENE_CLOSING:
 		}
 	}
@@ -212,17 +238,33 @@ class CutScene extends FlxSubState {
 		return ( state == CUTSCENE_CLOSED || state == CUTSCENE_CLOSING );
 	}
 	
+	public function next_ready():Bool {
+		return wait_end;
+	}
+	public function flush():Void {
+		trace( "CALL flush" );
+		if ( indexA < characters.length )
+			indexB = dialogue[indexA].length - 1;
+	}
 	public function go_next():Void {
+		trace( "CALL go_next" );
 		if ( wait_end ) {
+			if ( saying.alpha == 0 )
+				show_dialogue();
 			wait_end = false;
 		} else {
 			indexA ++ ;
+			indexB = 0;
 		}
 	}
 	public function change():Void {
-		if ( state == CUTSCENE_OPENED )
-			go_next();
-		else if ( state == CUTSCENE_OPENING )
+		if ( state == CUTSCENE_OPENED ) {
+			if ( wait_end ) {
+				go_next();
+			} else {
+				flush();
+			}
+		} else if ( state == CUTSCENE_OPENING )
 			hide();
 		else
 			show();
@@ -239,8 +281,6 @@ class CutScene extends FlxSubState {
 					upper.scale.y = 1;
 					lower.scale.y = 1;
 					state = CUTSCENE_OPENED;
-					if ( dialogue.length != 0 )
-						show_dialogue();
 				}
 			case CUTSCENE_CLOSING:
 				upper.scale.y -= ( upper.scale.y ) / 2;
