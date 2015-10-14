@@ -35,7 +35,7 @@ class MenuState extends FlxState
 	override public function create():Void
 	{
 		
-		WillG.skipCutScene = true;
+		WillG.skipCutScene = false;
 		//WillG.skipCutScene = true;
 		
 		FlxG.sound.volume = 10.0;
