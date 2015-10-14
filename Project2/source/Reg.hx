@@ -28,7 +28,7 @@ class Reg
 	 * Generic score variable that can be used for cross-state stuff.
 	 * Example usage: Storing the current score.
 	 */
-	public static var score:Int = 0;
+	public static var score:Int = 9999;
 	/**
 	 * Generic bucket for storing different FlxSaves.
 	 * Especially useful for setting up multiple save slots.

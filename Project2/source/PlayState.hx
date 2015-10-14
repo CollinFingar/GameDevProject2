@@ -57,6 +57,8 @@ class PlayState extends FlxState
 	
 	public var endLocation:FlxPoint;
 	
+	public var speechBubblesActive:Bool;
+	
 	// she is dead
 	var dead_and_dying:Int = 0;
 	var tmpspd:FlxText;
@@ -133,7 +135,7 @@ class PlayState extends FlxState
 		
 		var Heart = new FlxSprite();
 		Heart.makeGraphic( 32, 32, FlxColor.RED );
-		hud = new HUD( this, 5, Heart, 10000, 9999 );
+		hud = new HUD( this, 5, Heart, 10000, Reg.score );
 		
 		var Joe = new FlxSprite( 0, 0 );
 		var Mike = new FlxSprite( 0, 0 );
@@ -229,7 +231,7 @@ class PlayState extends FlxState
 		
 		var Heart = new FlxSprite();
 		Heart.makeGraphic( 32, 32, FlxColor.RED );
-		hud = new HUD( this, 5, Heart, 10000, 9999 );
+		hud = new HUD( this, 5, Heart, 10000, Reg.score);
 		
 		var Joe = new FlxSprite( 0, 0 );
 		var Mike = new FlxSprite( 0, 0 );
@@ -263,7 +265,7 @@ class PlayState extends FlxState
 		
 		//placeSpeechBubbles1();
 		
-		FlxG.sound.playMusic("assets/music/towerbgm.ogg", .2, true);
+		FlxG.sound.playMusic("assets/music/undergroundbgm.ogg", .2, true);
 	}
 	
 	public function buildLevel3():Void{
@@ -639,7 +641,8 @@ class PlayState extends FlxState
 	}
 	
 	
-	public function placeSpeechBubbles1():Void{
+	public function placeSpeechBubbles1():Void {
+	if(speechBubblesActive){	
 		var pnt:FlxPoint = new FlxPoint(11500, 600);
 		var spch:SpeechBubble = new SpeechBubble(this, pnt, 180, 50, "What a jerk..", .1, 1.2);
 		var npc:NPC = new NPC(pnt, spch, true, 300, this);
@@ -687,7 +690,7 @@ class PlayState extends FlxState
 		npc = new NPC(pnt, spch, true, 500, this);
 		NPCs.push(npc);
 		add(npc);
-		
+	}
 	}
 	
 	public function checkSpeechBubbles():Void{
