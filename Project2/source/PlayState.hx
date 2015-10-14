@@ -58,6 +58,14 @@ class PlayState extends FlxState
 	public var NPCs:Array<NPC> = [];
 	public var scr:Script;
 	public var durgen:Durgen;
+	
+	public var noob1:Noob;
+	public var noob2:Noob;
+	public var noob3:Noob;
+	public var noob1InPlay:Bool = false;
+	public var noob2InPlay:Bool = false;
+	public var noob3InPlay:Bool = false;
+	
 	public var endLocation:FlxPoint;
 	
 	// she is dead
@@ -128,6 +136,22 @@ class PlayState extends FlxState
 		placeEnemies();
 		
 		add(player = new Player(12340, 300, this));	//12300, 300 is start of 1. 2000, 9000 by end.
+		
+		var pnt:FlxPoint = new FlxPoint(8800, 4705);
+		var speechpnt:FlxPoint = new FlxPoint(8680, 4650);
+		var spch:SpeechBubble = new SpeechBubble(this, speechpnt, 200, 270, "First day on the job! They said the new guards should be towards the top of the tower today, because they're trying something new. \n\n Who are you, the captain?", .1, 1.2);
+		noob1 = new Noob(pnt, spch, 800, "assets/images/noobknight.png", this);
+		add(noob1);
+		noob1InPlay = true;
+		
+		
+		var pnt:FlxPoint = new FlxPoint(7500, 2850);
+		var speechpnt:FlxPoint = new FlxPoint(7700, 2750);
+		var spch:SpeechBubble = new SpeechBubble(this, speechpnt, 200, 210, "He was... too powerful... \n\nand brave... \n\n\nand handsome....", .1, 1.2);
+		noob2 = new Noob(pnt, spch, 600, "assets/images/outcoldknight_370x305_12fps_strip4.png", this);
+		add(noob2);
+		noob2InPlay = true;
+		
 		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
 		FlxG.camera.zoom = 1;
 		
@@ -197,6 +221,7 @@ class PlayState extends FlxState
 		} else {
 			scr.start();
 		}
+		
 		
 		placeSpeechBubbles1();
 		
@@ -710,10 +735,15 @@ class PlayState extends FlxState
 		for(i in 0...NPCs.length){
 			NPCs[i].checkIfPlayerNear();
 		}
-	}
-	
-	public function nextLevel():Void{
-		
+		if(noob1InPlay){
+			noob1.checkIfPlayerNear();
+		}
+		if(noob2InPlay){
+			noob2.checkIfPlayerNear();
+		}
+		if(noob3InPlay){
+			noob3.checkIfPlayerNear();
+		}
 	}
 	
 	
