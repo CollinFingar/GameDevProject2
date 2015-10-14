@@ -309,7 +309,69 @@ class PlayState extends FlxState
 	}
 	
 	public function buildLevel3():Void{
+		super.create();
 		
+		endLocation = new FlxPoint(1500, 600);
+		
+		FlxG.state.bgColor = FlxColor.AZURE;
+		FlxG.worldBounds.set(0, 0, 200 * 64, 150 * 64);
+		
+		tileMap = new PlatformGroup( this, "assets/images/tiles1.png" );
+		var backMap = new PlatformTiles( tileMap, "Back Map", "assets/data/Level2/Level3_Background.csv", [5, 8, 20], false );
+		
+		lavaMap = new FlxTilemap();
+		var lavaData:String = Assets.getText("assets/data/Level3/Level3_Lava.csv");
+		lavaMap.loadMap(lavaData, "assets/images/tiles1.png", 64, 64);
+		add(lavaMap);
+		
+		var mainMap = new PlatformTiles( tileMap, "Main Map", "assets/data/Level2/Level3_Walls.csv", [18] );
+		
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement1", "assets/data/Level3/Level3_Platform1.csv", [64] ), 3 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement2", "assets/data/Level3/Level3_Platform2.csv", [64] ), 3 );
+		
+		var sw:PlatformControlSignaller = new PlatformControlSignaller( tileMap, 12000, 300, "assets/images/misc/switch_UNPRESSED.png" );
+		
+		new PlatformFalling( tileMap, 11500, 400 );
+		
+		
+		
+		coinMap = new FlxTilemap();
+		var coinData:String = Assets.getText("assets/data/Level3/Level3_Coins.csv");
+		coinMap.loadMap(coinData, "assets/images/tiles1.png", 64, 64);
+		placeCoins();
+		
+		heartMap = new FlxTilemap();
+		var heartData:String = Assets.getText("assets/data/Level3/Level3_Health.csv");
+		heartMap.loadMap(heartData, "assets/images/tiles1.png", 64, 64);
+		placeHearts();
+		
+		enemyMap = new FlxTilemap();
+		var enemyData:String = Assets.getText("assets/data/Level3/Level3_Enemy.csv");
+		enemyMap.loadMap(enemyData, "assets/images/tiles1.png", 64, 64);
+		placeEnemies();
+		
+		add(player = new Player(9000, 1200, this));	//12300, 300 is start
+		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
+		FlxG.camera.zoom = 1;
+		
+		/* WILL'S CODE */
+		
+		var Heart = new FlxSprite();
+		Heart.makeGraphic( 32, 32, FlxColor.RED );
+		hud = new HUD( this, 5, Heart, 10000, Reg.score);
+		
+		tmpspd = new FlxText( 16, FlxG.height - 48, FlxG.width );
+		tmpspd.scrollFactor.set( 0, 0 );
+		tmpspd.size = 24;
+		add( tmpspd );
+		
+		//pnt = new FlxPoint(10500, 600);
+		
+		
+		
+		//placeSpeechBubbles1();
+		
+		FlxG.sound.playMusic("assets/music/fieldbgm.ogg", .2, true);
 	}
 	
 	

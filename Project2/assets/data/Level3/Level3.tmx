@@ -10,12 +10,12 @@
  </layer>
  <layer name="Lava" width="200" height="50">
   <data encoding="base64" compression="zlib">
-   eJzt0iEOACAQA0E0HsH/P4pFoA9KZpL1FW0NAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgX/1QsvT9yU5futFLW16NelMxUW8opt0CVG4Xmw==
+   eJzt0ikOACAAA0E0HsH/P4pFYDlKZpL1FS0FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgX3VRsvT9CVafeamEjbfjnK642KcpvtkACOIYhw==
   </data>
  </layer>
  <layer name="Walls" width="200" height="50">
   <data encoding="base64" compression="zlib">
-   eJzt2G2KglAUgOGgVlBbqDYwM7T/nXWDhDNhfp5rJs8D55epJfdFbbcDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgLpuYTLsyxyeA/x3LHN6DnyLc5lLmWvl8+iDb/RT5rfMX+Xz6IO1au4RbfcJfZAhrrG2qf18MkfTQFsH+iBDXGNtE9dX5v8+Qw25R+iDWsb0ES3VypAG9EEtU/uI5rYy9x6R3UffM2ccfWxbRh+vHuur770lfmZuA9l99F2TOPr4jCnvzV37vFuvNfpojtn1/eOxl+hjzPXUx/pNWbdd+7xb5zX76Jsl+xjzO/WxfvrI2aaPbdJHzrYl+7gDLcFYIQ==
+   eJzt2GtOg0AUgFESXYG6BHUDatz/zsRE4k0zMNMZhkd7TnL/FSgwX6AdBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM7m+WJe9v06cCj6OKbvMGt4GOfxbyinj/vwNPzfY8rpY1+v47yN8975OPqoo499fYzzOc5X5+Poo44++pueEannhD6O7Sx9xDWWmt7vJy2mBlId6OPYztJHXGOpietrzf99SpU8I/RxPrfYR7RVKyUN6ON8br2PqLWV1mfE2n3k3jnj6KNOqo/ctd7jXX+NPi79rq/cucTPtDawdh+5axJHH3VSfeSudbyXNb+bl7aZW689+pj2ufT947636OOa66mP/lr7qFm3S9vMrfOefZSe7xZ9XHOe+uhPH/pgnj7ur48fYpFmYw==
   </data>
  </layer>
  <layer name="Platform1" width="200" height="50">
