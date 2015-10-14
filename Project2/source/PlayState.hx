@@ -329,7 +329,7 @@ class PlayState extends FlxState
 		//lavaMap.loadMap(lavaData, "assets/images/tiles1.png", 64, 64);
 		//add(lavaMap);
 		
-		var lavaMap = new PlatformTiles(tileMap, "Lava Map", "assets/data/Level3/Level3_Lava.csv", [-1], true);
+		lavaMap = new PlatformTiles( tileMap, "Lava Map", "assets/data/Level3/Level3_Lava.csv", [9], true);
 		
 		var mainMap = new PlatformTiles( tileMap, "Main Map", "assets/data/Level3/Level3_Walls.csv", [18] );
 		
