@@ -319,11 +319,6 @@ class PlayState extends FlxState
 		
 		tileMap = new PlatformGroup( this, "assets/images/tiles1.png" );
 		var backMap = new PlatformTiles( tileMap, "Back Map", "assets/data/Level3/Level3_Background.csv", [5, 8, 20, 39, 40], false );
-		
-		lavaMap = new FlxTilemap();
-		//var lavaData:String = Assets.getText("assets/data/Level3/Level3_Lava.csv");
-		//lavaMap.loadMap(lavaData, "assets/images/tiles1.png", 64, 64);
-		//add(lavaMap);
 
 		lavaMap = new PlatformTiles( tileMap, "Lava Map", "assets/data/Level3/Level3_Lava.csv", [9], true);
 		lavaMap.ignore = true;
