@@ -329,9 +329,8 @@ class PlayState extends FlxState
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement1", "assets/data/Level3/Level3_Platform1.csv", [64] ), 3 );
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement2", "assets/data/Level3/Level3_Platform2.csv", [64] ), 3 );
 		
-		var sw:PlatformControlSignaller = new PlatformControlSignaller( tileMap, 12000, 300, "assets/images/misc/switch_UNPRESSED.png" );
-		
-		new PlatformFalling( tileMap, 11500, 400 );
+		//var sw:PlatformControlSignaller = new PlatformControlSignaller( tileMap, 12000, 300, "assets/images/misc/switch_UNPRESSED.png" );
+		//new PlatformFalling( tileMap, 11500, 400 );
 		
 		
 		
