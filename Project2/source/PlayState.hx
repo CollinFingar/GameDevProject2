@@ -144,7 +144,7 @@ class PlayState extends FlxState
 		enemyMap.loadMap(enemyData, "assets/images/tiles1.png", 64, 64);
 		placeEnemies();
 		
-		add(player = new Player(12340, 300, this));	//12300, 300 is start of 1. 2000, 9000 by end.
+		add(player = new Player(12300, 300, this));	//12300, 300 is start of 1. 2000, 9000 by end.
 		
 		var pnt:FlxPoint = new FlxPoint(8800, 4705);
 		var speechpnt:FlxPoint = new FlxPoint(8680, 4650);
@@ -285,6 +285,7 @@ class PlayState extends FlxState
 		placeEnemies();
 		
 		add(player = new Player(9000, 1200, this));	//12300, 300 is start
+		player.animctrl.force_state(Player.ANIM_IDLE);
 		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
 		FlxG.camera.zoom = 1;
 		
@@ -409,8 +410,12 @@ class PlayState extends FlxState
 		if ( FlxG.keys.justPressed.ESCAPE ) {
 			FlxG.switchState(new MenuState());
 		}
-		if ( Reg.level == 1 )
+
+		
+		if(Reg.level==1){
 			scr.update();
+		}
+
 		
 		if ( player.isDead() ) {
 			if ( dead_and_dying > 0 ) {
@@ -427,7 +432,9 @@ class PlayState extends FlxState
 		tileMap.override_update();
 		super.update();
 		tileMap.collisionCheck( player );
-		tileMap.collisionCheck( prince );
+		if(Reg.level==1){
+			tileMap.collisionCheck( prince );
+		}
 		player.late_update();
 		
 		tmpspd.text = Player.ANIMATIONS[player.animctrl.current][Player.ANIMI_NAME];
