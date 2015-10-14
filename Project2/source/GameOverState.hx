@@ -29,6 +29,8 @@ class GameOverState extends FlxState
 	 */
 	override public function create():Void
 	{
+		WillG.skipCutScene = true;
+		
 		FlxG.state.bgColor = FlxColor.BLACK;
 		
 		title = new FlxText(0, FlxG.height / 3, FlxG.width, "Game Over!" );

@@ -15,3 +15,7 @@ player end update
 	
 AFTER parent position updated
 BEFORE collision
+
+
+TO DO
+-- 

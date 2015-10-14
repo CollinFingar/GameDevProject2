@@ -70,6 +70,9 @@ class AnimationController {
 		current = cat.index;
 		clist.set(cat.index, cat);
 	}
+	public function force_state( st:Int ):Void {
+		current = st;
+	}
 	public function update():Int {
 		var cat:AnimateCatcher = clist.get(current);
 		var tmp:Int = cat.get();

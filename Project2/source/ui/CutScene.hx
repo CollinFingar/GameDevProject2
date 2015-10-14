@@ -62,10 +62,10 @@ class CutScene extends FlxSubState {
 	var buffer:Float;
 	var wrtspeed:Float;
 	
-	var portraits:Map<String,Map<String,FlxSprite>>;
-	var characters:Array<String>;
-	var expressions:Array<String>;
-	var dialogue:Array<String>;
+	public var portraits:Map<String,Map<String,FlxSprite>>;
+	public var characters:Array<String>;
+	public var expressions:Array<String>;
+	public var dialogue:Array<String>;
 	
 	public override function new( par:FlxState, h:Float = 0.2 ) {
 		super();
@@ -95,6 +95,7 @@ class CutScene extends FlxSubState {
 		portrait.makeGraphic( porth, porth, 0xFFEEBC1D );
 		portrait.drawRect( 16, 16, porth - 32, porth - 32, 0xFFDDDDDD );
 		portrait.scrollFactor.set( 0, 0 );
+		portrait.alpha = 0.0;
 		
 		saying.size = 32;
 		said.size = 16;
@@ -194,12 +195,8 @@ class CutScene extends FlxSubState {
 					indexA ++ ;
 				}
 			} else {
-				if ( indexA > 0 ) {
-					trace( characters );
-					trace( indexA );
-					trace( characters[indexA - 1] );
+				if ( indexA > 0 )
 					fetch(indexA - 1).alpha = 0;
-				}
 				buffer = 0;
 				hide();
 			}
@@ -242,12 +239,11 @@ class CutScene extends FlxSubState {
 		return wait_end;
 	}
 	public function flush():Void {
-		trace( "CALL flush" );
 		if ( indexA < characters.length )
 			indexB = dialogue[indexA].length - 1;
 	}
-	public function go_next():Void {
-		trace( "CALL go_next" );
+	public function go_next( n:String, sn:String, txt:String ):Void {
+		add_dialogue( n, sn, txt );
 		if ( wait_end ) {
 			if ( saying.alpha == 0 )
 				show_dialogue();
@@ -256,18 +252,6 @@ class CutScene extends FlxSubState {
 			indexA ++ ;
 			indexB = 0;
 		}
-	}
-	public function change():Void {
-		if ( state == CUTSCENE_OPENED ) {
-			if ( wait_end ) {
-				go_next();
-			} else {
-				flush();
-			}
-		} else if ( state == CUTSCENE_OPENING )
-			hide();
-		else
-			show();
 	}
 	
 	public override function update():Void {

@@ -17,6 +17,7 @@ class Player extends MoveBase implements Actor
 {
 	public static inline var SIG_PRINCESS_AWAKE = 0;
 	public static inline var SIG_PRINCESS_ANGRY = 1;
+	public static inline var SIG_PRINCESS_DONE = 2;
 	
 	public static inline var ANIM_IDLE 			=  0;
 	public static inline var ANIM_SHOOT 		=  1;
@@ -30,6 +31,7 @@ class Player extends MoveBase implements Actor
 	public static inline var ANIM_DEATH 		=  9;
 	public static inline var ANIM_DEATH_LOOP 	= 10;
 	public static inline var ANIM_INTRO 		= 11;
+	public static inline var ANIM_ASLEEP 		= 12;
 	
 	public static inline var ANIMI_NAME 		= 0;
 	public static inline var ANIMI_FNAME 		= 1;
@@ -52,7 +54,8 @@ class Player extends MoveBase implements Actor
 		["hurt", "assets/images/damsel/princess_hurt1_307x343_14fps_strip4.png",	 		307, 343, [0, 1, 2, 3],								false,  14 ] ,
 		["death", "assets/images/damsel/princess_deathSTART_307x343_14fps_strip5.png",	 	307, 343, [0, 1, 2, 3, 4],							false, 14 ],
 		["deathloop", "assets/images/damsel/princess_deathLOOP_307x343_16fps_strip2.png",	307, 343, [0, 1],									true,  16 ],
-		["intro", "assets/images/damsel/princess_INTRO_307x343_8fps_strip19.png",		 	307, 343, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], false, 8 ]
+		["intro", "assets/images/damsel/princess_INTRO_307x343_8fps_strip19.png",		 	307, 343, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], false, 8 ],
+		["asleep", "", 307, 343, [], false, 0 ]
 	
 	];
 	
@@ -105,9 +108,7 @@ class Player extends MoveBase implements Actor
 	function checkDeath():Bool { return playerDead; }
 	function checkDeathLoop():Bool { return playerDead; }
 	
-	//function checkAwaken():Bool { return initSignal == SIG_PRINCESS_AWAKE; }
-	//function checkIntro():Bool { return initSignal == SIG_PRINCESS_ANGRY; }
-	
+	function checkAsleep():Bool { return true; }
 	function checkAwaken():Bool { return initSignal == SIG_PRINCESS_AWAKE; }
 	function checkIntro():Bool { return initSignal == SIG_PRINCESS_ANGRY;  }
 	
@@ -132,16 +133,14 @@ class Player extends MoveBase implements Actor
 	function cancelDead():Bool {
 		return !animation.finished;
 	}
-	function cancelAwake():Bool {
-		var ret:Bool = animation.finished;
-		if ( ret ) {
-			initSignal = SIG_PRINCESS_ANGRY;
-		}
-		return !ret;
+	function cancelIntro():Bool {
+		trace( "CANCEL " + initSignal + " " + SIG_PRINCESS_ANGRY );
+		return (initSignal == SIG_PRINCESS_ANGRY);
 	}
 	
 	public function buildAnimations():Void {
-		var awake 	= new AnimateThrower( ANIM_AWAKEN, checkAwaken, 8 );
+		var asleep 	= new AnimateThrower( ANIM_ASLEEP, checkAwaken, 6 );
+		var awake 	= new AnimateThrower( ANIM_AWAKEN, checkAwaken, 7 );
 		var intro 	= new AnimateThrower( ANIM_INTRO, checkIntro, 9 );
 		var dead	= new AnimateThrower( ANIM_DEATH, checkDeath, 10 );
 		var dedl	= new AnimateThrower( ANIM_DEATH_LOOP, checkDeathLoop, 11 );
@@ -155,8 +154,9 @@ class Player extends MoveBase implements Actor
 		var land	= new AnimateThrower( ANIM_LAND, checkLand, 19 );
 		
 		animctrl = new AnimationController( [
-												new AnimateCatcher( ANIM_AWAKEN, [intro], cancelAwake ),
-												new AnimateCatcher( ANIM_INTRO, [idle], cancelDead ),
+												new AnimateCatcher( ANIM_ASLEEP, [awake] ),
+												new AnimateCatcher( ANIM_AWAKEN, [intro] ),
+												new AnimateCatcher( ANIM_INTRO, [idle,fall,jump,run], cancelIntro ),
 												new AnimateCatcher( ANIM_DEATH, [dedl], cancelDead ),
 												new AnimateCatcher( ANIM_DEATH_LOOP, [] ),
 												new AnimateCatcher( ANIM_IDLE, [dead, hurt, shoot, fall, jump, run, sword] ),
@@ -168,7 +168,7 @@ class Player extends MoveBase implements Actor
 												new AnimateCatcher( ANIM_LAND, [dead, hurt, shoot, fall, jump, run, sword, idle] ), 
 												new AnimateCatcher( ANIM_HURT, [fall, idle, run], cancelHurt ) 
 											], 
-											ANIM_AWAKEN );
+											ANIM_ASLEEP );
 	}
     
     public function new(X:Float=0, Y:Float=0, Parent:PlayState) 
@@ -424,22 +424,28 @@ class Player extends MoveBase implements Actor
 	public function setAnimation( st:Int ) {
 		if ( state != st ) {
 			state = st;
-			loadGraphic( ANIMATIONS[st][ANIMI_FNAME],
-						 true,
-						 ANIMATIONS[st][ANIMI_W],
-						 ANIMATIONS[st][ANIMI_H] );
-						 
-			animation.add( ANIMATIONS[st][ANIMI_NAME],
-						   ANIMATIONS[st][ANIMI_FRAMES], 
-						   ANIMATIONS[st][ANIMI_FRAMERATE], 
-						   ANIMATIONS[st][ANIMI_LOOP] );
-						   
-			animation.play( ANIMATIONS[st][ANIMI_NAME],
-							false );
-							
+			if ( state == ANIM_ASLEEP ) {
+				loadGraphic( ANIMATIONS[ANIM_AWAKEN][ANIMI_FNAME],
+							 true,
+							 ANIMATIONS[ANIM_AWAKEN][ANIMI_W],
+							 ANIMATIONS[ANIM_AWAKEN][ANIMI_H] );
+			} else {
+				loadGraphic( ANIMATIONS[st][ANIMI_FNAME],
+							 true,
+							 ANIMATIONS[st][ANIMI_W],
+							 ANIMATIONS[st][ANIMI_H] );
+							 
+				animation.add( ANIMATIONS[st][ANIMI_NAME],
+							   ANIMATIONS[st][ANIMI_FRAMES], 
+							   ANIMATIONS[st][ANIMI_FRAMERATE], 
+							   ANIMATIONS[st][ANIMI_LOOP] );
+							   
+				animation.play( ANIMATIONS[st][ANIMI_NAME],
+								false );
+			}
 			scale.set(.75, .75);
-			setSize(width / 3, height / 1.75);
-			offset.set(width , height / 3);
+			setSize(width / 4, height / 1.75);
+			offset.set(width * 1.5, height / 3);
 		}
 	}
 	
@@ -496,13 +502,17 @@ class Player extends MoveBase implements Actor
 			case "up":
 				if ( velocity.y == 0 )
 					newAction = true;
+			case "left":
+				velocity.x = -amount;
+				newAction = true;
+			case "right":
+				velocity.x = amount;
+				newAction = true;
 		}
 	}
 	public function signal( sig:Int ):Void { 
-		switch( sig ) {
-			case SIG_PRINCESS_ANGRY:
-			case SIG_PRINCESS_AWAKE:
-		}
+		trace( "SET SIGNAL " + sig );
+		initSignal = sig;
 	}
 	public function ready():Bool {
 		return newAction;

@@ -26,6 +26,7 @@ import platforms.PlatformCircle;
 import platforms.PlatformFalling;
 
 import Level1_Script;
+import MiscCage;
 import source.ui.SpeechBubble;
 import source.ui.CutScene;
 import source.ui.HUD;
@@ -39,6 +40,7 @@ class PlayState extends FlxState
 	
 	
 	public var player:Player;
+	public var prince:Prince;
 	public var tileMap:PlatformGroup;
 	public var lavaMap:FlxTilemap;
 	public var cs:CutScene;
@@ -56,10 +58,7 @@ class PlayState extends FlxState
 	public var NPCs:Array<NPC> = [];
 	public var scr:Script;
 	public var durgen:Durgen;
-	
 	public var endLocation:FlxPoint;
-	
-	public var speechBubblesActive:Bool;
 	
 	// she is dead
 	var dead_and_dying:Int = 0;
@@ -70,8 +69,6 @@ class PlayState extends FlxState
 	 */
 	override public function create():Void
 	{
-		
-		
 		if(Reg.level == 1){
 			buildLevel1();
 		} else if(Reg.level == 2){
@@ -110,9 +107,10 @@ class PlayState extends FlxState
 		
 		var sw:PlatformControlSignaller = new PlatformControlSignaller( tileMap, 12000, 300, "assets/images/misc/switch_UNPRESSED.png" );
 		
-		new PlatformFalling( tileMap, 11500, 400 );
+		new PlatformFalling( tileMap, 9500, 400 );
 		
-		
+		var cageBack = new FlxSprite( 0, 0, "assets/images/enemies/cageBACK.png" );
+		add( cageBack );
 		
 		coinMap = new FlxTilemap();
 		var coinData:String = Assets.getText("assets/data/Level1/Level1_Coins.csv");
@@ -129,9 +127,20 @@ class PlayState extends FlxState
 		enemyMap.loadMap(enemyData, "assets/images/tiles1.png", 64, 64);
 		placeEnemies();
 		
-		add(player = new Player(12300, 300, this));	//12300, 300 is start of 1. 2000, 9000 by end.
+		add(player = new Player(12340, 300, this));	//12300, 300 is start of 1. 2000, 9000 by end.
 		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
 		FlxG.camera.zoom = 1;
+		
+		prince = new Prince(11000, 600, this );
+		add( prince );
+		
+		//pnt = new FlxPoint(10500, 600);
+		durgen = new Durgen(10000, 730, this);
+		durgen.immovable = true;
+		add(durgen);
+		
+		var cage = new MiscCageFront( 12180, 330, this, cageBack );
+		var cloud = new DustCloud( 11800, 530, this );
 		
 		/* WILL'S CODE */
 		
@@ -147,17 +156,19 @@ class PlayState extends FlxState
 		var prinSmile = new FlxSprite(0, 0, "assets/images/talking/princess_smile.png");
 		var prinUhh = new FlxSprite(0, 0, "assets/images/talking/princess_uhh.png");
 		
+		var prinNorm = new FlxSprite(0, 0, "assets/images/talking/prince_talk.png");
+		var prinDead = new FlxSprite(0, 0, "assets/images/talking/prince_outcold.png");
+		
 		cs.add_character( "Princess", "grr", prinGrr );
 		cs.add_character( "Princess", "hmm", prinHmm );
 		cs.add_character( "Princess", "neutral", prinNeutral );
 		cs.add_character( "Princess", "smile", prinSmile );
 		cs.add_character( "Princess", "uhh", prinUhh );
 		
-		cs.add_dialogue( "Princess", "grr", "Grr I'm so mad!" );
-		cs.add_dialogue( "Princess", "hmm", "Hmm I'm so confused" );
-		cs.add_dialogue( "Princess", "neutral", "Whatever. I don't care." );
-		cs.add_dialogue( "Princess", "smile", "I'm so happy!" );
-		cs.add_dialogue( "Princess", "uhh", "Um. What." );
+		cs.add_character( "Knight", "normal", prinNorm );
+		cs.add_character( "Knight", "dead", prinDead );
+		
+		trace( cs.portraits["Knight"]["normal"] );
 		
 		add( prinGrr );
 		add( prinHmm );
@@ -165,7 +176,10 @@ class PlayState extends FlxState
 		add( prinSmile );
 		add( prinUhh );
 		
-		scr = new ScriptLvl1( cs, [player] );
+		add( prinNorm );
+		add( prinDead );
+		
+		scr = new ScriptLvl1( this, cs, [player, prince, cage, cloud] );
 		
 		/* WILL'S CODE */
 		
@@ -174,11 +188,15 @@ class PlayState extends FlxState
 		tmpspd.size = 24;
 		add( tmpspd );
 		
-		//pnt = new FlxPoint(10500, 600);
-		durgen = new Durgen(10000, 730, this);
-		durgen.immovable = true;
-		add(durgen);
-		
+		if ( WillG.skipCutScene ) {
+			player.animctrl.force_state( Player.ANIM_IDLE );
+			prince.signal(0);
+			prince.x = 11963;
+			prince.y = 621.5;
+			cage.alpha = 0.0;
+		} else {
+			scr.start();
+		}
 		
 		placeSpeechBubbles1();
 		
@@ -243,27 +261,6 @@ class PlayState extends FlxState
 		var Heart = new FlxSprite();
 		Heart.makeGraphic( 32, 32, FlxColor.RED );
 		hud = new HUD( this, 5, Heart, 10000, Reg.score);
-		
-		var Joe = new FlxSprite( 0, 0 );
-		var Mike = new FlxSprite( 0, 0 );
-		
-		Joe.makeGraphic( 120, 80, FlxColor.GREEN );
-		Mike.makeGraphic( 70, 130, FlxColor.RED );
-		
-		cs = new CutScene( this );
-		
-		cs.add_character( "Joe", "m", Joe );
-		cs.add_character( "Mike", "m", Mike );
-		
-		cs.add_dialogue( "Joe",  "m", "So what are we doing" );
-		cs.add_dialogue( "Mike", "m", "I don't know" );
-		cs.add_dialogue( "Mike", "m", "Ask me about it later" );
-		cs.add_dialogue( "Joe",  "m", "Yeah okay sure whatever" );
-		
-		add( Joe );
-		add( Mike );
-		
-		/* WILL'S CODE */
 		
 		tmpspd = new FlxText( 16, FlxG.height - 48, FlxG.width );
 		tmpspd.scrollFactor.set( 0, 0 );
@@ -341,6 +338,7 @@ class PlayState extends FlxState
 		tileMap.override_update();
 		super.update();
 		tileMap.collisionCheck( player );
+		tileMap.collisionCheck( prince );
 		player.late_update();
 		
 		tmpspd.text = Player.ANIMATIONS[player.animctrl.current][Player.ANIMI_NAME];
@@ -351,7 +349,7 @@ class PlayState extends FlxState
 				player.velocity.x = 1000;
 			else
 				player.velocity.x = -1000;
-			hud.damage(3);
+			hud.damage(100);
 			player.setDead();
 		}
 		
@@ -364,10 +362,6 @@ class PlayState extends FlxState
 		checkBatShots();
 		checkShieldGuys();
 		checkSpeechBubbles();
-		
-		if ( FlxG.keys.justPressed.Q ) {
-			cs.change();
-		}
 		
 	}
 	
@@ -661,7 +655,6 @@ class PlayState extends FlxState
 	
 	
 	public function placeSpeechBubbles1():Void {
-	if(speechBubblesActive){	
 		var pnt:FlxPoint = new FlxPoint(11500, 600);
 		var spch:SpeechBubble = new SpeechBubble(this, pnt, 180, 50, "What a jerk..", .1, 1.2);
 		var npc:NPC = new NPC(pnt, spch, true, 300, this);
@@ -710,9 +703,10 @@ class PlayState extends FlxState
 		NPCs.push(npc);
 		add(npc);
 	}
-	}
 	
-	public function checkSpeechBubbles():Void{
+	public function checkSpeechBubbles():Void {
+		if (!WillG.speechBubblesActive)
+			return;
 		for(i in 0...NPCs.length){
 			NPCs[i].checkIfPlayerNear();
 		}
