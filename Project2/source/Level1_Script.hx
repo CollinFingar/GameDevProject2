@@ -32,13 +32,13 @@ class ScriptLvl1 extends Script {
 		
 		action( princess, "signal", [Player.SIG_PRINCESS_AWAKE] );
 		
-		talk( "Princess", "neutral", "Well, it's about time SOMEONE came. Who are you with? The Royal Army?" );
+		talk( "Princess Licia", "neutral", "Well, it's about time SOMEONE came. Who are you with? The Royal Army?" );
 		talk( "Knight", "normal", "No, Princess. I have come from a faraway land of my own accord, to have the beutiful maiden's hand in marriage." );
-		talk( "Princess", "uhh", "Marriage? MARRIAGE? You do realize that we're going to have to fight our way out of this tower?" );
+		talk( "Princess Licia", "uhh", "Marriage? MARRIAGE? You do realize that we're going to have to fight our way out of this tower?" );
 		talk( "Knight", "normal", "That should be no problem at all! I fought my way up here for you, I can fight my way out!" );
-		talk( "Princess", "grr", "For ME, huh!? I am royalty! How dare you speak to me thusly. On whose divine authority do I owe you anything, sir knight? " );
+		talk( "Princess Licia", "grr", "For ME, huh!? I am royalty! How dare you speak to me thusly. On whose divine authority do I owe you anything, sir knight? " );
 		talk( "Knight", "normal", "Well, isn't that how it goes? The Knight climbs the tower. The Knight rescues the Princess. They escape and get married." );
-		talk( "Princess", "grr", "Are you serious? You really expect me to just walk off with you, don't you? Well, come here and let me see the face of my BRAVE savior." );
+		talk( "Princess Licia", "grr", "Are you serious? You really expect me to just walk off with you, don't you? Well, come here and let me see the face of my BRAVE savior." );
 		talk( "Knight", "normal", "But of course!" );
 		
 		silence();
@@ -56,7 +56,7 @@ class ScriptLvl1 extends Script {
 		
 		wait( 2 );
 		
-		talk( "Princess", "neutral", "Marriage, pah! This second rate baffoon couldn't hope to conquer a shetland pony, much less my kingdom." );
-		talk( "Princess", "neutral", "Enough of this drudgery. I'm out of this place." );
+		talk( "Princess Licia", "neutral", "Marriage, pah! This second rate baffoon couldn't hope to conquer a shetland pony, much less my kingdom." );
+		talk( "Princess Licia", "neutral", "Enough of this drudgery. I'm out of this place." );
 	}
 }

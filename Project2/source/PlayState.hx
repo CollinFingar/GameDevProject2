@@ -154,7 +154,7 @@ class PlayState extends FlxState
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement8", "assets/data/Level1/Level1_Platform8.csv", [64] ), 4 );
 		
 		PlatformControlSignaller.makeController( this, tileMap, "assets/data/Level1/Level1_Switch1.csv", "assets/data/Level1/Level1_SwitchPlatform1.csv" );
-		PlatformControlSignaller.makeController( this, tileMap, "assets/data/Level1/Level1_Switch2.csv", "assets/data/Level1/Level1_SwitchPlatform2.csv" );
+		//PlatformControlSignaller.makeController( this, tileMap, "assets/data/Level1/Level1_Switch2.csv", "assets/data/Level1/Level1_SwitchPlatform2.csv" );
 		
 		var cageBack = new FlxSprite( 0, 0, "assets/images/enemies/cageBACK.png" );
 		add( cageBack );
@@ -235,7 +235,8 @@ class PlayState extends FlxState
 		} else {
 			scr.start();
 		}
-		
+		hud.score = Reg.score;
+
 		
 		placeSpeechBubbles1();
 		
@@ -291,10 +292,24 @@ class PlayState extends FlxState
 		enemyMap.loadMap(enemyData, "assets/images/tiles1.png", 64, 64);
 		placeEnemies();
 		
+		var pnt:FlxPoint = new FlxPoint(8600, 4540);
+		var speechpnt:FlxPoint = new FlxPoint(8900, 4400);
+		var spch:SpeechBubble = new SpeechBubble(this, speechpnt, 200, 250, "Oh, Princess Licia, is that you? I, Sir Reginald was captured trying to rescue you! If you let me out of here, we can escape together and get married!", .1, 1.2);
+		noob3 = new Noob(pnt, spch, 700, "assets/images/trappedguy1_idle_307x343_1fps_strip2.png", this);
+		add(noob3);
+		noob3InPlay = true;
+		
+		
+		
+		
 		add(player = new Player(9000, 1200, this));	//9000, 1200 is start. 2000, 1200 is end
 		player.animctrl.force_state(Player.ANIM_IDLE);
 		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
 		FlxG.camera.zoom = 1;
+		
+		
+		
+		
 		
 		/* WILL'S CODE */
 		
@@ -309,9 +324,10 @@ class PlayState extends FlxState
 		
 		//pnt = new FlxPoint(10500, 600);
 		
+		hud.score = Reg.score;
+
 		
-		
-		//placeSpeechBubbles1();
+		placeSpeechBubbles2();
 		
 		FlxG.sound.playMusic("assets/music/undergroundbgm.ogg", .2, true);
 	}
@@ -354,8 +370,7 @@ class PlayState extends FlxState
 		enemyMap.loadMap(enemyData, "assets/images/tiles1.png", 64, 64);
 		placeEnemies();
 		
-		//add(player = new Player(12000, 2400, this));	//12300, 300 is start
-		add(player = new Player(5900, 2400, this));
+		add(player = new Player(12300, 2600, this));	//12300, 300 is start
 		player.animctrl.force_state(Player.ANIM_IDLE);
 		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
 		FlxG.camera.zoom = 1;
@@ -380,7 +395,9 @@ class PlayState extends FlxState
 		buildCS();
 		scr = new ScriptLvl3( this, cs, [player, prince] );
 		
-		//placeSpeechBubbles1();
+		hud.score = Reg.score;
+
+		placeSpeechBubbles3();
 		
 		FlxG.sound.playMusic("assets/music/fieldbgm.ogg", .2, true);
 	}
@@ -437,6 +454,8 @@ class PlayState extends FlxState
 			Reg.level =3;
 			Reg.score = hud.score;
 			FlxG.switchState(new PlayState());
+		} else if(FlxG.keys.justPressed.H){
+			hud.setHealth(5);
 		}
 
 		
@@ -840,6 +859,60 @@ class PlayState extends FlxState
 		pnt = new FlxPoint(5000, 7000);
 		spch = new SpeechBubble(this, pnt, 200, 120, "Maybe the occasional tour of this Castle would help out.", .1, 1.2);
 		npc = new NPC(pnt, spch, true, 500, this);
+		NPCs.push(npc);
+		add(npc);
+	}
+	
+	
+	public function placeSpeechBubbles2():Void {
+		var pnt:FlxPoint = new FlxPoint(7000, 1500);
+		var spch:SpeechBubble = new SpeechBubble(this, pnt, 180, 120, "A journey underground. JUST what I needed.", .1, 1.2);
+		var npc:NPC = new NPC(pnt, spch, true, 300, this);
+		NPCs.push(npc);
+		add(npc);
+		
+		pnt = new FlxPoint(8300, 2700);
+		spch = new SpeechBubble(this, pnt, 220, 100, "Escape on my own, I said. IT WILL BE EASY, I SAID.", .1, 1.2);
+		npc = new NPC(pnt, spch, true, 300, this);
+		NPCs.push(npc);
+		add(npc);
+		
+		pnt = new FlxPoint(7600, 4300);
+		spch = new SpeechBubble(this, pnt, 200, 130, "I know I was thirsty, but this wasn't the solution I had in mind.", .1, 1.2);
+		npc = new NPC(pnt, spch, true, 300, this);
+		NPCs.push(npc);
+		add(npc);
+		
+		pnt = new FlxPoint(2500, 4300);
+		spch = new SpeechBubble(this, pnt, 200, 100, "When in doubt, keep moving left.", .1, 1.2);
+		npc = new NPC(pnt, spch, true, 300, this);
+		NPCs.push(npc);
+		add(npc);
+		
+		pnt = new FlxPoint(2500, 2500);
+		spch = new SpeechBubble(this, pnt, 200, 100, "How do they even keep this place clean?", .1, 1.2);
+		npc = new NPC(pnt, spch, true, 300, this);
+		NPCs.push(npc);
+		add(npc);
+		
+		
+		pnt = new FlxPoint(2000, 1300);
+		spch = new SpeechBubble(this, pnt, 200, 80, "This crossbow is really heavy.", .1, 1.2);
+		npc = new NPC(pnt, spch, true, 300, this);
+		NPCs.push(npc);
+		add(npc);
+	}
+	
+	public function placeSpeechBubbles3():Void {
+		var pnt:FlxPoint = new FlxPoint(10700, 2300);
+		var spch:SpeechBubble = new SpeechBubble(this, pnt, 180, 80, "This fresh air is so... fresh!", .1, 1.2);
+		var npc:NPC = new NPC(pnt, spch, true, 300, this);
+		NPCs.push(npc);
+		add(npc);
+		
+		pnt = new FlxPoint(6900, 2600);
+		spch = new SpeechBubble(this, pnt, 220, 120, "I'm going to have to take a nice long bath once I'm free of this place.", .1, 1.2);
+		npc = new NPC(pnt, spch, true, 300, this);
 		NPCs.push(npc);
 		add(npc);
 	}

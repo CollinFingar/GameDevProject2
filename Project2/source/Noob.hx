@@ -35,7 +35,12 @@ class Noob extends FlxSprite
 			loadGraphic(AssetPath, true, 370, 305);
 			animation.add("idle", [0, 1, 2, 3], 12, true);
 			animation.play("idle", false);
-		} else {
+		} else if (AssetPath == "assets/images/trappedguy1_idle_307x343_1fps_strip2.png") {
+			loadGraphic(AssetPath, true, 307, 343);
+			animation.add("idle", [0, 1], 1, true);
+			animation.play("idle", false);
+		}
+		else {
 			loadGraphic(AssetPath, true, 307, 343);
 		}
     }

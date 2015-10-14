@@ -35,7 +35,7 @@ class MenuState extends FlxState
 	override public function create():Void
 	{
 		
-		WillG.skipCutScene = true;
+		WillG.skipCutScene = false;
 		//WillG.skipCutScene = true;
 		
 		FlxG.sound.volume = 10.0;
@@ -112,6 +112,7 @@ class MenuState extends FlxState
 		if (FlxG.keys.anyJustPressed(["ENTER"])) {
 			switch(option) {
 			case 0:
+				Reg.level = 1;
 				FlxG.state.bgColor = FlxColor.BLACK;
 				title.visible = false;
 				opt0txt.visible = false;
