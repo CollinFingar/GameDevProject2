@@ -410,7 +410,7 @@ class Player extends MoveBase implements Actor
 		}
 		var len:Int = this.parent.walkers.length;
 		for(i in 0...len) {
-			if (FlxG.collide(this.parent.walkers[i], swingArea)) {
+			if (FlxG.overlap(this.parent.walkers[i], swingArea)) {
 				if(this.parent.walkers[i].x > this.x){
 					this.parent.walkers[i].velocity.x = 1500;
 				} else {
@@ -420,23 +420,23 @@ class Player extends MoveBase implements Actor
 			}
 		}
 		for(i in 0...this.parent.batneyes.length){
-				if(FlxG.collide(this.parent.batneyes[i], swingArea)){
+				if(FlxG.overlap(this.parent.batneyes[i], swingArea)){
 					this.parent.batneyes[i].killByWeapon();
 			}
 		}
 		for(i in 0...this.parent.shieldGuys.length){
-			if(FlxG.collide(this.parent.shieldGuys[i], swingArea)){
+			if(FlxG.overlap(this.parent.shieldGuys[i], swingArea)){
 					
-					if ( this.parent.shieldGuys[i].shield.isDestroyed ) {
-						this.parent.shieldGuys[i].damage( 1 );
-					}
-					this.parent.shieldGuys[i].destroyShield();
-					
-					if(this.parent.shieldGuys[i].x > this.x){
-						this.parent.shieldGuys[i].velocity.x = 1500;
-					} else {
-						this.parent.shieldGuys[i].velocity.x = -1500;
-					}
+				if ( this.parent.shieldGuys[i].shield.isDestroyed ) {
+					this.parent.shieldGuys[i].damage( 1 );
+				}
+				this.parent.shieldGuys[i].destroyShield();
+				
+				if(this.parent.shieldGuys[i].x > this.x){
+					this.parent.shieldGuys[i].velocity.x = 1500;
+				} else {
+					this.parent.shieldGuys[i].velocity.x = -1500;
+				}
 			}
 		}
 	}

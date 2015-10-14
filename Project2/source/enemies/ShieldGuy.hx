@@ -147,9 +147,14 @@ class ShieldGuy extends FlxSprite
         super.update();
 		
 		shield.setAnimation( shield.anim.update() );
-		shield.x = x;
-		shield.y = y;
 		shield.flipX = flipX;
+		if ( shield.flipX ){
+			shield.x = x - 16;
+			shield.y = y;
+		} else {
+			shield.x = x - 16;
+			shield.y = y;
+		}
     }
 	
 	public function setAnimation( st:Int ):Void {

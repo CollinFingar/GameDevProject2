@@ -42,7 +42,7 @@ class PlayState extends FlxState
 	public var player:Player;
 	public var prince:Prince;
 	public var tileMap:PlatformGroup;
-	public var lavaMap:Dynamic;
+	public var lavaMap:PlatformTiles;
 	public var cs:CutScene;
 	public var hud:HUD;
 	public var coinMap:FlxTilemap;
@@ -95,23 +95,15 @@ class PlayState extends FlxState
 		super.create();
 		
 		endLocation = new FlxPoint(1500, 9000);
-		
+			
 		FlxG.state.bgColor = FlxColor.AZURE;
 		FlxG.worldBounds.set(0, 0, 200 * 64, 150 * 64);
 		
 		tileMap = new PlatformGroup( this, "assets/images/tiles1.png" );
 		var backMap = new PlatformTiles( tileMap, "Back Map", "assets/data/Level1/Level1_Background.csv", [5, 20], false );
-		
-		lavaMap = new FlxTilemap();
 
 		lavaMap = new PlatformTiles( tileMap, "Lava Map", "assets/data/Level1/Level1_Lava.csv", [9], true);
 		lavaMap.ignore = true;
-		
-		
-		//lavaMap = new FlxTilemap();
-		//var lavaData:String = Assets.getText("assets/data/Level1/Level1_Lava.csv");
-		//lavaMap.loadMap(lavaData, "assets/images/tiles1.png", 64, 64);
-		//add(lavaMap);
 		
 		var mainMap = new PlatformTiles( tileMap, "Main Map", "assets/data/Level1/Level1_Walls.csv", [18] );
 		
@@ -120,9 +112,9 @@ class PlayState extends FlxState
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement3", "assets/data/Level1/Level1_Platform3.csv", [64] ), 8 );
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement4", "assets/data/Level1/Level1_Platform4.csv", [64] ), 8 );
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement5", "assets/data/Level1/Level1_Platform5.csv", [64] ), 8 );
-		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement6", "assets/data/Level1/Level1_Platform6.csv", [64] ), 2 );
-		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement7", "assets/data/Level1/Level1_Platform7.csv", [64] ), 2 );
-		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement8", "assets/data/Level1/Level1_Platform8.csv", [64] ), 2 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement6", "assets/data/Level1/Level1_Platform6.csv", [64] ), 4 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement7", "assets/data/Level1/Level1_Platform7.csv", [64] ), 4 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement8", "assets/data/Level1/Level1_Platform8.csv", [64] ), 4 );
 		
 		PlatformControlSignaller.makeController( this, tileMap, "assets/data/Level1/Level1_Switch1.csv", "assets/data/Level1/Level1_SwitchPlatform1.csv" );
 		PlatformControlSignaller.makeController( this, tileMap, "assets/data/Level1/Level1_Switch2.csv", "assets/data/Level1/Level1_SwitchPlatform2.csv" );
@@ -260,21 +252,8 @@ class PlayState extends FlxState
 		tileMap = new PlatformGroup( this, "assets/images/tiles1.png" );
 		var backMap = new PlatformTiles( tileMap, "Back Map", "assets/data/Level2/Level2_Background.csv", [5, 8, 20], false );
 		
-		
-		lavaMap = new FlxTilemap();
-		//var lavaData:String = Assets.getText("assets/data/Level3/Level3_Lava.csv");
-		//lavaMap.loadMap(lavaData, "assets/images/tiles1.png", 64, 64);
-		//add(lavaMap);
-
 		lavaMap = new PlatformTiles( tileMap, "Lava Map", "assets/data/Level2/Level2_Lava.csv", [9], true);
 		lavaMap.ignore = true;
-		
-		
-		
-		//lavaMap = new FlxTilemap();
-		//var lavaData:String = Assets.getText("assets/data/Level2/Level2_Lava.csv");
-		//lavaMap.loadMap(lavaData, "assets/images/tiles1.png", 64, 64);
-		//add(lavaMap);
 		
 		var mainMap = new PlatformTiles( tileMap, "Main Map", "assets/data/Level2/Level2_Walls.csv", [18] );
 		
@@ -354,11 +333,6 @@ class PlayState extends FlxState
 		
 		tileMap = new PlatformGroup( this, "assets/images/tiles1.png" );
 		var backMap = new PlatformTiles( tileMap, "Back Map", "assets/data/Level3/Level3_Background.csv", [5, 8, 20, 39, 40], false );
-		
-		lavaMap = new FlxTilemap();
-		//var lavaData:String = Assets.getText("assets/data/Level3/Level3_Lava.csv");
-		//lavaMap.loadMap(lavaData, "assets/images/tiles1.png", 64, 64);
-		//add(lavaMap);
 
 		lavaMap = new PlatformTiles( tileMap, "Lava Map", "assets/data/Level3/Level3_Lava.csv", [9], true);
 		lavaMap.ignore = true;
