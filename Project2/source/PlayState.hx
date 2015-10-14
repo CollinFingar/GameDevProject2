@@ -318,14 +318,16 @@ class PlayState extends FlxState
 		FlxG.worldBounds.set(0, 0, 200 * 64, 150 * 64);
 		
 		tileMap = new PlatformGroup( this, "assets/images/tiles1.png" );
-		var backMap = new PlatformTiles( tileMap, "Back Map", "assets/data/Level2/Level3_Background.csv", [5, 8, 20], false );
+		var backMap = new PlatformTiles( tileMap, "Back Map", "assets/data/Level3/Level3_Background.csv", [5, 8, 20, 39, 40], false );
 		
-		lavaMap = new FlxTilemap();
-		var lavaData:String = Assets.getText("assets/data/Level3/Level3_Lava.csv");
-		lavaMap.loadMap(lavaData, "assets/images/tiles1.png", 64, 64);
-		add(lavaMap);
+		//lavaMap = new FlxTilemap();
+		//var lavaData:String = Assets.getText("assets/data/Level3/Level3_Lava.csv");
+		//lavaMap.loadMap(lavaData, "assets/images/tiles1.png", 64, 64);
+		//add(lavaMap);
 		
-		var mainMap = new PlatformTiles( tileMap, "Main Map", "assets/data/Level2/Level3_Walls.csv", [18] );
+		var lavaMap = new PlatformTiles(tileMap, "Lava Map", "assets/data/Level3/Level3_Lava.csv", [-1], true);
+		
+		var mainMap = new PlatformTiles( tileMap, "Main Map", "assets/data/Level3/Level3_Walls.csv", [18] );
 		
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement1", "assets/data/Level3/Level3_Platform1.csv", [64] ), 3 );
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement2", "assets/data/Level3/Level3_Platform2.csv", [64] ), 3 );
@@ -344,11 +346,12 @@ class PlayState extends FlxState
 		placeHearts();
 		
 		enemyMap = new FlxTilemap();
-		var enemyData:String = Assets.getText("assets/data/Level3/Level3_Enemy.csv");
+		var enemyData:String = Assets.getText("assets/data/Level3/Level3_Enemies.csv");
 		enemyMap.loadMap(enemyData, "assets/images/tiles1.png", 64, 64);
 		placeEnemies();
 		
-		add(player = new Player(9000, 1200, this));	//12300, 300 is start
+		add(player = new Player(12000, 2400, this));	//12300, 300 is start
+		player.animctrl.force_state(Player.ANIM_IDLE);
 		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
 		FlxG.camera.zoom = 1;
 		
@@ -439,7 +442,8 @@ class PlayState extends FlxState
 		
 		tmpspd.text = Player.ANIMATIONS[player.animctrl.current][Player.ANIMI_NAME];
 		
-		if(!player.isDead() && FlxG.collide(lavaMap, player)){
+		if (!player.isDead() && FlxG.collide(lavaMap, player)) {
+			trace("meh");
 			player.velocity.y = -7000;
 			if ( Std.random(2) == 0 )
 				player.velocity.x = 1000;
