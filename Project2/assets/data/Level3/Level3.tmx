@@ -10,7 +10,7 @@
  </layer>
  <layer name="Lava" width="200" height="50">
   <data encoding="base64" compression="zlib">
-   eJzt0ikOACAAA0E0HsH/P4pFYDlKZpL1FS0FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgX3VRsvT9CVafeamEjbfjnK642KcpvtkACOIYhw==
+   eJztzqENACAMAMHqegT7L4plASgNd8n7jwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKCLrB74QD5eh8fquGeqXZwz1L7dAgkMGFU=
   </data>
  </layer>
  <layer name="Walls" width="200" height="50">
