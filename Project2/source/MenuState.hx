@@ -112,6 +112,7 @@ class MenuState extends FlxState
 		if (FlxG.keys.anyJustPressed(["ENTER"])) {
 			switch(option) {
 			case 0:
+				Reg.level = 1;
 				FlxG.state.bgColor = FlxColor.BLACK;
 				title.visible = false;
 				opt0txt.visible = false;
