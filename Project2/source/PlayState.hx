@@ -360,7 +360,7 @@ class PlayState extends FlxState
 		enemyMap.loadMap(enemyData, "assets/images/tiles1.png", 64, 64);
 		placeEnemies();
 		
-		add(player = new Player(12000, 2400, this));	//12300, 300 is start
+		add(player = new Player(12300, 2600, this));	//12300, 300 is start
 		player.animctrl.force_state(Player.ANIM_IDLE);
 		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
 		FlxG.camera.zoom = 1;
@@ -380,7 +380,7 @@ class PlayState extends FlxState
 		
 		
 		
-		//placeSpeechBubbles1();
+		placeSpeechBubbles3();
 		
 		FlxG.sound.playMusic("assets/music/fieldbgm.ogg", .2, true);
 	}
@@ -872,6 +872,20 @@ class PlayState extends FlxState
 		
 		pnt = new FlxPoint(2000, 1300);
 		spch = new SpeechBubble(this, pnt, 200, 80, "This crossbow is really heavy.", .1, 1.2);
+		npc = new NPC(pnt, spch, true, 300, this);
+		NPCs.push(npc);
+		add(npc);
+	}
+	
+	public function placeSpeechBubbles3():Void {
+		var pnt:FlxPoint = new FlxPoint(10700, 2300);
+		var spch:SpeechBubble = new SpeechBubble(this, pnt, 180, 80, "This fresh air is so... fresh!", .1, 1.2);
+		var npc:NPC = new NPC(pnt, spch, true, 300, this);
+		NPCs.push(npc);
+		add(npc);
+		
+		pnt = new FlxPoint(6900, 2600);
+		spch = new SpeechBubble(this, pnt, 220, 120, "I'm going to have to take a nice long bath once I'm free of this place.", .1, 1.2);
 		npc = new NPC(pnt, spch, true, 300, this);
 		NPCs.push(npc);
 		add(npc);
