@@ -54,10 +54,16 @@ class PlayState extends FlxState
 	public var shieldGuys:Array<ShieldGuy> = [];
 	public var NPCs:Array<NPC> = [];
 	public var durgen:Durgen;
+	public var noob1:Noob;
+	public var noob2:Noob;
+	public var noob3:Noob;
+	public var noob1InPlay:Bool = false;
+	public var noob2InPlay:Bool = false;
+	public var noob3InPlay:Bool = false;
 	
 	public var endLocation:FlxPoint;
 	
-	public var speechBubblesActive:Bool;
+	public var speechBubblesActive:Bool = false;
 	
 	// she is dead
 	var dead_and_dying:Int = 0;
@@ -127,7 +133,23 @@ class PlayState extends FlxState
 		enemyMap.loadMap(enemyData, "assets/images/tiles1.png", 64, 64);
 		placeEnemies();
 		
-		add(player = new Player(12300, 300, this));	//12300, 300 is start of 1. 2000, 9000 by end.
+		var pnt:FlxPoint = new FlxPoint(8800, 4705);
+		var speechpnt:FlxPoint = new FlxPoint(8680, 4650);
+		var spch:SpeechBubble = new SpeechBubble(this, speechpnt, 200, 270, "First day on the job! They said the new guards should be towards the top of the tower today, because they're trying something new. \n\n Who are you, the captain?", .1, 1.2);
+		noob1 = new Noob(pnt, spch, 800, "assets/images/noobknight.png", this);
+		add(noob1);
+		noob1InPlay = true;
+		
+		
+		var pnt:FlxPoint = new FlxPoint(7500, 2850);
+		var speechpnt:FlxPoint = new FlxPoint(7700, 2750);
+		var spch:SpeechBubble = new SpeechBubble(this, speechpnt, 200, 210, "He was... too powerful... \n\nand brave... \n\n\nand handsome....", .1, 1.2);
+		noob2 = new Noob(pnt, spch, 600, "assets/images/outcoldknight_370x305_12fps_strip4.png", this);
+		add(noob2);
+		noob2InPlay = true;
+		
+		
+		add(player = new Player(7500, 2800, this));	//12300, 300 is start of 1. 2000, 9000 by end.
 		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
 		FlxG.camera.zoom = 1;
 		
@@ -167,6 +189,7 @@ class PlayState extends FlxState
 		durgen = new Durgen(10000, 730, this);
 		durgen.immovable = true;
 		add(durgen);
+		
 		
 		
 		placeSpeechBubbles1();
@@ -697,10 +720,15 @@ class PlayState extends FlxState
 		for(i in 0...NPCs.length){
 			NPCs[i].checkIfPlayerNear();
 		}
-	}
-	
-	public function nextLevel():Void{
-		
+		if(noob1InPlay){
+			noob1.checkIfPlayerNear();
+		}
+		if(noob2InPlay){
+			noob2.checkIfPlayerNear();
+		}
+		if(noob3InPlay){
+			noob3.checkIfPlayerNear();
+		}
 	}
 	
 	
