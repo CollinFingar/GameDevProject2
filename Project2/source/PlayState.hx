@@ -294,7 +294,7 @@ class PlayState extends FlxState
 		
 		
 		
-		add(player = new Player(9000, 1200, this));	//9000, 1200 is start. 2000, 1200 is end
+		add(player = new Player(2000, 1100, this));	//9000, 1200 is start. 2000, 1200 is end
 		player.animctrl.force_state(Player.ANIM_IDLE);
 		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
 		FlxG.camera.zoom = 1;
@@ -318,7 +318,7 @@ class PlayState extends FlxState
 		
 		
 		
-		//placeSpeechBubbles1();
+		placeSpeechBubbles2();
 		
 		FlxG.sound.playMusic("assets/music/undergroundbgm.ogg", .2, true);
 	}
@@ -833,6 +833,46 @@ class PlayState extends FlxState
 		pnt = new FlxPoint(5000, 7000);
 		spch = new SpeechBubble(this, pnt, 200, 120, "Maybe the occasional tour of this Castle would help out.", .1, 1.2);
 		npc = new NPC(pnt, spch, true, 500, this);
+		NPCs.push(npc);
+		add(npc);
+	}
+	
+	
+	public function placeSpeechBubbles2():Void {
+		var pnt:FlxPoint = new FlxPoint(7000, 1500);
+		var spch:SpeechBubble = new SpeechBubble(this, pnt, 180, 120, "A journey underground. JUST what I needed.", .1, 1.2);
+		var npc:NPC = new NPC(pnt, spch, true, 300, this);
+		NPCs.push(npc);
+		add(npc);
+		
+		pnt = new FlxPoint(8300, 2700);
+		spch = new SpeechBubble(this, pnt, 220, 100, "Escape on my own, I said. IT WILL BE EASY, I SAID.", .1, 1.2);
+		npc = new NPC(pnt, spch, true, 300, this);
+		NPCs.push(npc);
+		add(npc);
+		
+		pnt = new FlxPoint(7600, 4300);
+		spch = new SpeechBubble(this, pnt, 200, 130, "I know I was thirsty, but this wasn't the solution I had in mind.", .1, 1.2);
+		npc = new NPC(pnt, spch, true, 300, this);
+		NPCs.push(npc);
+		add(npc);
+		
+		pnt = new FlxPoint(2500, 4300);
+		spch = new SpeechBubble(this, pnt, 200, 100, "When in doubt, keep moving left.", .1, 1.2);
+		npc = new NPC(pnt, spch, true, 300, this);
+		NPCs.push(npc);
+		add(npc);
+		
+		pnt = new FlxPoint(2500, 2500);
+		spch = new SpeechBubble(this, pnt, 200, 100, "How do they even keep this place clean?", .1, 1.2);
+		npc = new NPC(pnt, spch, true, 300, this);
+		NPCs.push(npc);
+		add(npc);
+		
+		
+		pnt = new FlxPoint(2000, 1300);
+		spch = new SpeechBubble(this, pnt, 200, 80, "This crossbow is really heavy.", .1, 1.2);
+		npc = new NPC(pnt, spch, true, 300, this);
 		NPCs.push(npc);
 		add(npc);
 	}
