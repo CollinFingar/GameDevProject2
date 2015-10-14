@@ -25,6 +25,7 @@ class ScriptLvl1 extends Script {
 		
 		talk( "Knight", "normal", "Princess Licia, I've come to rescue you from this tower!" );
 		
+		silence();
 		action( cage, "signal", [0] );
 		
 		wait( 0.2 );
@@ -32,14 +33,13 @@ class ScriptLvl1 extends Script {
 		action( princess, "signal", [Player.SIG_PRINCESS_AWAKE] );
 		
 		talk( "Princess", "neutral", "Well, it's about time SOMEONE came. Who are you with? The Royal Army?" );
-		talk( "Knight", "normal", "No, Princess. I came here on my own accord, so you would have my hand in marriage." );
+		talk( "Knight", "normal", "No, Princess. I have come from a faraway land of my own accord, to have the beutiful maiden's hand in marriage." );
 		talk( "Princess", "uhh", "Marriage? MARRIAGE? You do realize that we're going to have to fight our way out of this tower?" );
 		talk( "Knight", "normal", "That should be no problem at all! I fought my way up here for you, I can fight my way out!" );
-		talk( "Princess", "grr", "For ME? No. You fought your way up here so I would have to marry you." );
+		talk( "Princess", "grr", "For ME, huh!? I am royalty! How dare you speak to me thusly. On whose divine authority do I owe you anything, sir knight? " );
 		talk( "Knight", "normal", "Well, isn't that how it goes? The Knight climbs the tower. The Knight rescues the Princess. They escape and get married." );
-		talk( "Princess", "grr", "You really expect me to marry some self-centered jerk who is only in this for himself?" );
-		talk( "Knight", "normal", "Of course! That's how it goes!" );
-		talk( "Princess", "neutral", "Well, okay then." );
+		talk( "Princess", "grr", "Are you serious? You really expect me to just walk off with you, don't you? Well, come here and let me see the face of my BRAVE savior." );
+		talk( "Knight", "normal", "But of course!" );
 		
 		silence();
 		
@@ -56,7 +56,7 @@ class ScriptLvl1 extends Script {
 		
 		wait( 2 );
 		
-		talk( "Princess", "neutral", "Ugh, men. They always think that just because they're saving Princesses, that they have to elope. They never think about how we feel." );
-		talk( "Princess", "neutral", "WHATEVER. I'm out of this place." );
+		talk( "Princess", "neutral", "Marriage, pah! This second rate baffoon couldn't hope to conquer a shetland pony, much less my kingdom." );
+		talk( "Princess", "neutral", "Enough of this drudgery. I'm out of this place." );
 	}
 }
