@@ -460,6 +460,8 @@ class PlayState extends FlxState
 			return;
 		} else if(FlxG.keys.justPressed.H){
 			hud.setHealth(5);
+		} else if(FlxG.keys.justPressed.Q){
+			WillG.speechBubblesActive = !WillG.speechBubblesActive;
 		}
 
 		
