@@ -228,7 +228,8 @@ class PlayState extends FlxState
 		} else {
 			scr.start();
 		}
-		
+		hud.score = Reg.score;
+
 		
 		placeSpeechBubbles1();
 		
@@ -316,7 +317,8 @@ class PlayState extends FlxState
 		
 		//pnt = new FlxPoint(10500, 600);
 		
-		
+		hud.score = Reg.score;
+
 		
 		placeSpeechBubbles2();
 		
@@ -325,6 +327,7 @@ class PlayState extends FlxState
 	
 	public function buildLevel3():Void{
 		super.create();
+		
 		
 		endLocation = new FlxPoint(1500, 600);
 		
@@ -379,7 +382,8 @@ class PlayState extends FlxState
 		//pnt = new FlxPoint(10500, 600);
 		
 		
-		
+		hud.score = Reg.score;
+
 		placeSpeechBubbles3();
 		
 		FlxG.sound.playMusic("assets/music/fieldbgm.ogg", .2, true);
