@@ -23,6 +23,9 @@ class Script {
 	function music( fname:String, del:Float, rep:Bool ):Void {
 		actions.push( ["music",fname,del,rep] );
 	}
+	function shake( power:Float, dur:Float ):Void {
+		actions.push( ["shake",power,dur,1] );
+	}
 	function silence():Void {
 		actions.push( ["silent"] );
 	}
@@ -63,12 +66,16 @@ class Script {
 			end_script();
 		else {
 			if ( actions[index].length != 3 ) {
-				if ( actions[index][0] == "talk" ) {
+				if ( actions[index][0] == "shake" ) {
+					FlxG.camera.shake( actions[index][1], actions[index][2] );
+					index ++ ;
+				} else if ( actions[index][0] == "talk" ) {
 					if ( writingscene ) {
 						if ( FlxG.keys.anyJustPressed(["ENTER"]) ) {
 							if ( cs.next_ready() ) {
 								index ++ ;
 								writingscene = false;
+								FlxG.camera.stopFX();
 							} else {
 								cs.flush();
 							}

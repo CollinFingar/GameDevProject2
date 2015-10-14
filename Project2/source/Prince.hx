@@ -119,12 +119,14 @@ class Prince extends MoveBase implements Actor {
 		}
 		switch ( direc ) {
 			case "left":
+				flipX = true;
 				var check = ( initX - x >= amount );
 				if ( !check )
 					velocity.x = -cast(amount, Float) / time;
 				else
 					newAction = true;
 			case "right":
+				flipX = false;
 				var check = ( x - initX >= amount );
 				if ( !check )
 					velocity.x = cast(amount, Float) / time;
@@ -148,15 +150,22 @@ class Prince extends MoveBase implements Actor {
 					newAction = true;
 				}
 			case "left":
+				flipX = true;
 				velocity.x = -amount;
 				newAction = true;
 			case "right":
+				flipX = false;
 				velocity.x = amount;
 				newAction = true;
 		}
 	}
 	public function signal( sig:Int ):Void { 
-		isDead = true;
+		if ( sig == 0 ) {
+			isDead = true;
+		} else if ( sig == 1 ) {
+			active = true;
+			visible = true;
+		}
 	}
 	public function ready():Bool {
 		return newAction;

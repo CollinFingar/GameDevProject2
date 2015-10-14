@@ -152,6 +152,9 @@ class CutScene extends FlxSubState {
 	}
 	
 	function fetch(n:Int):FlxSprite {
+		trace( portraits );
+		trace( characters[n] );
+		trace( expressions[n] );
 		return portraits[characters[n]][expressions[n]];
 	}
 	public function show_dialogue():Void {

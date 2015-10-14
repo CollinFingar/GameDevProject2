@@ -26,6 +26,7 @@ import platforms.PlatformCircle;
 import platforms.PlatformFalling;
 
 import Level1_Script;
+import Level3_Script;
 import MiscCage;
 import source.ui.SpeechBubble;
 import source.ui.CutScene;
@@ -88,6 +89,42 @@ class PlayState extends FlxState
 		}
 	}
 	
+	public function buildCS():Void {
+		cs = new CutScene( this );
+		
+		var prinGrr = new FlxSprite(0, 0, "assets/images/talking/princess_grr.png");
+		var prinHmm = new FlxSprite(0, 0, "assets/images/talking/princess_hmm.png");
+		var prinNeutral = new FlxSprite(0, 0, "assets/images/talking/princess_neutral.png");
+		var prinSmile = new FlxSprite(0, 0, "assets/images/talking/princess_smile.png");
+		var prinUhh = new FlxSprite(0, 0, "assets/images/talking/princess_uhh.png");
+		
+		var prinNorm = new FlxSprite(0, 0, "assets/images/talking/prince_talk.png");
+		var prinDead = new FlxSprite(0, 0, "assets/images/talking/prince_outcold.png");
+		
+		var kingCray = new FlxSprite(0, 0, "assets/images/talking/kingCravin_talk.png");
+		
+		cs.add_character( "Princess Licia", "grr", prinGrr );
+		cs.add_character( "Princess Licia", "hmm", prinHmm );
+		cs.add_character( "Princess Licia", "neutral", prinNeutral );
+		cs.add_character( "Princess Licia", "smile", prinSmile );
+		cs.add_character( "Princess Licia", "uhh", prinUhh );
+		
+		cs.add_character( "Knight", "normal", prinNorm );
+		cs.add_character( "Knight", "dead", prinDead );
+		
+		cs.add_character( "King Cravin", "only", kingCray );
+		
+		add( prinGrr );
+		add( prinHmm );
+		add( prinNeutral );
+		add( prinSmile );
+		add( prinUhh );
+		
+		add( prinNorm );
+		add( prinDead );
+		
+		add( kingCray );
+	}
 	
 	public function buildLevel1():Void{
 			
@@ -178,38 +215,8 @@ class PlayState extends FlxState
 		var Heart = new FlxSprite();
 		Heart.makeGraphic( 32, 32, FlxColor.RED );
 		hud = new HUD( this, 5, Heart, 10000, Reg.score );
-		
-		cs = new CutScene( this );
-		
-		var prinGrr = new FlxSprite(0, 0, "assets/images/talking/princess_grr.png");
-		var prinHmm = new FlxSprite(0, 0, "assets/images/talking/princess_hmm.png");
-		var prinNeutral = new FlxSprite(0, 0, "assets/images/talking/princess_neutral.png");
-		var prinSmile = new FlxSprite(0, 0, "assets/images/talking/princess_smile.png");
-		var prinUhh = new FlxSprite(0, 0, "assets/images/talking/princess_uhh.png");
-		
-		var prinNorm = new FlxSprite(0, 0, "assets/images/talking/prince_talk.png");
-		var prinDead = new FlxSprite(0, 0, "assets/images/talking/prince_outcold.png");
-		
-		cs.add_character( "Princess", "grr", prinGrr );
-		cs.add_character( "Princess", "hmm", prinHmm );
-		cs.add_character( "Princess", "neutral", prinNeutral );
-		cs.add_character( "Princess", "smile", prinSmile );
-		cs.add_character( "Princess", "uhh", prinUhh );
-		
-		cs.add_character( "Knight", "normal", prinNorm );
-		cs.add_character( "Knight", "dead", prinDead );
-		
-		trace( cs.portraits["Knight"]["normal"] );
-		
-		add( prinGrr );
-		add( prinHmm );
-		add( prinNeutral );
-		add( prinSmile );
-		add( prinUhh );
-		
-		add( prinNorm );
-		add( prinDead );
-		
+	
+		buildCS();
 		scr = new ScriptLvl1( this, cs, [player, prince, cage, cloud] );
 		
 		/* WILL'S CODE */
@@ -262,8 +269,8 @@ class PlayState extends FlxState
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement3", "assets/data/Level2/Level2_Platform3.csv", [64] ), 3 );
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement4", "assets/data/Level2/Level2_Platform4.csv", [64] ), 3 );
 		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement5", "assets/data/Level2/Level2_Platform5.csv", [64] ), 3 );
-		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement6", "assets/data/Level2/Level2_Platform6.csv", [64] ), 3 );
-		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement7", "assets/data/Level2/Level2_Platform7.csv", [64] ), 3 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement6", "assets/data/Level2/Level2_Platform6.csv", [64] ), 6 );
+		PlatformMoveBasic.makeController( new PlatformMoveBasic( tileMap, "Movement7", "assets/data/Level2/Level2_Platform7.csv", [64] ), 6 );
 		
 		//var sw:PlatformControlSignaller = new PlatformControlSignaller( tileMap, 12000, 300, "assets/images/misc/switch_UNPRESSED.png" );
 		
@@ -312,6 +319,7 @@ class PlayState extends FlxState
 	public function buildLevel3():Void{
 		super.create();
 		
+		
 		endLocation = new FlxPoint(1500, 600);
 		
 		FlxG.state.bgColor = FlxColor.AZURE;
@@ -346,7 +354,8 @@ class PlayState extends FlxState
 		enemyMap.loadMap(enemyData, "assets/images/tiles1.png", 64, 64);
 		placeEnemies();
 		
-		add(player = new Player(12000, 2400, this));	//12300, 300 is start
+		//add(player = new Player(12000, 2400, this));	//12300, 300 is start
+		add(player = new Player(5900, 2400, this));
 		player.animctrl.force_state(Player.ANIM_IDLE);
 		FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN);
 		FlxG.camera.zoom = 1;
@@ -364,7 +373,12 @@ class PlayState extends FlxState
 		
 		//pnt = new FlxPoint(10500, 600);
 		
-		
+		prince = new Prince(5235, 2000, this );
+		prince.visible = false;
+		prince.active = false;
+		add( prince );
+		buildCS();
+		scr = new ScriptLvl3( this, cs, [player, prince] );
 		
 		//placeSpeechBubbles1();
 		
@@ -406,6 +420,9 @@ class PlayState extends FlxState
 		}
 		
 		
+		if ( FlxG.keys.justReleased.A ) {
+			trace( player.x, player.y );
+		}
 		if ( FlxG.keys.justPressed.ESCAPE ) {
 			FlxG.switchState(new MenuState());
 		} else if(FlxG.keys.justPressed.ONE){
@@ -423,7 +440,13 @@ class PlayState extends FlxState
 		}
 
 		
-		if(Reg.level==1){
+		if ( Reg.level == 1 ) {
+			scr.update();
+		}
+		if ( Reg.level == 3 ) {
+			if ( player.x < 5235 ) {
+				scr.start();
+			}
 			scr.update();
 		}
 
@@ -443,7 +466,7 @@ class PlayState extends FlxState
 		tileMap.override_update();
 		super.update();
 		tileMap.collisionCheck( player );
-		if(Reg.level==1){
+		if(Reg.level==1 || Reg.level == 3){
 			tileMap.collisionCheck( prince );
 		}
 		player.late_update();
@@ -605,7 +628,7 @@ class PlayState extends FlxState
 	];
 	
 	public function checkHit( obj:FlxSprite, id:Int ):Bool {
-		if ( !player.isDeadOrHurt() && FlxG.overlap( player, obj ) ) {
+		if ( !player.isActing && !player.isDeadOrHurt() && FlxG.overlap( player, obj ) ) {
 			hud.damage( ENEMY_BOUNCE[id][PLAYER_HEALTH] );
 			
 			if ( hud.getHealth() == 0 ) {

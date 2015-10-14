@@ -197,8 +197,8 @@ class Player extends MoveBase implements Actor
     }
     
     public override function update():Void {
+		acceleration.x = 0;
 		if ( !this.isActing ) {
-			acceleration.x = 0;
 			if ( !this.isDeadOrHurt() ) {
 				handleInput();
 				moveCharacter();
@@ -473,13 +473,19 @@ class Player extends MoveBase implements Actor
 	// ACTOR STUFF
 	
 	public var scr:Script;
-	var isActing:Bool;
+	public var isActing:Bool;
 	var newAction:Bool = true;
 	var initX:Float;
 	var initY:Float;
 	var initSignal:Int = -1;
 	
 	public function passToScript():Void {
+		ctrlLeft = false;
+		ctrlRight = false;
+		ctrlUp = false;
+		ctrlX = false;
+		ctrlZ = false;
+		velocity.set();
 		acceleration.y = 3200;
 		isActing = true;
 	}
@@ -496,12 +502,16 @@ class Player extends MoveBase implements Actor
 		}
 		switch ( direc ) {
 			case "left":
+				flipX = false;
+				ctrlLeft = true;
 				var check = ( initX - x >= amount );
 				if ( !check )
 					velocity.x = -cast(amount, Float) / time;
 				else
 					newAction = true;
 			case "right":
+				flipX = true;
+				ctrlRight = true;
 				var check = ( x - initX >= amount );
 				if ( !check )
 					velocity.x = cast(amount, Float) / time;
@@ -523,16 +533,23 @@ class Player extends MoveBase implements Actor
 				if ( velocity.y == 0 )
 					newAction = true;
 			case "left":
+				flipX = false;
 				velocity.x = -amount;
 				newAction = true;
 			case "right":
+				flipX = true;
 				velocity.x = amount;
 				newAction = true;
 		}
 	}
 	public function signal( sig:Int ):Void { 
-		trace( "SET SIGNAL " + sig );
-		initSignal = sig;
+		if ( sig == 10 ) {
+			velocity.x = 0;
+			drag.x = 80;
+		} else {
+			trace( "SET SIGNAL " + sig );
+			initSignal = sig;
+		}
 	}
 	public function ready():Bool {
 		return newAction;
